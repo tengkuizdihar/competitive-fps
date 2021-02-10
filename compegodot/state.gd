@@ -6,7 +6,7 @@ const SIGNAL_PREFIX = "state_changed_"
 # besides null.
 onready var _state = {
 	"DEBUG_PLAYER_VELOCITY": 0.0,
-	"DEBUG_FLOOR_NORMAL": Vector3()
+	"DEBUG_MISC": "NOT USED"
 }
 
 

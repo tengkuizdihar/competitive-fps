@@ -1,12 +1,14 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Player.gd" type="Script" id=1]
+[ext_resource path="res://assets/crosshair_temp/crosshair.tres" type="Texture" id=2]
+[ext_resource path="res://middlescreen.gd" type="Script" id=3]
 
 [sub_resource type="CapsuleShape" id=1]
 height = 3.0
 
 [sub_resource type="CylinderShape" id=2]
-height = 1.42489
+height = 0.920179
 
 [sub_resource type="CapsuleMesh" id=3]
 mid_height = 3.0
@@ -29,7 +31,7 @@ func _process(_delta: float) -> void:
 script/source = "extends Label
 
 func _physics_process(_delta: float) -> void:
-	text = \"Input Basis \" + str(State.get_state(\"DEBUG_FLOOR_NORMAL\"))
+	text = \"Debug Misc: \" + str(State.get_state(\"DEBUG_MISC\"))
 "
 
 [node name="Player" type="KinematicBody"]
@@ -39,8 +41,8 @@ script = ExtResource( 1 )
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, 0 )
 shape = SubResource( 1 )
 
-[node name="CollisionShape" type="CollisionShape" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.53984, 0 )
+[node name="Feet" type="CollisionShape" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.85865, 0 )
 shape = SubResource( 2 )
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
@@ -53,15 +55,40 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.47521, 0 )
 
 [node name="Camera" type="Camera" parent="Pivot"]
 current = true
+far = 300.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Pivot/Camera"]
-margin_right = 40.0
-margin_bottom = 40.0
+[node name="Control" type="Control" parent="Pivot/Camera"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="FPSDebug" type="Label" parent="Pivot/Camera/VBoxContainer"]
+[node name="Crosshair" type="TextureRect" parent="Pivot/Camera/Control"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -3.00006
+margin_top = -8.00003
+margin_right = 20.9999
+margin_bottom = 24.0
+mouse_filter = 2
+texture = ExtResource( 2 )
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Pivot/Camera/Control"]
+margin_right = 153.0
+margin_bottom = 50.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FPSDebug" type="Label" parent="Pivot/Camera/Control/VBoxContainer"]
 margin_right = 153.0
 margin_bottom = 14.0
 text = "FPS: 0"
@@ -70,7 +97,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VelocityDebug" type="Label" parent="Pivot/Camera/VBoxContainer"]
+[node name="VelocityDebug" type="Label" parent="Pivot/Camera/Control/VBoxContainer"]
 margin_top = 18.0
 margin_right = 153.0
 margin_bottom = 32.0
@@ -80,17 +107,12 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="InputBasisDebug" type="Label" parent="Pivot/Camera/VBoxContainer"]
+[node name="MiscDebug" type="Label" parent="Pivot/Camera/Control/VBoxContainer"]
 margin_top = 36.0
 margin_right = 153.0
 margin_bottom = 50.0
-text = "FLOOR NORMAL: (0,1,0)"
+text = "Misc Debug: Null"
 script = SubResource( 6 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="RayCast" type="RayCast" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.5032, 0 )
-enabled = true
-cast_to = Vector3( 0, -15, 0 )
