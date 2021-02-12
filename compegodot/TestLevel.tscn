@@ -107,6 +107,25 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 23 )
 polygon = PoolVector2Array( -18, 10, -17, 10, 2, 0, 1, 0 )
 depth = 5.0
 
+[node name="CSGBox2" type="CSGBox" parent="CSGLevel"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 33, 2.5, -1 )
+height = 4.0
+
+[node name="CrouchBridge" type="CSGBox" parent="CSGLevel"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 33, 6.5, 6 )
+width = 16.0
+height = 8.0
+
+[node name="Pillar" type="CSGBox" parent="CSGLevel/CrouchBridge"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 3, -3 )
+width = 16.0
+height = 8.0
+
+[node name="Pillar2" type="CSGBox" parent="CSGLevel/CrouchBridge"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, -5, -3 )
+width = 16.0
+height = 8.0
+
 [node name="RigidBody2" type="RigidBody" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -11.2823, 2.29554, 11.8187 )
 physics_material_override = SubResource( 1 )
@@ -142,7 +161,7 @@ mesh = ExtResource( 4 )
 material/0 = null
 
 [node name="Player" parent="." instance=ExtResource( 1 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -25, 1.5044, 2 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 21, 4.5044, 2 )
 
 [node name="DirectionalLight" type="DirectionalLight" parent="."]
 transform = Transform( 0.37818, 0.239597, 0.894189, -0.925732, 0.0978802, 0.365294, 0, -0.965926, 0.258819, 0, 16, 0 )

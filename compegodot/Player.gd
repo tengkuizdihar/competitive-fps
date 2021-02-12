@@ -1,9 +1,13 @@
 extends KinematicBody
 
-# INFO - MAGIC_ON_GROUND_GRAVITY
-# Is a constant used by the kinematic for making the player stay on the ground.
-# For example: It's used so that the player wouldn't fly off when going up and down
-#              ramps.
+###########################################################
+# Variables
+###########################################################
+
+### INFO - MAGIC_ON_GROUND_GRAVITY
+### Is a constant used by the kinematic for making the player stay on the ground.
+### For example: It's used so that the player wouldn't fly off when going up and down
+###              ramps.
 const MAGIC_ON_GROUND_GRAVITY = 9 # m/s
 
 onready var normal_input_direction = Vector3.ZERO # will be changed by outside actors
@@ -12,11 +16,31 @@ onready var pivot = $Pivot
 onready var mouse_sensitivity = 0.0008  # radians/pixel, TODO: refactor to game settings
 onready var current_acceleration = ground_acceleration
 
+### A counter that will increase as many times as it jumps until it's on the floor again
+var jump_counter = 0
+
+### The currently used max velocity for movement input
 var current_max_movement_velocity = max_run_velocity
+
+### The current velocity for the gravity applied to the character. Will change based
+### on the situation. For example it could be the same as MAGIC_ON_GROUND_GRAVITY.
 var gravity_velocity = Vector3()
+
+### The desired movement_velocity stored for acceleration purposes.
 var desired_movement_velocity = Vector3()
+
+### The final velocity used for debugging returned by move_and_slide
 var final_velocity = Vector3()
 
+### Flag for crouching
+var is_crouching = false
+onready var feet_original_local_translation = $Feet.transform.origin
+onready var body_original_local_translation = $Body.transform.origin
+onready var body_original_height = $Body.shape.height
+
+export(bool) var auto_bhop = false
+export(float) var crouch_height = 2 # based on collision body height
+export(float) var crouch_speed = 3 # meter per second
 export(float) var jump_impulse_velocity = 12
 export(float) var air_acceleration = 15
 export(float) var ground_acceleration = 45
@@ -24,6 +48,10 @@ export(float) var gravity_constant = 25
 export(float) var max_run_velocity = 12.0
 export(float) var max_walk_velocity = 6.0
 export(float) var max_velocity = 30.0 # meter per second
+
+###########################################################
+# Engine Callbacks
+###########################################################
 
 func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -39,6 +67,7 @@ func _unhandled_input(event):
 func _physics_process(delta: float) -> void:
 	# TODO-BIG: refactor input so that it would be outside of this script
 	#           this will ensure possibilities for multiplayer in the future
+	manage_crouching(delta)
 	apply_movement(get_movement_input($Pivot/Camera.global_transform.basis), delta)
 
 
@@ -46,7 +75,33 @@ func _physics_process(delta: float) -> void:
 # Stateful function
 ###########################################################
 
-# BUG jumping will be shorter when going down
+### The body that's affected here is: Body size & position and Feet position only.
+### When the body is reduced in height by N, it will go higher by N.
+### The feet will follow the position of the body by getting higher N also.
+### This process is reversible because of how crouching works which is:
+###     * Crouch
+###     * Come to normal
+### BUG: shouldn't exit crouch when clearence is standing limit
+func manage_crouching(delta: float):
+	if Input.is_action_pressed("player_crouch"):
+		is_crouching = true
+
+		var height_change = abs(crouch_height - body_original_height)
+		var body_trans_target = body_original_local_translation + Vector3.UP * height_change / 2
+		var feet_trans_target = feet_original_local_translation + Vector3.UP * height_change
+
+		$Body.shape.height = move_toward($Body.shape.height, crouch_height, crouch_speed * delta)
+		$Body.transform.origin = $Body.transform.origin.move_toward(body_trans_target, crouch_speed * delta)
+		$Feet.transform.origin = $Feet.transform.origin.move_toward(feet_trans_target, crouch_speed * delta)
+	else:
+		is_crouching = false
+
+		var crouch_delta = crouch_speed * 1.5 * delta
+		$Body.shape.height = move_toward($Body.shape.height, body_original_height, crouch_delta)
+		$Body.transform.origin = $Body.transform.origin.move_toward(body_original_local_translation, crouch_delta)
+		$Feet.transform.origin = $Feet.transform.origin.move_toward(feet_original_local_translation, crouch_delta)
+
+
 func apply_movement(input_vector: Vector3, delta: float):
 	input_vector = input_vector.normalized()
 
@@ -65,7 +120,11 @@ func apply_movement(input_vector: Vector3, delta: float):
 		current_acceleration = ground_acceleration
 
 	# Player walk action that will decrease max_velocity
-	if Input.is_action_pressed("player_walk"):
+	if Input.is_action_pressed("player_walk") and is_crouching:
+		current_max_movement_velocity = max_walk_velocity * 0.5
+	elif is_crouching:
+		current_max_movement_velocity = max_walk_velocity * 0.75
+	elif Input.is_action_pressed("player_walk"):
 		current_max_movement_velocity = max_walk_velocity
 	else:
 		current_max_movement_velocity = max_run_velocity
@@ -82,13 +141,12 @@ func apply_movement(input_vector: Vector3, delta: float):
 	#
 	# EXAMPLE: if the desired velocity isn't changed, player who went up a slope
 	#          will have higher jumping velocity than the one going downwards.
-	#
-	# BUG: can jump multiple times per frame. need a counter for this.
-	if is_on_floor() and Input.is_action_just_pressed("player_jump"):
+	if is_on_floor() and (Input.is_action_just_pressed("player_jump") or (auto_bhop and Input.is_action_pressed("player_jump"))):
 		gravity_velocity = Vector3.UP * jump_impulse_velocity
 		desired_movement_velocity = input_vector * current_max_movement_velocity
 
 	# finalize to current velocity
+	# BUG: desired_movement_velocity need to be clamped when going against a wall
 	var velocity_and_gravity = desired_movement_velocity + gravity_velocity
 
 	# clamp the velocity and gravity to max speed
@@ -98,9 +156,7 @@ func apply_movement(input_vector: Vector3, delta: float):
 	final_velocity = self.move_and_slide(velocity_and_gravity, Vector3.UP, true, 4, 0.785398, false)
 
 	# DEBUG
-	State.change_state("DEBUG_MISC", str(is_on_floor()))
 	State.change_state("DEBUG_PLAYER_VELOCITY", stepify(final_velocity.length(), 0.01))
-
 
 ###########################################################
 # Stateless Function
