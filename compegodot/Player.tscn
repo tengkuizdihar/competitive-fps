@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Player.gd" type="Script" id=1]
 [ext_resource path="res://assets/crosshair_temp/crosshair.tres" type="Texture" id=2]
 [ext_resource path="res://middlescreen.gd" type="Script" id=3]
+[ext_resource path="res://PhysicsRenderSmooth.gd" type="Script" id=4]
 
 [sub_resource type="CapsuleShape" id=1]
 height = 3.0
@@ -10,29 +11,29 @@ height = 3.0
 [sub_resource type="CylinderShape" id=2]
 height = 0.920179
 
-[sub_resource type="CapsuleMesh" id=3]
-mid_height = 3.0
-
-[sub_resource type="GDScript" id=4]
+[sub_resource type="GDScript" id=3]
 script/source = "extends Label
 
 func _process(_delta: float) -> void:
 	text = \"FPS: \" + str(Engine.get_frames_per_second())
 "
 
-[sub_resource type="GDScript" id=5]
+[sub_resource type="GDScript" id=4]
 script/source = "extends Label
 
 func _process(_delta: float) -> void:
 	text = \"VELOCITY: \" + str(State.get_state(\"DEBUG_PLAYER_VELOCITY\"))
 "
 
-[sub_resource type="GDScript" id=6]
+[sub_resource type="GDScript" id=5]
 script/source = "extends Label
 
 func _physics_process(_delta: float) -> void:
 	text = \"Debug Misc: \" + str(State.get_state(\"DEBUG_MISC\"))
 "
+
+[sub_resource type="CapsuleMesh" id=6]
+mid_height = 3.0
 
 [node name="Player" type="KinematicBody"]
 script = ExtResource( 1 )
@@ -42,19 +43,16 @@ transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, 0
 shape = SubResource( 1 )
 
 [node name="Feet" type="CollisionShape" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.85865, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.92458, 0 )
 shape = SubResource( 2 )
 
-[node name="MeshInstance" type="MeshInstance" parent="."]
-transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, 0 )
-mesh = SubResource( 3 )
-material/0 = null
-
 [node name="Pivot" type="Spatial" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.47521, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0 )
+script = ExtResource( 4 )
 
 [node name="Camera" type="Camera" parent="Pivot"]
 current = true
+size = 5.0
 far = 300.0
 
 [node name="Control" type="Control" parent="Pivot/Camera"]
@@ -92,7 +90,7 @@ __meta__ = {
 margin_right = 153.0
 margin_bottom = 14.0
 text = "FPS: 0"
-script = SubResource( 4 )
+script = SubResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -102,7 +100,7 @@ margin_top = 18.0
 margin_right = 153.0
 margin_bottom = 32.0
 text = "VELOCITY: 0"
-script = SubResource( 5 )
+script = SubResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -112,7 +110,17 @@ margin_top = 36.0
 margin_right = 153.0
 margin_bottom = 50.0
 text = "Misc Debug: Null"
-script = SubResource( 6 )
+script = SubResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="MeshInstance" type="MeshInstance" parent="Pivot"]
+transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, -1.5, 0 )
+mesh = SubResource( 6 )
+material/0 = null
+
+[node name="HeadLimitRayCast" type="RayCast" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0 )
+enabled = true
+cast_to = Vector3( 0, 0, 0 )
