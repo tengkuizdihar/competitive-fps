@@ -163,14 +163,7 @@ func handle_movement(input_vector: Vector3, delta: float):
 	# apply to move and slide
 	final_velocity = self.move_and_slide(velocity_and_gravity, Vector3.UP, true, 4, 0.785398, false)
 
-	# DEBUG for interpolating
-	debug_position_one_frame_ago = global_transform.origin
-	print(str(Engine.get_physics_frames()) + " FRAME RIGHT NOW -> " + str(debug_position_one_frame_ago))
-	print(str(Engine.get_physics_frames()) + " FRAME LATER     -> " + str(global_transform.origin + (final_velocity * delta)))
-	# Engine.get_physics_interpolation_fraction()
-
 	State.change_state("DEBUG_PLAYER_VELOCITY", stepify(final_velocity.length(), 0.01))
-	State.change_state("DEBUG_MISC", str(desired_movement_velocity.length()))
 
 ###########################################################
 # Stateless Function

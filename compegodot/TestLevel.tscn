@@ -112,19 +112,19 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 33, 2.5, -1 )
 height = 4.0
 
 [node name="CrouchBridge" type="CSGBox" parent="CSGLevel"]
-transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 33, 6.5, 6 )
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 33, 6, 6 )
 width = 16.0
 height = 8.0
 
-[node name="Pillar" type="CSGBox" parent="CSGLevel/CrouchBridge"]
-transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 3, -3 )
+[node name="Pillar" type="CSGBox" parent="CSGLevel"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 33, 4, 3 )
 width = 16.0
-height = 8.0
+height = 6.0
 
-[node name="Pillar2" type="CSGBox" parent="CSGLevel/CrouchBridge"]
-transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, -5, -3 )
+[node name="Pillar2" type="CSGBox" parent="CSGLevel"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 33, 4, 11 )
 width = 16.0
-height = 8.0
+height = 6.0
 
 [node name="RigidBody2" type="RigidBody" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -11.2823, 2.29554, 11.8187 )
@@ -144,7 +144,7 @@ mesh = SubResource( 3 )
 material/0 = null
 
 [node name="RigidBody3" type="RigidBody" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -22.2823, 9.29554, 19.8187 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -22.2823, 8.69554, 19.8187 )
 physics_material_override = SubResource( 1 )
 continuous_cd = true
 can_sleep = false
@@ -175,8 +175,11 @@ directional_shadow_bias_split_scale = 0.0
 directional_shadow_max_distance = 300.0
 
 [node name="Platform2" type="KinematicBody" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -22, 7, 20 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -22, 6.4, 20 )
 script = SubResource( 5 )
+__meta__ = {
+"_edit_group_": true
+}
 
 [node name="CollisionShape" type="CollisionShape" parent="Platform2"]
 shape = SubResource( 6 )
