@@ -8,6 +8,10 @@ var accumulated_delta_render = 0.0
 export(bool) var tps_view = false
 export(float) var tps_distance = 7.0
 
+func _ready() -> void:
+	$CenterRaycast.add_exception(self)
+	$CenterRaycast.add_exception(get_parent())
+	$CenterRaycast.add_exception(get_parent().get_parent())
 
 func _physics_process(delta: float) -> void:
 	self.latest_physics_delta = delta

@@ -13,9 +13,15 @@ _global_script_classes=[ {
 "class": "CameraSmoothPhysics",
 "language": "GDScript",
 "path": "res://CameraSmoothPhysics.gd"
+}, {
+"base": "Node",
+"class": "IHealth",
+"language": "GDScript",
+"path": "res://interfaces/IHealth.gd"
 } ]
 _global_script_class_icons={
-"CameraSmoothPhysics": ""
+"CameraSmoothPhysics": "",
+"IHealth": ""
 }
 
 [application]

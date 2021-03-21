@@ -16,6 +16,7 @@ onready var camera = $Pivot/Camera
 onready var pivot = $Pivot
 onready var mouse_sensitivity = 0.0008  # radians/pixel, TODO: refactor to game settings
 onready var current_acceleration = GROUND_ACCELERATION
+onready var center_raycast = $Pivot/Camera/CenterRaycast
 
 ### A counter that will increase as many times as it jumps until it's on the floor again
 var jump_counter = 0
@@ -36,6 +37,8 @@ var final_velocity = Vector3()
 ### Flag for crouching
 var is_crouching = false
 var debug_position_one_frame_ago = Vector3.ZERO
+var held_weapon = null
+
 onready var feet_original_local_translation = $Feet.transform.origin
 onready var body_original_local_translation = $Body.transform.origin
 onready var body_original_height = $Body.shape.height
@@ -50,6 +53,28 @@ export(float) var GRAVITY_CONSTANT = 25
 export(float) var MAX_RUN_VELOCITY = 13.0
 export(float) var MAX_WALK_VELOCITY = 6.0
 export(float) var MAX_VELOCITY = 30.0 # meter per second
+
+###########################################################
+# State Enum
+###########################################################
+
+signal player_state_changed(enum_state)
+signal gun_state_changed(enum_state)
+
+enum PlayerState {
+	WALKING,
+	RUNNING,
+	FALLING,
+	DEAD,
+	CROUCHING_WALK,
+	CROUCHING_RUN,
+}
+
+enum GunState {
+	SHOOTING,
+	SHOOTING_OUT_OF_BULLETS,
+	RELOADING,
+}
 
 ###########################################################
 # Engine Callbacks
@@ -75,6 +100,7 @@ func _physics_process(delta: float) -> void:
 	#           this will ensure possibilities for multiplayer in the future
 	manage_crouching(delta)
 	handle_movement(get_movement_input($Pivot/Camera.global_transform.basis), delta)
+	fire_to_direction()
 
 ###########################################################
 # Stateful function
@@ -139,7 +165,7 @@ func handle_movement(input_vector: Vector3, delta: float):
 
 	# counterstrafing, by gradualy increasing/decreasing acceleration
 	if desired_movement_velocity.normalized().dot(input_slanted) < 0:
-		desired_movement_velocity = desired_movement_velocity.move_toward(input_slanted * current_max_movement_velocity, current_acceleration * delta * 2)
+		desired_movement_velocity = desired_movement_velocity.move_toward(input_slanted * current_max_movement_velocity, current_acceleration * delta * 3)
 	else:
 		desired_movement_velocity = desired_movement_velocity.move_toward(input_slanted * current_max_movement_velocity, current_acceleration * delta)
 
@@ -164,6 +190,18 @@ func handle_movement(input_vector: Vector3, delta: float):
 	final_velocity = self.move_and_slide(velocity_and_gravity, Vector3.UP, true, 4, 0.785398, false)
 
 	State.change_state("DEBUG_PLAYER_VELOCITY", stepify(final_velocity.length(), 0.01))
+
+# TODO: fire to direction on the same frame when pressed
+# TODO: use gun inaccuracy + movement inaccuracy
+# TODO: use gun information for ammo and reloading
+func fire_to_direction() -> void:
+	if Input.is_action_just_pressed("player_shoot"):
+		var colliding = center_raycast.get_collider()
+		if "i_health" in colliding:
+			colliding.i_health.change_health(-100)
+	elif Input.is_action_just_released("player_shoot"):
+		pass
+
 
 ###########################################################
 # Stateless Function
