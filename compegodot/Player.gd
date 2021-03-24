@@ -197,7 +197,7 @@ func handle_movement(input_vector: Vector3, delta: float):
 func fire_to_direction() -> void:
 	if Input.is_action_just_pressed("player_shoot"):
 		var colliding = center_raycast.get_collider()
-		if "i_health" in colliding:
+		if colliding and "i_health" in colliding:
 			colliding.i_health.change_health(-100)
 	elif Input.is_action_just_released("player_shoot"):
 		pass

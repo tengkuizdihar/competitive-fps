@@ -1,7 +1,7 @@
 [gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Player.gd" type="Script" id=1]
-[ext_resource path="res://assets/crosshair_temp/crosshair.tres" type="Texture" id=2]
+[ext_resource path="res://assets/crosshair_temp/default_crosshair.tres" type="Texture" id=2]
 [ext_resource path="res://middlescreen.gd" type="Script" id=3]
 [ext_resource path="res://CameraSmoothPhysics.gd" type="Script" id=4]
 
@@ -64,22 +64,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Crosshair" type="TextureRect" parent="Pivot/Camera/Control"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -3.00006
-margin_top = -8.00003
-margin_right = 20.9999
-margin_bottom = 24.0
-mouse_filter = 2
-texture = ExtResource( 2 )
-script = ExtResource( 3 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="VBoxContainer" type="VBoxContainer" parent="Pivot/Camera/Control"]
 margin_right = 153.0
 margin_bottom = 50.0
@@ -112,6 +96,22 @@ margin_right = 153.0
 margin_bottom = 50.0
 text = "Misc Debug: Null"
 script = SubResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Crosshair" type="TextureRect" parent="Pivot/Camera/Control"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -24.0
+margin_top = -12.0
+margin_right = 24.0
+margin_bottom = 12.0
+mouse_filter = 2
+texture = ExtResource( 2 )
+script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
