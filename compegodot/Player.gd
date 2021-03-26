@@ -163,11 +163,7 @@ func handle_movement(input_vector: Vector3, delta: float):
 	else:
 		current_max_movement_velocity = MAX_RUN_VELOCITY
 
-	# counterstrafing, by gradualy increasing/decreasing acceleration
-	if desired_movement_velocity.normalized().dot(input_slanted) < 0:
-		desired_movement_velocity = desired_movement_velocity.move_toward(input_slanted * current_max_movement_velocity, current_acceleration * delta * 3)
-	else:
-		desired_movement_velocity = desired_movement_velocity.move_toward(input_slanted * current_max_movement_velocity, current_acceleration * delta)
+	desired_movement_velocity = desired_movement_velocity.move_toward(input_slanted * current_max_movement_velocity, current_acceleration * delta)
 
 	# Jumping mechanics, affects desired_movement_velocity. this is because
 	# the jumping height could be affected by the movement velocity, which is
