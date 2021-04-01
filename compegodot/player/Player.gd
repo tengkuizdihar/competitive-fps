@@ -17,6 +17,7 @@ onready var pivot = $Pivot
 onready var mouse_sensitivity = 0.0008  # radians/pixel, TODO: refactor to game settings
 onready var current_acceleration = GROUND_ACCELERATION
 onready var center_raycast = $Pivot/Camera/CenterRaycast
+onready var gun: GenericGun = $Pivot/Camera/PM9
 
 ### A counter that will increase as many times as it jumps until it's on the floor again
 var jump_counter = 0
@@ -80,7 +81,6 @@ enum GunState {
 # Engine Callbacks
 ###########################################################
 
-# BUG: the screen is jittery because render and physics are done in two different FPS
 func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	# height of the character from local origin + the crouch height delta with original height
@@ -191,10 +191,15 @@ func handle_movement(input_vector: Vector3, delta: float):
 # TODO: use gun inaccuracy + movement inaccuracy
 # TODO: use gun information for ammo and reloading
 func fire_to_direction() -> void:
-	if Input.is_action_just_pressed("player_shoot"):
+	if Input.is_action_just_pressed("player_shoot") and gun.can_shoot():
+		# TODO DEV ONLY PLEASE CHANGE TO A BETTER ONE WITH WAIT AND SHIT
+		gun.shoot_routine()
 		var colliding = center_raycast.get_collider()
 		if colliding and "i_health" in colliding:
-			colliding.i_health.change_health(-100)
+			colliding.i_health.change_health(-gun.base_damage)
+		if colliding and colliding is RigidBody:
+			var imp_direction = -center_raycast.global_transform.basis.z.normalized()
+			colliding.apply_impulse(center_raycast.get_collision_point() - colliding.global_transform.origin, imp_direction * 10)
 	elif Input.is_action_just_released("player_shoot"):
 		pass
 
