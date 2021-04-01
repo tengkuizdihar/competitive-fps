@@ -1,0 +1,23 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://world_item/GunContainer.gd" type="Script" id=1]
+
+[node name="GunContainer" type="ViewportContainer"]
+margin_right = 40.0
+margin_bottom = 40.0
+mouse_filter = 2
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false,
+"_editor_description_": "https://www.youtube.com/watch?v=Myr9-6A0wqE"
+}
+
+[node name="GunViewport" type="Viewport" parent="."]
+size = Vector2( 1366, 768 )
+size_override_stretch = true
+transparent_bg = true
+handle_input_locally = false
+
+[node name="Camera" type="Camera" parent="GunViewport"]
+cull_mask = 2
+current = true
