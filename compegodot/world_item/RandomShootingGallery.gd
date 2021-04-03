@@ -39,6 +39,7 @@ func get_random_points_inside_area() -> Vector3:
 	var shape = collision_area.shape as BoxShape
 	var extents = shape.extents
 	var collision_area_glob_trans = collision_area.global_transform
+	randomize()
 	var random_in_box = Vector3(rand_range(-extents.x, extents.x), rand_range(-extents.y, extents.y), rand_range(-extents.z, extents.z))
 
 	return collision_area_glob_trans.xform(random_in_box)

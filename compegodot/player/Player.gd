@@ -17,7 +17,16 @@ onready var pivot = $Pivot
 onready var mouse_sensitivity = 0.0008  # radians/pixel, TODO: refactor to game settings
 onready var current_acceleration = GROUND_ACCELERATION
 onready var center_raycast = $Pivot/Camera/CenterRaycast
-onready var gun: GenericGun = $Pivot/Camera/PM9
+
+### Gun Variables
+onready var weapon: GenericWeapon = $Pivot/Camera/GunContainer/PM9
+onready var current_weapon = "secondary"
+onready var last_weapon_used = "knife"
+onready var weapons = {
+	"primary": null,
+	"secondary": $Pivot/Camera/GunContainer/PM9,
+	"knife": $Pivot/Camera/GunContainer/KF1
+}
 
 ### A counter that will increase as many times as it jumps until it's on the floor again
 var jump_counter = 0
@@ -100,6 +109,7 @@ func _physics_process(delta: float) -> void:
 	#           this will ensure possibilities for multiplayer in the future
 	manage_crouching(delta)
 	handle_movement(get_movement_input($Pivot/Camera.global_transform.basis), delta)
+	handle_weapon_selection()
 	fire_to_direction()
 
 ###########################################################
@@ -187,21 +197,78 @@ func handle_movement(input_vector: Vector3, delta: float):
 
 	State.change_state("DEBUG_PLAYER_VELOCITY", stepify(final_velocity.length(), 0.01))
 
-# TODO: fire to direction on the same frame when pressed
-# TODO: use gun inaccuracy + movement inaccuracy
-# TODO: use gun information for ammo and reloading
+
+func hide_all_weapon() -> void:
+	for w in weapons.values():
+		if w:
+			w.hide()
+
+
+func handle_weapon_selection() -> void:
+	if Input.is_action_just_pressed("player_weapon_swap"):
+		hide_all_weapon()
+		var new_weapon = last_weapon_used
+		last_weapon_used = current_weapon
+		current_weapon = new_weapon
+		weapon = weapons[current_weapon]
+		weapon.show()
+	if Input.is_action_just_pressed("player_weapon_gun_primary"):
+		if weapons.primary:
+			if current_weapon != "primary":
+				last_weapon_used = current_weapon
+				current_weapon = "primary"
+			hide_all_weapon()
+			weapon = weapons.primary
+			weapon.show()
+	if Input.is_action_just_pressed("player_weapon_gun_secondary"):
+		if weapons.secondary:
+			if current_weapon != "secondary":
+				last_weapon_used = current_weapon
+				current_weapon = "secondary"
+			hide_all_weapon()
+			weapon = weapons.secondary
+			weapon.show()
+	if Input.is_action_just_pressed("player_weapon_gun_knife"):
+		if weapons.knife:
+			if current_weapon != "knife":
+				last_weapon_used = current_weapon
+				current_weapon = "knife"
+			hide_all_weapon()
+			weapon = weapons.knife
+			weapon.show()
+	State.change_state("DEBUG_MISC", current_weapon + " - " + last_weapon_used)
+
+
+# TODO: use weapon inaccuracy + movement inaccuracy
+# TODO: use weapon information for ammo and reloading
 func fire_to_direction() -> void:
-	if Input.is_action_just_pressed("player_shoot") and gun.can_shoot():
-		# TODO DEV ONLY PLEASE CHANGE TO A BETTER ONE WITH WAIT AND SHIT
-		gun.shoot_routine()
+	# FIRST TRIGGER
+	if Input.is_action_just_pressed("player_shoot_primary") and weapon.can_shoot():
+		weapon.trigger_on()
+		center_raycast.cast_to = Vector3.FORWARD * weapon.max_distance
+
 		var colliding = center_raycast.get_collider()
 		if colliding and "i_health" in colliding:
-			colliding.i_health.change_health(-gun.base_damage)
+			colliding.i_health.change_health(-weapon.base_damage)
 		if colliding and colliding is RigidBody:
 			var imp_direction = -center_raycast.global_transform.basis.z.normalized()
 			colliding.apply_impulse(center_raycast.get_collision_point() - colliding.global_transform.origin, imp_direction * 10)
-	elif Input.is_action_just_released("player_shoot"):
-		pass
+	elif Input.is_action_just_released("player_shoot_primary"):
+		weapon.trigger_off()
+
+	# SECOND TRIGGER
+	elif Input.is_action_just_pressed("player_shoot_secondary") and weapon.can_shoot():
+		weapon.second_trigger_on()
+		center_raycast.cast_to = Vector3.FORWARD * weapon.max_distance
+
+		var colliding = center_raycast.get_collider()
+		if colliding and "i_health" in colliding:
+			colliding.i_health.change_health(-weapon.base_damage)
+		if colliding and colliding is RigidBody:
+			var imp_direction = -center_raycast.global_transform.basis.z.normalized()
+			colliding.apply_impulse(center_raycast.get_collision_point() - colliding.global_transform.origin, imp_direction * 10)
+	elif Input.is_action_just_released("player_shoot_secondary"):
+		weapon.second_trigger_off()
 
 
 ###########################################################

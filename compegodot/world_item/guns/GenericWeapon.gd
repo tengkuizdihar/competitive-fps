@@ -1,6 +1,9 @@
 tool
 extends Spatial
-class_name GenericGun
+class_name GenericWeapon
+
+# The type of the weapon
+export (Global.WEAPON_TYPE) var weapon_type = Global.WEAPON_TYPE.SEMI_AUTOMATIC
 
 # The nodepath going to the animation player of the gun
 export (NodePath) var gun_animation_player_path
@@ -11,11 +14,17 @@ export (NodePath) var gun_shoot_audio_player
 # The shooting animation name in the gun AnimationPlayer
 export (String) var anim_shoot_name = "shoot"
 
+# The secondary animation name in the gun AnimationPlayer
+export (String) var anim_shoot_secondary_name = "shoot_secondary"
+
 # The base damage inflicted for this gun
 export (float) var base_damage = 100.0
 
 # The gun's rounds per second. Use 0 to disable it
 export (float) var round_per_second = 1
+
+# The gun's maximum distance toward the target
+export (float) var max_distance = 300.0
 
 # Interal reference to the gun animation player
 var anim_player: AnimationPlayer
@@ -68,8 +77,26 @@ func can_shoot() -> bool:
 
 # Call when you want to animate and make a shooting sound
 # Will also start the timer for round per minute
-func shoot_routine() -> void:
-	shoot_audio_player.play()
-	rof_timer.start()
-	anim_player.stop()
-	anim_player.play(anim_shoot_name)
+func trigger_on() -> void:
+	if Global.WEAPON_TYPE.SEMI_AUTOMATIC or Global.WEAPON_TYPE.KNIFE:
+		shoot_audio_player.play()
+		rof_timer.start()
+		anim_player.stop()
+		anim_player.play(anim_shoot_name)
+
+func trigger_off() -> void:
+	if Global.WEAPON_TYPE.SEMI_AUTOMATIC:
+		pass
+
+
+# TODO add second audio
+func second_trigger_on() -> void:
+	if Global.WEAPON_TYPE.KNIFE:
+		rof_timer.start()
+		anim_player.stop()
+		anim_player.play(anim_shoot_secondary_name)
+
+
+func second_trigger_off() -> void:
+	if Global.WEAPON_TYPE.KNIFE:
+		pass
