@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://world_item/guns/GenericWeapon.gd" type="Script" id=1]
 [ext_resource path="res://assets/knife/knife_sharp.obj" type="ArrayMesh" id=2]
 [ext_resource path="res://assets/sounds/344403__jawbutch__knife-swish-1uncompressed.wav" type="AudioStream" id=3]
+[ext_resource path="res://world_item/guns/GenericWeaponPhysicsMaterial.tres" type="PhysicsMaterial" id=4]
 
 [sub_resource type="Animation" id=1]
 resource_name = "shoot"
@@ -20,22 +21,27 @@ tracks/0/keys = {
 "values": [ Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 ), Transform( 1, 0, 0, 0, 0.137929, 0.990442, 0, -0.990442, 0.137929, 0, 0.214322, 0 ), Transform( 1, 0, 0, 0, 0.150647, 0.988588, 0, -0.988588, 0.150647, 0, 0, -0.52338 ), Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 ) ]
 }
 
-[node name="KF1" type="Spatial"]
+[sub_resource type="BoxShape" id=2]
+extents = Vector3( 0.0236014, 0.189683, 0.03582 )
+
+[node name="KF1" type="RigidBody"]
+collision_layer = 0
+mass = 3.0
+physics_material_override = ExtResource( 4 )
+continuous_cd = true
 script = ExtResource( 1 )
-__meta__ = {
-"_editor_description_": "Knife Formality 1"
-}
 weapon_type = 2
 gun_animation_player_path = NodePath("AnimationPlayer")
 gun_shoot_audio_player = NodePath("AudioStreamPlayer")
+gun_mesh_instance = NodePath("Spatial/knife_sharp")
 round_per_second = 2.0
-max_distance = 3.25
+max_distance = 5.0
 
 [node name="Spatial" type="Spatial" parent="."]
 
 [node name="knife_sharp" type="MeshInstance" parent="Spatial"]
 transform = Transform( -5, -1.7517e-07, -6.53831e-07, 2.18557e-07, 6.06218, -2.5, 6.28795e-07, -3.5, -4.33013, 0, 0, 0 )
-layers = 2
+layers = 2147483649
 mesh = ExtResource( 2 )
 material/0 = null
 material/1 = null
@@ -57,3 +63,7 @@ anims/shoot = SubResource( 1 )
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 3 )
 volume_db = 0.5
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 0, 0 )
+shape = SubResource( 2 )

@@ -96,6 +96,10 @@ func _ready() -> void:
 	var body_height = $Body.shape.height
 	headlimit_raycast.cast_to = Vector3.UP * (body_height - crouch_height)
 
+	# set all weapon to equipped
+	$Pivot/Camera/GunContainer/KF1.set_to_equipped()
+	$Pivot/Camera/GunContainer/PM9.set_to_equipped()
+
 
 func _unhandled_input(event):
 	if event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
@@ -109,6 +113,7 @@ func _physics_process(delta: float) -> void:
 	#           this will ensure possibilities for multiplayer in the future
 	manage_crouching(delta)
 	handle_movement(get_movement_input($Pivot/Camera.global_transform.basis), delta)
+	handle_weapon_drop()
 	handle_weapon_selection()
 	fire_to_direction()
 
@@ -236,7 +241,7 @@ func handle_weapon_selection() -> void:
 			hide_all_weapon()
 			weapon = weapons.knife
 			weapon.show()
-	State.change_state("DEBUG_MISC", current_weapon + " - " + last_weapon_used)
+	State.change_state("DEBUG_MISC", str(current_weapon + " - " + last_weapon_used))
 
 
 # TODO: use weapon inaccuracy + movement inaccuracy
@@ -269,6 +274,44 @@ func fire_to_direction() -> void:
 			colliding.apply_impulse(center_raycast.get_collision_point() - colliding.global_transform.origin, imp_direction * 10)
 	elif Input.is_action_just_released("player_shoot_secondary"):
 		weapon.second_trigger_off()
+
+
+func handle_weapon_drop() -> void:
+	if Input.is_action_just_pressed("player_weapon_drop") and weapon.weapon_type != Global.WEAPON_TYPE.KNIFE:
+
+		# remove from child
+		$Pivot/Camera/GunContainer.remove_child(weapon)
+
+		# make set_to_world_object
+		weapon.set_to_world_object()
+
+		# throw it into the world (for now just place it on the ground from where the camera origin is)
+		for i in get_tree().root.get_children():
+			if i is Spatial:
+				i.add_child(weapon)
+
+		weapon.global_transform.origin = camera.global_transform.origin - global_transform.basis.z.normalized() * 2
+
+		# make the weapons (dict) currenly equipped to null
+		weapons[current_weapon] = null
+
+		# make the current weapon the last equipped weapon
+		hide_all_weapon()
+		for k in weapons.keys():
+			var test = weapons.get(k)
+			if test:
+				current_weapon = k
+				weapon = test
+				weapon.show()
+
+		# set the last_weapon_used
+		for j in weapons.keys():
+			var test = weapons.get(j)
+			if test and j != current_weapon:
+				last_weapon_used = j
+
+
+# TODO: create weapon pickup system
 
 
 ###########################################################

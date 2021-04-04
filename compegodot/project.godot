@@ -14,7 +14,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://player/CameraSmoothPhysics.gd"
 }, {
-"base": "Spatial",
+"base": "RigidBody",
 "class": "GenericWeapon",
 "language": "GDScript",
 "path": "res://world_item/guns/GenericWeapon.gd"
@@ -120,6 +120,11 @@ player_weapon_swap={
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":81,"unicode":0,"echo":false,"script":null)
  ]
 }
+player_weapon_drop={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":71,"unicode":0,"echo":false,"script":null)
+ ]
+}
 
 [layer_names]
 
@@ -129,6 +134,8 @@ player_weapon_swap={
 [physics]
 
 common/physics_fps=128
+3d/physics_engine="Bullet"
+3d/active_soft_world=false
 
 [rendering]
 
