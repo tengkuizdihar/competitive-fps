@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://assets/gun_model/pink.material" type="Material" id=1]
 [ext_resource path="res://world_item/guns/GenericWeapon.gd" type="Script" id=2]
@@ -6,7 +6,7 @@
 [ext_resource path="res://assets/gun_model/dark.material" type="Material" id=4]
 [ext_resource path="res://assets/gun_model/darkMetal.material" type="Material" id=5]
 [ext_resource path="res://assets/sounds/415912__okieactor__heathers-gunshot-effect2.wav" type="AudioStream" id=6]
-
+[ext_resource path="res://world_item/guns/GenericWeaponPhysicsMaterial.tres" type="PhysicsMaterial" id=7]
 
 [sub_resource type="ArrayMesh" id=1]
 resource_name = "blasterC"
@@ -75,20 +75,24 @@ tracks/0/keys = {
 "values": [ Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 ), Transform( 1, 0, 0, 0, 0.879873, -0.47521, 0, 0.47521, 0.879873, 0, -0.0704469, 0.200603 ), Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 ) ]
 }
 
-[node name="PM9" type="Spatial"]
+[sub_resource type="BoxShape" id=3]
+extents = Vector3( 0.0845181, 0.203704, 0.262221 )
+
+[node name="PM9" type="RigidBody"]
+collision_layer = 0
+mass = 10.0
+physics_material_override = ExtResource( 7 )
+continuous_cd = true
 script = ExtResource( 2 )
-__meta__ = {
-"_editor_description_": "Pistol Machina 9"
-}
 gun_animation_player_path = NodePath("AnimationPlayer")
 gun_shoot_audio_player = NodePath("GunShoot")
+gun_mesh_instance = NodePath("Spatial/blasterC2")
 round_per_second = 4.45
 
 [node name="Spatial" type="Spatial" parent="."]
 
 [node name="blasterC2" type="MeshInstance" parent="Spatial"]
 transform = Transform( -1, 0, -2.06632e-07, 0, 1, 0, 2.06632e-07, 0, -1, 0, 0, 0 )
-layers = 2
 mesh = SubResource( 1 )
 material/0 = null
 material/1 = null
@@ -101,3 +105,6 @@ anims/shoot = SubResource( 2 )
 [node name="GunShoot" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 6 )
 volume_db = -15.0
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+shape = SubResource( 3 )

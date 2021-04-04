@@ -1,5 +1,5 @@
 tool
-extends Spatial
+extends RigidBody
 class_name GenericWeapon
 
 # The type of the weapon
@@ -10,6 +10,9 @@ export (NodePath) var gun_animation_player_path
 
 # The nodepath going to the AudioStreamPlayer3D for shooting
 export (NodePath) var gun_shoot_audio_player
+
+# The nodepath going to the currently used mesh instance
+export (NodePath) var gun_mesh_instance
 
 # The shooting animation name in the gun AnimationPlayer
 export (String) var anim_shoot_name = "shoot"
@@ -45,11 +48,18 @@ func _is_shoot_audio_player() -> bool:
 	return test and (test is AudioStreamPlayer)
 
 
+func _is_gun_mesh_instance() -> bool:
+	var test = get_node(gun_mesh_instance)
+	return test and (test is MeshInstance)
+
+
 func _get_configuration_warning() -> String:
 	if not _is_animation_player():
 		return "Set gun_animation_player_path to valid AnimationPlayer"
 	if not _is_shoot_audio_player():
 		return "Set gun_shoot_audio_player to valid AudioStreamPlayer"
+	if not _is_gun_mesh_instance():
+		return "Set gun_mesh_instance to valid MeshInstance"
 
 	return ""
 
@@ -100,3 +110,21 @@ func second_trigger_on() -> void:
 func second_trigger_off() -> void:
 	if Global.WEAPON_TYPE.KNIFE:
 		pass
+
+
+func set_to_equipped() -> void:
+	var gun_mesh: MeshInstance = get_node(gun_mesh_instance)
+	gun_mesh.layers = 2
+
+	self.mode = RigidBody.MODE_KINEMATIC
+	self.collision_layer = 0
+	self.collision_mask = 0
+
+
+func set_to_world_object() -> void:
+	var gun_mesh: MeshInstance = get_node(gun_mesh_instance)
+	gun_mesh.layers = 1
+
+	self.mode = RigidBody.MODE_RIGID
+	self.collision_layer = 1
+	self.collision_mask = 1
