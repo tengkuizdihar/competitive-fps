@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=2]
+
+[sub_resource type="Curve" id=3]
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=4]
+curve = SubResource( 3 )
+
+[sub_resource type="ParticlesMaterial" id=1]
+initial_velocity = 4.0
+angular_velocity = 137.87
+angular_velocity_random = 0.27
+angle = 90.0
+angle_random = 0.39
+scale_curve = SubResource( 4 )
+color = Color( 0.992157, 1, 0.184314, 1 )
+
+[sub_resource type="SpatialMaterial" id=5]
+
+[sub_resource type="SphereMesh" id=2]
+material = SubResource( 5 )
+radius = 0.1
+height = 0.2
+radial_segments = 4
+rings = 1
+is_hemisphere = true
+
+[node name="Spatial" type="Particles"]
+cast_shadow = 0
+use_in_baked_light = true
+amount = 40
+lifetime = 0.24
+explosiveness = 1.0
+process_material = SubResource( 1 )
+draw_pass_1 = SubResource( 2 )

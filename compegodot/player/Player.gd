@@ -16,7 +16,6 @@ onready var camera = $Pivot/Camera
 onready var pivot = $Pivot
 onready var mouse_sensitivity = 0.0008  # radians/pixel, TODO: refactor to game settings
 onready var current_acceleration = GROUND_ACCELERATION
-onready var center_raycast = $Pivot/Camera/CenterRaycast
 
 ### Gun Variables
 onready var weapon: GenericWeapon = $Pivot/Camera/GunContainer/PM9
@@ -250,28 +249,14 @@ func fire_to_direction() -> void:
 	# FIRST TRIGGER
 	if Input.is_action_just_pressed("player_shoot_primary") and weapon.can_shoot():
 		weapon.trigger_on()
-		center_raycast.cast_to = Vector3.FORWARD * weapon.max_distance
-
-		var colliding = center_raycast.get_collider()
-		if colliding and "i_health" in colliding:
-			colliding.i_health.change_health(-weapon.base_damage)
-		if colliding and colliding is RigidBody:
-			var imp_direction = -center_raycast.global_transform.basis.z.normalized()
-			colliding.apply_impulse(center_raycast.get_collision_point() - colliding.global_transform.origin, imp_direction * 10)
+		shooting_routine(self, camera, weapon)
 	elif Input.is_action_just_released("player_shoot_primary"):
 		weapon.trigger_off()
 
 	# SECOND TRIGGER
 	elif Input.is_action_just_pressed("player_shoot_secondary") and weapon.can_shoot():
 		weapon.second_trigger_on()
-		center_raycast.cast_to = Vector3.FORWARD * weapon.max_distance
-
-		var colliding = center_raycast.get_collider()
-		if colliding and "i_health" in colliding:
-			colliding.i_health.change_health(-weapon.base_damage)
-		if colliding and colliding is RigidBody:
-			var imp_direction = -center_raycast.global_transform.basis.z.normalized()
-			colliding.apply_impulse(center_raycast.get_collision_point() - colliding.global_transform.origin, imp_direction * 10)
+		shooting_routine(self, camera, weapon)
 	elif Input.is_action_just_released("player_shoot_secondary"):
 		weapon.second_trigger_off()
 
@@ -317,6 +302,35 @@ func handle_weapon_drop() -> void:
 ###########################################################
 # Stateless Function
 ###########################################################
+
+# TODO use the native method of raycasting instead of using this one https://docs.godotengine.org/en/stable/tutorials/physics/ray-casting.html
+static func shooting_routine(player: KinematicBody, camera: Camera, weapon: GenericWeapon) -> void:
+	var from = camera.global_transform.origin
+	var to = from + -camera.global_transform.basis.z * weapon.max_distance
+
+	var space_state = camera.get_world().direct_space_state
+	var ray_result = space_state.intersect_ray(from, to, [player], 1)
+	var colliding = ray_result.get("collider")
+	var collision_point = ray_result.get("position")
+
+	if colliding:
+		# change the health based on the weapon's damage
+		if "i_health" in colliding:
+			colliding.i_health.change_health(-weapon.base_damage)
+
+		# push the object if it's hit by the weapon
+		if colliding is RigidBody:
+			var imp_direction = -camera.global_transform.basis.z.normalized()
+			colliding.apply_impulse(collision_point - colliding.global_transform.origin, imp_direction * 10)
+
+		# spawn sparks
+		# TODO change the location where you preload sparks. Maybe in the global??
+		var sparks = preload("res://world_item/spark.tscn").instance()
+
+		for i in camera.get_tree().root.get_children():
+			if i is Spatial:
+				i.add_child(sparks)
+				sparks.global_transform.origin = collision_point
 
 
 static func get_movement_input(camera_basis: Basis) -> Vector3:

@@ -127,10 +127,6 @@ margin_right = 0.0
 margin_bottom = 0.0
 world_camera_path = NodePath("../..")
 
-[node name="CenterRaycast" type="RayCast" parent="Pivot/Camera"]
-enabled = true
-cast_to = Vector3( 0, 0, -300 )
-
 [node name="GunContainer" type="Spatial" parent="Pivot/Camera"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.619, -0.281, -0.844 )
 
