@@ -8,7 +8,7 @@
     - [**Dispute-Solver**](#dispute-solver)
     - [**Team-Solver**](#team-solver)
 
-# THe Solver Series
+# The Solver Series
 
 This is an open source project about the most versatile and fun **first person shooter**. There's already an implementation made in Godot Engine, but every single changes is based on the proposal inside of PROPOSAL.odt. Right now I'm the only one who is developing it on my free time, but you're welcome to contribute to the project.
 
