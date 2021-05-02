@@ -48,9 +48,9 @@ The first game in The Solver Series that's all about aiming and training. It fea
 - [ ] Variety of target to shot at.
 - [ ] Different guns for different needs.
 - [ ] Movement system that's inspired by the Counter Strike series.
-  - [ ] Crouch Jumping
-  - [ ] Bunny Hopping
-  - [ ] Air Strafing
+  - [x] Crouch Jumping
+  - [x] Bunny Hopping
+  - [x] Air Strafing
   - [ ] Counter Strafing
 - [ ] Light weight experience that's not only targetting the toaster, but also your HD tv.
 
