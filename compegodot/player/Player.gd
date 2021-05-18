@@ -18,6 +18,7 @@ onready var mouse_sensitivity = 0.0008  # radians/pixel, TODO: refactor to game 
 onready var current_acceleration = GROUND_ACCELERATION
 
 ### Gun Variables
+onready var gun_container = $Pivot/Camera/GunContainer
 onready var weapon: GenericWeapon = $Pivot/Camera/GunContainer/PM9
 onready var current_weapon = "secondary"
 onready var last_weapon_used = "knife"
@@ -112,6 +113,7 @@ func _physics_process(delta: float) -> void:
 	#           this will ensure possibilities for multiplayer in the future
 	manage_crouching(delta)
 	handle_movement(get_movement_input($Pivot/Camera.global_transform.basis), delta)
+	handle_weapon_pickup()
 	handle_weapon_drop()
 	handle_weapon_selection()
 	fire_to_direction()
@@ -297,13 +299,45 @@ func handle_weapon_drop() -> void:
 
 
 # TODO: create weapon pickup system
+func handle_weapon_pickup() -> void:
+	if Input.is_action_just_pressed("player_interact"):
+		var from = camera.global_transform.origin
+		var to = from + -camera.global_transform.basis.z * 5.0
+
+		# get the weapon being looked at
+		var space_state = camera.get_world().direct_space_state
+		var ray_result = space_state.intersect_ray(from, to, [self], 1)
+		var colliding = ray_result.get("collider")
+
+		if colliding and colliding is GenericWeapon:
+			# TODO remove node from the world
+			var parent = colliding.get_parent()
+			parent.remove_child(colliding)
+
+			# TODO get weapon type
+			# TODO if there's a gun already in the inventory with same type
+			#      remove the gun and put it to the world
+
+			# DEBUG: for now just give it to the secondary slot
+			weapons.secondary = colliding
+			last_weapon_used = "secondary"
+
+			# Add to gun container
+			gun_container.add_child(colliding)
+			colliding.global_transform = gun_container.get_global_transform()
+
+			# Set the weapon to be equipped
+			colliding.set_to_equipped()
+
+			# TODO make an option for auto switch on pickup
+			# Hide it at pickup
+			colliding.hide()
 
 
 ###########################################################
-# Stateless Function
+# Static Function
 ###########################################################
 
-# TODO use the native method of raycasting instead of using this one https://docs.godotengine.org/en/stable/tutorials/physics/ray-casting.html
 static func shooting_routine(player: KinematicBody, camera: Camera, weapon: GenericWeapon) -> void:
 	var from = camera.global_transform.origin
 	var to = from + -camera.global_transform.basis.z * weapon.max_distance
@@ -332,6 +366,9 @@ static func shooting_routine(player: KinematicBody, camera: Camera, weapon: Gene
 				i.add_child(sparks)
 				sparks.global_transform.origin = collision_point
 
+###########################################################
+# Stateless Function
+###########################################################
 
 static func get_movement_input(camera_basis: Basis) -> Vector3:
 	var input_direction = Vector3.ZERO
