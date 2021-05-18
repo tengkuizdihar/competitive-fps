@@ -79,7 +79,6 @@ tracks/0/keys = {
 extents = Vector3( 0.0845181, 0.203704, 0.262221 )
 
 [node name="PM9" type="RigidBody"]
-collision_layer = 0
 mass = 10.0
 physics_material_override = ExtResource( 7 )
 continuous_cd = true
