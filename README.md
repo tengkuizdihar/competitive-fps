@@ -1,7 +1,6 @@
 # Table Of Contents
 - [Table Of Contents](#table-of-contents)
-- [THe Solver Series](#the-solver-series)
-  - [Project Structure](#project-structure)
+- [The Solver Series](#the-solver-series)
   - [How to Contribute](#how-to-contribute)
   - [Roadmap](#roadmap)
     - [**Aim-Solver**](#aim-solver)
@@ -14,26 +13,9 @@ This is an open source project about the most versatile and fun **first person s
 
 For any question, you can contact me on matrix which is listed in https://tengkuizdihar.gitlab.io/contact/.
 
-## Project Structure
-
-Right now the project is structured in such a way to avoid confusion and made to be as simple as possible.
-
-```
-- root
-    - compegodot
-    - documents
-```
-
-The folder `compegodot` is filled with the implementation of the proposal made in Godot Engine 3.x. Right now it's the only implementation available, but other contributor are free to create their own implementation based on the proposal. The second main folder is called `documents`. Right now it's filled mainly with the proposal itself and any media related to the project.
-
 ## How to Contribute
 
-Developer and designer alike can contribute by doing the following things in order.
-1. They must be intrested in game development in general or are willingly spare their freetime as the owner did for the project.
-2. Read the proposal or at least skim it a bit to understand the philosophy of the project.
-3. Search for unsolved issues or create a new one. Be it bugs, new features, or anything else.
-4. Create a Merge Request for it.
-5. I'll be notified if there's any unmerged or new issues. 
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for further instructions.
 
 ## Roadmap
 
@@ -52,7 +34,7 @@ The first game in The Solver Series that's all about aiming and training. It fea
   - [x] Bunny Hopping
   - [x] Air Strafing
   - [ ] Counter Strafing
-- [ ] Light weight experience that's not only targetting the toaster, but also your HD tv.
+- [x] Light weight experience that's not only targetting the toaster, but also your HD tv.
 
 ### **Dispute-Solver**
 
