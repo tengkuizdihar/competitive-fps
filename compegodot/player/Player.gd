@@ -112,7 +112,7 @@ func _physics_process(delta: float) -> void:
 	# TODO-BIG: refactor input so that it would be outside of this script
 	#           this will ensure possibilities for multiplayer in the future
 	manage_crouching(delta)
-	handle_movement(get_movement_input($Pivot/Camera.global_transform.basis), delta)
+	handle_movement(get_movement_input(self.global_transform.basis), delta)
 	handle_weapon_pickup()
 	handle_weapon_drop()
 	handle_weapon_selection()
@@ -283,7 +283,12 @@ func handle_weapon_drop() -> void:
 			if i is Spatial:
 				i.add_child(weapon)
 
+		randomize()
 		weapon.global_transform.origin = camera.global_transform.origin - global_transform.basis.z.normalized() * 2
+
+		# add force to the gun
+		weapon.apply_central_impulse(-camera.global_transform.basis.z * 70)
+		weapon.apply_torque_impulse(-camera.global_transform.basis.z.rotated(Vector3.UP, rand_range(-PI/2, PI/2)) * rand_range(2,3))
 
 		# make the weapons (dict) currenly equipped to null
 		weapons[current_weapon] = null
@@ -304,7 +309,7 @@ func handle_weapon_drop() -> void:
 				last_weapon_used = j
 
 
-# TODO: create weapon pickup system
+# TODO: add weapon pickup when near
 func handle_weapon_pickup() -> void:
 	if Input.is_action_just_pressed("player_interact"):
 		var from = camera.global_transform.origin
