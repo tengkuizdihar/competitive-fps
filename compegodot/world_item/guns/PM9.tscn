@@ -83,6 +83,7 @@ mass = 10.0
 physics_material_override = ExtResource( 7 )
 continuous_cd = true
 script = ExtResource( 2 )
+weapon_slot = 1
 gun_animation_player_path = NodePath("AnimationPlayer")
 gun_shoot_audio_player = NodePath("GunShoot")
 gun_mesh_instance = NodePath("Spatial/blasterC2")

@@ -31,6 +31,7 @@ physics_material_override = ExtResource( 4 )
 continuous_cd = true
 script = ExtResource( 1 )
 weapon_type = 2
+weapon_slot = 2
 gun_animation_player_path = NodePath("AnimationPlayer")
 gun_shoot_audio_player = NodePath("AudioStreamPlayer")
 gun_mesh_instance = NodePath("Spatial/knife_sharp")

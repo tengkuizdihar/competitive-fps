@@ -20,12 +20,12 @@ onready var current_acceleration = GROUND_ACCELERATION
 ### Gun Variables
 onready var gun_container = $Pivot/Camera/GunContainer
 onready var weapon: GenericWeapon = $Pivot/Camera/GunContainer/PM9
-onready var current_weapon = "secondary"
-onready var last_weapon_used = "knife"
+onready var current_weapon = Global.WEAPON_SLOT.SECONDARY
+onready var last_weapon_used = Global.WEAPON_SLOT.MELEE
 onready var weapons = {
-	"primary": null,
-	"secondary": $Pivot/Camera/GunContainer/PM9,
-	"knife": $Pivot/Camera/GunContainer/KF1
+	Global.WEAPON_SLOT.PRIMARY: null,
+	Global.WEAPON_SLOT.SECONDARY: $Pivot/Camera/GunContainer/PM9,
+	Global.WEAPON_SLOT.MELEE: $Pivot/Camera/GunContainer/KF1
 }
 
 ### A counter that will increase as many times as it jumps until it's on the floor again
@@ -219,30 +219,36 @@ func handle_weapon_selection() -> void:
 		weapon = weapons[current_weapon]
 		weapon.show()
 	if Input.is_action_just_pressed("player_weapon_gun_primary"):
-		if weapons.primary:
-			if current_weapon != "primary":
+		if weapons[Global.WEAPON_SLOT.PRIMARY]:
+			if current_weapon != Global.WEAPON_SLOT.PRIMARY:
 				last_weapon_used = current_weapon
-				current_weapon = "primary"
+				current_weapon = Global.WEAPON_SLOT.PRIMARY
 			hide_all_weapon()
-			weapon = weapons.primary
+			weapon = weapons[Global.WEAPON_SLOT.PRIMARY]
 			weapon.show()
 	if Input.is_action_just_pressed("player_weapon_gun_secondary"):
-		if weapons.secondary:
-			if current_weapon != "secondary":
+		if weapons[Global.WEAPON_SLOT.SECONDARY]:
+			if current_weapon != Global.WEAPON_SLOT.SECONDARY:
 				last_weapon_used = current_weapon
-				current_weapon = "secondary"
+				current_weapon = Global.WEAPON_SLOT.SECONDARY
 			hide_all_weapon()
-			weapon = weapons.secondary
+			weapon = weapons[Global.WEAPON_SLOT.SECONDARY]
 			weapon.show()
 	if Input.is_action_just_pressed("player_weapon_gun_knife"):
-		if weapons.knife:
-			if current_weapon != "knife":
+		if weapons[Global.WEAPON_SLOT.MELEE]:
+			if current_weapon != Global.WEAPON_SLOT.MELEE:
 				last_weapon_used = current_weapon
-				current_weapon = "knife"
+				current_weapon = Global.WEAPON_SLOT.MELEE
 			hide_all_weapon()
-			weapon = weapons.knife
+			weapon = weapons[Global.WEAPON_SLOT.MELEE]
 			weapon.show()
-	State.change_state("DEBUG_MISC", str(current_weapon + " - " + last_weapon_used))
+
+	var DEBUG_WEAPON_SLOT_KEYS = Global.WEAPON_SLOT.keys()
+	State.change_state("DEBUG_MISC",
+		DEBUG_WEAPON_SLOT_KEYS[current_weapon]
+		+ " - "
+		+ DEBUG_WEAPON_SLOT_KEYS[last_weapon_used]
+	)
 
 
 # TODO: use weapon inaccuracy + movement inaccuracy
@@ -319,8 +325,8 @@ func handle_weapon_pickup() -> void:
 			#      remove the gun and put it to the world
 
 			# DEBUG: for now just give it to the secondary slot
-			weapons.secondary = colliding
-			last_weapon_used = "secondary"
+			weapons[Global.WEAPON_SLOT.SECONDARY] = colliding
+			last_weapon_used = Global.WEAPON_SLOT.SECONDARY
 
 			# Add to gun container
 			gun_container.add_child(colliding)
