@@ -5,6 +5,9 @@ class_name GenericWeapon
 # The type of the weapon
 export (Global.WEAPON_TYPE) var weapon_type = Global.WEAPON_TYPE.SEMI_AUTOMATIC
 
+# The slot that the weapon use if held by a player
+export (Global.WEAPON_SLOT) var weapon_slot = Global.WEAPON_SLOT.PRIMARY
+
 # The nodepath going to the animation player of the gun
 export (NodePath) var gun_animation_player_path
 
