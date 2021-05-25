@@ -2,7 +2,7 @@
 
 [ext_resource path="res://world_item/guns/GenericWeapon.gd" type="Script" id=1]
 [ext_resource path="res://assets/knife/knife_sharp.obj" type="ArrayMesh" id=2]
-[ext_resource path="res://assets/sounds/344403__jawbutch__knife-swish-1uncompressed.wav" type="AudioStream" id=3]
+[ext_resource path="res://assets/sounds/knife_swing.wav" type="AudioStream" id=3]
 [ext_resource path="res://world_item/guns/GenericWeaponPhysicsMaterial.tres" type="PhysicsMaterial" id=4]
 
 [sub_resource type="Animation" id=1]

@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "AudioStreamPlayer",
+"class": "AutoFreeStreamPlayer",
+"language": "GDScript",
+"path": "res://world_item/AutoFreeStreamPlayer.gd"
+}, {
 "base": "Camera",
 "class": "CameraSmoothPhysics",
 "language": "GDScript",
@@ -25,6 +30,7 @@ _global_script_classes=[ {
 "path": "res://interfaces/IHealth.gd"
 } ]
 _global_script_class_icons={
+"AutoFreeStreamPlayer": "",
 "CameraSmoothPhysics": "",
 "GenericWeapon": "",
 "IHealth": ""

@@ -117,6 +117,7 @@ func _physics_process(delta: float) -> void:
 	handle_weapon_drop()
 	handle_weapon_selection()
 	fire_to_direction()
+	State.change_state("DEBUG_MISC", str(get_tree().get_node_count()))
 
 ###########################################################
 # Stateful function
@@ -244,11 +245,6 @@ func handle_weapon_selection() -> void:
 			weapon.show()
 
 	var DEBUG_WEAPON_SLOT_KEYS = Global.WEAPON_SLOT.keys()
-	State.change_state("DEBUG_MISC",
-		DEBUG_WEAPON_SLOT_KEYS[current_weapon]
-		+ " - "
-		+ DEBUG_WEAPON_SLOT_KEYS[last_weapon_used]
-	)
 
 
 # TODO: use weapon inaccuracy + movement inaccuracy

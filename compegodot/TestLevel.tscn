@@ -69,7 +69,9 @@ background_sky = SubResource( 9 )
 tonemap_mode = 2
 tonemap_exposure = 0.4
 
-[node name="TestLevel" type="Spatial"]
+[node name="TestLevel" type="Spatial" groups=[
+"LEVEL",
+]]
 
 [node name="CSGLevel" type="CSGCombiner" parent="."]
 material_override = ExtResource( 2 )
@@ -328,7 +330,7 @@ material/0 = null
 transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 17, 10, 43 )
 
 [node name="CollisionShape" type="CollisionShape" parent="RandomShootingGallery"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 0 )
+transform = Transform( 1, 0, 2.62268e-08, 0, 1, 0, 2.62268e-08, 0, 0.4, 0, -2, 0 )
 shape = SubResource( 8 )
 
 [node name="DirectionalLight" type="DirectionalLight" parent="."]

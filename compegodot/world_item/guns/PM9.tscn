@@ -5,7 +5,7 @@
 [ext_resource path="res://assets/gun_model/metal.material" type="Material" id=3]
 [ext_resource path="res://assets/gun_model/dark.material" type="Material" id=4]
 [ext_resource path="res://assets/gun_model/darkMetal.material" type="Material" id=5]
-[ext_resource path="res://assets/sounds/415912__okieactor__heathers-gunshot-effect2.wav" type="AudioStream" id=6]
+[ext_resource path="res://assets/sounds/gun_shot.wav" type="AudioStream" id=6]
 [ext_resource path="res://world_item/guns/GenericWeaponPhysicsMaterial.tres" type="PhysicsMaterial" id=7]
 
 [sub_resource type="ArrayMesh" id=1]
