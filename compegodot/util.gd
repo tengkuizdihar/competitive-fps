@@ -14,3 +14,10 @@ func get_interface(target: Node, interface_class) -> Node:
 		if i is interface_class:
 			return i
 	return null
+
+func add_to_world(node: Node) -> void:
+	var level: Node = get_tree().get_nodes_in_group(Global.GROUP.LEVEL).pop_back()
+	if level:
+		level.add_child(node)
+	else:
+		printerr("add_to_world doesn't work because no nodes is grouped as 'LEVEL'")

@@ -11,3 +11,6 @@ enum WEAPON_SLOT {
 	SECONDARY,
 	MELEE
 }
+
+class GROUP:
+	const LEVEL = "LEVEL"
