@@ -1,12 +1,13 @@
 extends Node
 
-const SIGNAL_PREFIX = "state_changed_"
+const SIGNAL_PREFIX = "STATE_"
 
 # To add state, make sure that the key is STRING and the value is anything
 # besides null.
 onready var _state = {
 	"DEBUG_PLAYER_VELOCITY": 0.0,
-	"DEBUG_MISC": "NOT USED"
+	"DEBUG_MISC": "NOT USED",
+	"SCOREBOARD_HIT_COUNT": 0
 }
 
 

@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://addons/SIsilicon.3d.text/label_3d.gd" type="Script" id=1]
+[ext_resource path="res://world_item/Scoreboard.gd" type="Script" id=2]
+[ext_resource path="res://assets/sounds/target_hit_ding.wav" type="AudioStream" id=3]
+
+[node name="Scoreboard" type="Spatial"]
+script = ExtResource( 2 )
+
+[node name="Scoreboard" type="Spatial" parent="."]
+transform = Transform( -1, 0, 5.96046e-08, 0, 1, 0, -5.96046e-08, 0, -1, 17, 13, 43.855 )
+script = ExtResource( 1 )
+text = "HIT COUNT: 9999"
+text_size = 1.25
+font = null
+align = 0
+billboard = false
+color = Color( 1, 1, 1, 1 )
+metallic = 0.0
+roughness = 0.5
+emission_color = Color( 1, 1, 1, 1 )
+emission_strength = 4.08
+extrude = 0.0
+min_steps = 32
+max_steps = 256
+
+[node name="DingPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 3 )
+volume_db = -10.0
