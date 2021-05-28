@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Reference",
+"class": "ArrayUtils",
+"language": "GDScript",
+"path": "res://addons/SIsilicon.3d.text/array_utils.gd"
+}, {
 "base": "AudioStreamPlayer",
 "class": "AutoFreeStreamPlayer",
 "language": "GDScript",
@@ -28,12 +33,19 @@ _global_script_classes=[ {
 "class": "IHealth",
 "language": "GDScript",
 "path": "res://interfaces/IHealth.gd"
+}, {
+"base": "Node",
+"class": "IInteract",
+"language": "GDScript",
+"path": "res://interfaces/IInteract.gd"
 } ]
 _global_script_class_icons={
+"ArrayUtils": "",
 "AutoFreeStreamPlayer": "",
 "CameraSmoothPhysics": "",
 "GenericWeapon": "",
-"IHealth": ""
+"IHealth": "",
+"IInteract": ""
 }
 
 [application]
@@ -53,6 +65,10 @@ Global="*res://global.gd"
 window/size/width=1366
 window/size/height=768
 window/vsync/use_vsync=false
+
+[editor_plugins]
+
+enabled=PoolStringArray( "res://addons/SIsilicon.3d.text/plugin.cfg" )
 
 [input]
 
@@ -148,5 +164,6 @@ common/physics_fps=128
 threads/thread_model=2
 quality/filters/anisotropic_filter_level=2
 quality/filters/use_nearest_mipmap_filter=true
+quality/spatial_partitioning/render_tree_balance=1.0
 quality/filters/msaa=5
 environment/default_environment="res://default_env.tres"

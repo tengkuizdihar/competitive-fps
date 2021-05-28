@@ -20,6 +20,7 @@ func _ready() -> void:
 				break
 
 	spawn_target(collision_area.global_transform.origin)
+	State.connect("STATE_SCOREBOARD_HIT_COUNT", self, "_on_hit_count")
 
 
 func spawn_target(target_origin: Vector3 = Vector3.INF) -> void:
@@ -47,3 +48,11 @@ func get_random_points_inside_area() -> Vector3:
 func _on_Target_dead() -> void:
 	# spawn one more
 	spawn_target()
+
+func _on_hit_count(value: int) -> void:
+	if value == 0:
+		for i in get_children():
+			if i != collision_area:
+				i.queue_free()
+
+		spawn_target(collision_area.global_transform.origin)

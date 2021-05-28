@@ -258,11 +258,12 @@ func fire_to_direction() -> void:
 		weapon.trigger_off()
 
 	# SECOND TRIGGER
-	elif Input.is_action_just_pressed("player_shoot_secondary") and weapon.can_shoot():
-		weapon.second_trigger_on()
-		shooting_routine(self, camera, weapon)
-	elif Input.is_action_just_released("player_shoot_secondary"):
-		weapon.second_trigger_off()
+	# TODO: make shooting routine to have many modes
+#	elif Input.is_action_just_pressed("player_shoot_secondary") and weapon.can_shoot():
+#		weapon.second_trigger_on()
+#		shooting_routine(self, camera, weapon)
+#	elif Input.is_action_just_released("player_shoot_secondary"):
+#		weapon.second_trigger_off()
 
 
 func handle_weapon_drop() -> void:
@@ -358,6 +359,10 @@ static func shooting_routine(player: KinematicBody, camera: Camera, weapon: Gene
 		# change the health based on the weapon's damage
 		if "i_health" in colliding:
 			colliding.i_health.change_health(-weapon.base_damage)
+
+		# interact with the object if interface exist
+		if "i_interact" in colliding:
+			colliding.i_interact.interact()
 
 		# push the object if it's hit by the weapon
 		if colliding is RigidBody:
