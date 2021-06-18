@@ -4,9 +4,9 @@
 [ext_resource path="res://materials/LevelTestingMaterial.tres" type="Material" id=2]
 [ext_resource path="res://materials/LevelTestingMaterial2.tres" type="Material" id=3]
 [ext_resource path="res://materials/ObjectTestMaterial.tres" type="CubeMesh" id=4]
-[ext_resource path="res://world_item/Scoreboard.tscn" type="PackedScene" id=5]
+[ext_resource path="res://world_item/scoreboard/Scoreboard.tscn" type="PackedScene" id=5]
 [ext_resource path="res://world_item/RandomShootingArea.tscn" type="PackedScene" id=6]
-[ext_resource path="res://world_item/ScoreboardMenu.tscn" type="PackedScene" id=7]
+[ext_resource path="res://world_item/scoreboard/ScoreboardMenu.tscn" type="PackedScene" id=7]
 
 [sub_resource type="PhysicsMaterial" id=1]
 rough = true

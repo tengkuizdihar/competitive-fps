@@ -11,3 +11,8 @@ data_*/
 
 # Export specific ignores
 exports/
+
+# Rust specific ignores
+/target/
+
+.vscode/

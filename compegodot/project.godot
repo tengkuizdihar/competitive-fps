@@ -38,6 +38,11 @@ _global_script_classes=[ {
 "class": "IInteract",
 "language": "GDScript",
 "path": "res://interfaces/IInteract.gd"
+}, {
+"base": "",
+"class": "ScoreDatabse",
+"language": "NativeScript",
+"path": "res://ScoreDatabase.gdns"
 } ]
 _global_script_class_icons={
 "ArrayUtils": "",
@@ -45,7 +50,8 @@ _global_script_class_icons={
 "CameraSmoothPhysics": "",
 "GenericWeapon": "",
 "IHealth": "",
-"IInteract": ""
+"IInteract": "",
+"ScoreDatabse": ""
 }
 
 [application]
@@ -59,6 +65,7 @@ config/icon="res://icon.png"
 Util="*res://util.gd"
 State="*res://state.gd"
 Global="*res://global.gd"
+ScoreDatabase="*res://ScoreDatabase.gdns"
 
 [display]
 
@@ -68,7 +75,7 @@ window/vsync/use_vsync=false
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/SIsilicon.3d.text/plugin.cfg" )
+enabled=PoolStringArray( "SIsilicon.3d.text" )
 
 [input]
 
@@ -164,6 +171,6 @@ common/physics_fps=128
 threads/thread_model=2
 quality/filters/anisotropic_filter_level=2
 quality/filters/use_nearest_mipmap_filter=true
-quality/spatial_partitioning/render_tree_balance=1.0
 quality/filters/msaa=5
 environment/default_environment="res://default_env.tres"
+quality/spatial_partitioning/render_tree_balance=1.0

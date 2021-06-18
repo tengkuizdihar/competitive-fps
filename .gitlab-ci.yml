@@ -1,7 +1,5 @@
 # Stolen from https://github.com/abarichello/godot-ci
 
-image: barichello/godot-ci:3.2.3
-
 stages:
   - export
 
@@ -9,23 +7,29 @@ variables:
   EXPORT_NAME: TheSolver
 
 linux:
+  image: tengkuizdihar/godot-rust-ci:3.2.3-2
   stage: export
   script:
     - mkdir -v -p build/linux
     - cd compegodot
+    - cargo build
     - godot -v --export "Linux X" ../build/linux/$EXPORT_NAME.x86_64
   artifacts:
     name: $EXPORT_NAME-$CI_JOB_NAME
     paths:
       - build/linux
 
-windows:
-  stage: export
-  script:
-    - mkdir -v -p build/windows
-    - cd compegodot
-    - godot -v --export "Windows Desktop" ../build/windows/$EXPORT_NAME.exe
-  artifacts:
-    name: $EXPORT_NAME-$CI_JOB_NAME
-    paths:
-      - build/windows
+# TODO: windows export is not ready yet because there's no godot-rust-ci-windows
+# CLUE: create a windows based godot + rust image
+#
+# windows:
+#   stage: export
+#   script:
+#     - mkdir -v -p build/windows
+#     - cd compegodot
+#     - cargo build --target x86_64-pc-windows-gnu
+#     - godot -v --export "Windows Desktop" ../build/windows/$EXPORT_NAME.exe
+#   artifacts:
+#     name: $EXPORT_NAME-$CI_JOB_NAME
+#     paths:
+#       - build/windows

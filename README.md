@@ -6,6 +6,7 @@
     - [**Aim-Solver**](#aim-solver)
     - [**Dispute-Solver**](#dispute-solver)
     - [**Team-Solver**](#team-solver)
+  - [Technical FAQ](#technical-faq)
 
 # The Solver Series
 
@@ -54,3 +55,10 @@ The endgame of The Solver Series that's all about 5v5 PVP. This game will also i
 - [ ] Delay based spectating for competitive matches.
 - [ ] A more flexible and transparent skill assignments.
 
+## Technical FAQ
+
+- **I'm on NixOS and I can't run any game that's exported from Godot!**
+  
+  Run the game by going into root directory where the game is, and then use `steam-run <location of the game file>`. For example, `steam-run ./game.x86_64`. 
+    
+  This of course happens because of how NixOS is structured and it seems like Godot does rely on some library such as `/lib64/ld-linux-x86-64.so.2` (in which every single 64 bit linux distribution should have).
