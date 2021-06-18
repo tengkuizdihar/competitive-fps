@@ -9,4 +9,4 @@ func _ready() -> void:
 
 
 func _on_interacted() -> void:
-	State.change_state("SCOREBOARD_HIT_COUNT", 0)
+	ScoreDatabase.reset_score()

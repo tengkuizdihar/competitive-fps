@@ -8,7 +8,7 @@ A living document of an unnamed 5 versus 5 competitive FPS, similar to Counter-S
 - [Table of Contents](#table-of-contents)
 - [Introduction](#introduction)
 - [Design Philosophy](#design-philosophy)
-- [Specification - Defusal Game Mode](#specification---defusal-game-mode)
+- [Game Mode Rule — Defusal](#game-mode-rule--defusal)
   - [Actors](#actors)
   - [Maps](#maps)
   - [Rounds and Winning Condition](#rounds-and-winning-condition)
@@ -28,9 +28,9 @@ A living document of an unnamed 5 versus 5 competitive FPS, similar to Counter-S
 
 This document shall describe the mission and vision for the game. The approach that we use to do so is called "top-bottom" starting from the elevator pitch of the game. After that, we will detail more and more aspect of the game such as rounds in a single game, maps, and the economic system being used. It will all end with the concept art and afterwords that might come from the developer.
 
-The unnamed team based competitive tactical shooter will value the player skill more than the utilities that they possess. It's basically an open source version of Counter Strike: Global Offensive. Because of the main inspiration, most of the the things that's mentioned in this proposal will borrow some of the vocabulary from said game. The open source nature of the game should in turn create a community that will hold itself even if the original company/developer is gone. To achieve this, there's several things that must be considered when developing the game. Below are some of them:
+The unnamed team based competitive tactical shooter will value the player skill more than the utilities that they possess. It's basically an open source version of Counter Strike: Global Offensive. Because of the main inspiration, most of the things that's mentioned in this proposal will borrow some vocabulary from said game. The open source nature of the game should in turn create a community that will hold itself even if the original company/developer is gone. To achieve this, there are several things that must be considered when developing the game. Below are some of them:
 
-1. **The game must be simple to play but hard to master**. This mission can be achieved by having a very small sets of things that the player must consider at all times but gradually increases as the skill of the player grows. For example, an inexperienced player would not consider pre-aiming an angle when going inside of a bomb site.
+1. **The game must be simple to play but hard to master**. This mission can be achieved by having a very small sets of things that the player must consider at all times but gradually increases as the skill of the player grows. For example, an inexperienced player would not consider pre-aiming an angle when going inside a bomb site.
 2. **Produce a well maintained learning material for players, content creators, and programmers**. For players, it might be great to give them a tour of the game in the form of tutorial levels, training maps, and videos. Content creators in the other hand can be introduced to the game with the usage of tools and commands that could benefit them in developing a new map, for example. Programmers could also benefit from being able to read the auto generated documentation such as the auto-generating documentation for Rust Programming Language.
 3. **Don't forget about the spectators**. The game should be able to be enjoyed by player and spectators because those who watch is but another potential player. The developer's appreciation toward spectators can be shown through making the game replay friendly and stream friendly. We could just use the current concept of source engine that took snapshot of the world every single step and broadcast it.
 4. **Market the game to the right people**. Before the time of release, the organization that mainly develop the game should research and then hold on to the main audience of the game. We cater towards people with the age of 16 above that cares a lot about legacies and meritocracy for the professional play. We shall not obey and be persuaded by the opinion of those that don't intend to play or enjoy the game. Internet drama for the game shall exist, but it should never break the beautiful relationship between the developer and the community.
@@ -41,16 +41,16 @@ The unnamed team based competitive tactical shooter will value the player skill 
 
 The design philosophy should govern every single content that's being made for the game. It will answer questions about what should be implemented, what should not be implemented, and the core motivation behind it. Below are the philosophy behind every single design decision, presented in a nifty bullet points.
 
-1. **It must follow the principle, Keep It Simple Stupid**. This philosophy have been expressed beautifully by at least two very good programmers, notably Tim Peters (the creator of zen of python) and the late Terry A. Davis (the creator of Temple OS).
-2. **It must be clear to the senses and not ambiguous**. There's at least three sensors of the human being that we can manipulate within the realm of video games. The auditory perception of the human ear, vision, and space. In terms of hearing, the game should be as clear as possible when presenting critical gameplay related sounds such as foot steps and gunshots. We allow background noises and musics but it should never be the "main character" during the gameplay. As for the vision, we must be as clear as possible at distinguishing between the critical elements of the game. Lastly, the sense of space can be expressed through fluid movement, scale between real world object and something on the map, and the presence of the player such as the length of the barrel the gun that the player's is using.
+1. **Keep It Simple Stupid**. This philosophy have been expressed beautifully by at least two very good programmers, notably Tim Peters (the creator of zen of python) and the late Terry A. Davis (the creator of Temple OS).
+2. **Be clear to the senses and not ambiguous**. There's at least three sensors of the human being that we can manipulate within the realm of video games. The auditory perception of the human ear, vision, and space. In terms of hearing, the game should be as clear as possible when presenting critical gameplay related sounds such as foot steps and gunshots. We allow background noises and musics but it should never be the "main character" during the gameplay. As for the vision, we must be as clear as possible at distinguishing between the critical elements of the game. Lastly, the sense of space can be expressed through fluid movement, scale between real world object and something on the map, and the presence of the player such as the length of the barrel the gun that the player's is using.
 3. **Balance between what's fair and what's fun**. The designer must balance between what's fair for the player involved and what's fun to play. In general, something that's fair tends eliminate the feeling of uncertainty but bore the player if it's used too much. For example, a map that only have a single box that obscure the vision of both team is fair, but doesn't present any interesting gameplay and strategies. In terms of fun, the notorious but beautifully crafted solution is by applying controlled randomization on the bullet sprays.
 4. **Customization for the needy and line that should not be crossed**. The player should be able to customize things in the game that have ties to accessibility such as the color of elements in the game. But we must make a hard limit towards what's allowed and not allowed in competitive play, such as the weapon placement on the screen and the field of view of the player.
 
 This is the core believe of how the designer shall move from now on.
 
-# Specification - Defusal Game Mode
+# Game Mode Rule — Defusal
 
-This section shall explain the details of the game that shall be implemented. Note that the specification lived in a living document and may change from time to time. It should not aim to be backward compatible like most software specification would be. The description would start at the actors that have the ability to change the dynamic of a single game. Then it will explain every single element that's in the game in such a detail that there would be no ambiguity in the intent but provide enough room for freedom of creativity. Right now, the would only provide defusal game mode, but will expand to other modes given the community's will and time.
+This section shall explain the details of the game that shall be implemented. Note that the specification lived in a living document and may change from time to time. It should not aim to be backward compatible like most software specification would be. The description would start at the actors that have the ability to change the dynamic of a single game. Then it will explain every single element that's in the game in such a detail that there would be no ambiguity in the intent but provide enough room for freedom of creativity. Right now, we would only provide defusal game mode, but will expand to other modes given the community's will and time.
 
 ## Actors
 
@@ -74,7 +74,7 @@ The map need to be competitively viable. The competitiveness of the map can be m
 - The rotation time for the defenders and attackers.
 - How much angle does the player need to clear to get into an advantaged position.
 - How much time is needed to get into the first contact point.
-- The many strategies and playstyle that the map could support.
+- The many strategies and play style that the map could support.
 
 In designing the map, the designer keep some aesthetic objective in mind. Below are the several points that need to be considered.
 
@@ -104,12 +104,12 @@ The game will decide the winner by using a system we call "The Magic Number". Th
 
 Below is the full rules that governs "The Magic Number" system:
 
-1. The team that reaches the "magic number" first shall win the match.
-2. The roles of both team shall be switched when the total number of round reaches half-time.
+1. The team that reaches the "magic number" first, win the match.
+2. The roles of both team is switched when the total number of round reaches half-time.
 3. The game will switch into overtime when both teams have the same amount of winning-rounds as match point.
 4. Overtime is a looping phase that will determine the winner of the game. Both team will fight with the same roles they have at second-half, with the same amount of money described in [economic system](#economic-system), and one of them must try to reach the newly set magic number which is `magic number = latest magic number + 3`. Overtime process will be used again if both team also have the same amount of winning-rounds as match point, following the newly set magic number. Every single time a new overtime is done, the role of both team will be switched again.
 
-If one of the team felt very overwhelmed or underleveled compared to the opposing force, they can majority-vote to surrender themselves. The minimum difference of round between the surrendering and the winning team must be equal or greater than the one set by the server. By default, the differences is 8 rounds.
+If one of the team felt very overwhelmed or under leveled compared to the opposing force, they can majority-vote to surrender themselves. The minimum difference of round between the surrendering and the winning team must be equal or greater than the one set by the server. By default, the differences is 8 rounds.
 
 ## Time
 
@@ -125,7 +125,7 @@ The objective of the game shall be competed between the two team that participat
 
 1. Wasting the time of the attacker. This method can be achieved by smart manipulation of the environment through [utilities](#utility) and mind games. 
 2. Eliminate every single member of the opposing team. This way is rather straight forward and self-explanatory. 
-3. Defusing the bomb that's planted by the attacking team. The defender would have a limited choices between defusing the bomb or not doing it to "save" weapon for the next round.
+3. Defusing the bomb that's planted by the attacking team. The defender would have limited choices between defusing the bomb or not doing it to "save" weapon for the next round.
 
 **The attackers** in the other hand tries to achieve their objective and these are some of the most used strategies.
 
@@ -158,11 +158,11 @@ TODO: explain that every single person in the game have 100 health and the damag
 
 ## Interaction
 
-TODO: explain the way that player can interact with the world. Dropping guns and utilities for their friends, defusing the bomb, opening and closing doors, manipulating sound cues like going through a checkpoint, killing a team mate, ping-ing a location, drawing on the map, voice chat, and team/inter-team chat etc.
+TODO: explain the way that player can interact with the world. Dropping guns and utilities for their friends, defusing the bomb, opening and closing doors, manipulating sound cues like going through a checkpoint, killing a teammate, pinging a location, drawing on the map, voice chat, and team/inter-team chat etc.
 
 # Media
 
-TODO: concept art that expresses the identity of the game, the art style that it conforms to, and the feeling of being in the game with your team mates.
+TODO: concept art that expresses the identity of the game, the art style that it conforms to, and the feeling of being in the game with your teammates.
 
 # Afterwords & Credits
 
@@ -178,6 +178,6 @@ Below are all of the more uncommon words that we use for this document. What mat
 - **Economic System**: A system that regulates, awards, and punish the action of the player through the means in-game cash.
 - **Elevator Pitch**: A short summary of the game that can be said within the duration of a single elevator ride.
 - **In-Game Cash**: Specific to this game (also CSGO and Valorant), this term refers to the context isolated currency that can be used to buy weapons and utilities. It **does not** have anything to do with real life money (Fiat, cryptocurrency, etc.) and shall be resetted for at least every single time the team switches or the match is over.
-- **Maps**: The current world which the player will play in. It's often self contained, small, and aim to produce the best engagement between the team involved.
+- **Maps**: The current world which the player will play in. It's often self-contained, small, and aim to produce the best engagement between the team involved.
 - **Match**: Contest between two teams.
-- **Pre-Aiming**: A technique used by players to place their crosshair onto the the possible location of the target even before they see them.
+- **Pre-Aiming**: A technique used by players to place their crosshair onto the possible location of the target even before they see them.

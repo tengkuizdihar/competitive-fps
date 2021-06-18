@@ -9,9 +9,7 @@ func _ready() -> void:
 
 
 func add_hit_count() -> void:
-	var state_name = "SCOREBOARD_HIT_COUNT"
-	var hit_count = State.get_state(state_name)
-	State.change_state(state_name, hit_count + 1)
+	ScoreDatabase.add_score()
 
 
 func _on_ShootingTarget_dead() -> void:
