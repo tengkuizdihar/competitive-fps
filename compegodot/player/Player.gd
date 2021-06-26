@@ -119,6 +119,7 @@ func _physics_process(delta: float) -> void:
 	fire_to_direction()
 	State.change_state("DEBUG_MISC", str(get_tree().get_node_count()))
 
+
 ###########################################################
 # Stateful function
 ###########################################################

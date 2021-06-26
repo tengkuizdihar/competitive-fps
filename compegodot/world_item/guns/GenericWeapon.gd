@@ -117,7 +117,8 @@ func second_trigger_off() -> void:
 
 func set_to_equipped() -> void:
 	var gun_mesh: MeshInstance = get_node(gun_mesh_instance)
-	gun_mesh.layers = 2
+	gun_mesh.layers = Global.RENDER_LAYERS.PLAYER
+	gun_mesh.cast_shadow = GeometryInstance.SHADOW_CASTING_SETTING_OFF
 
 	self.mode = RigidBody.MODE_KINEMATIC
 	self.collision_layer = 0
@@ -126,7 +127,8 @@ func set_to_equipped() -> void:
 
 func set_to_world_object() -> void:
 	var gun_mesh: MeshInstance = get_node(gun_mesh_instance)
-	gun_mesh.layers = 1
+	gun_mesh.layers = Global.RENDER_LAYERS.WORLD
+	gun_mesh.cast_shadow = GeometryInstance.SHADOW_CASTING_SETTING_OFF
 
 	self.mode = RigidBody.MODE_RIGID
 	self.collision_layer = 1

@@ -12,5 +12,10 @@ enum WEAPON_SLOT {
 	MELEE
 }
 
+enum RENDER_LAYERS {
+	WORLD,
+	PLAYER
+}
+
 class GROUP:
 	const LEVEL = "LEVEL"
