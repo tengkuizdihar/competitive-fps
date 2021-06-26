@@ -157,8 +157,8 @@ player_weapon_drop={
 
 [layer_names]
 
-3d_render/layer_1="World"
-3d_render/layer_2="Guns"
+3d_render/layer_1="WORLD"
+3d_render/layer_2="PLAYER"
 
 [physics]
 
