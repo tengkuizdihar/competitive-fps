@@ -49,6 +49,31 @@ var is_crouching = false
 var debug_position_one_frame_ago = Vector3.ZERO
 var held_weapon = null
 
+### Storage for Input Pools
+### The storage is structured as such that the key corresponds to the action
+### and its value depends on whether or not it was unconsumed (true) or consumed (false).
+### {
+###   [action_name]: boolean
+### }
+var input_dict = {}
+const captured_events = [
+	"player_crouch",
+	"player_walk",
+	"player_jump",
+	"player_weapon_swap",
+	"player_weapon_gun_primary",
+	"player_weapon_gun_secondary",
+	"player_weapon_gun_knife",
+	"player_shoot_primary",
+	"player_shoot_secondary",
+	"player_weapon_drop",
+	"player_interact",
+	"player_forward",
+	"player_backward",
+	"player_right",
+	"player_left",
+];
+
 onready var feet_original_local_translation = $Feet.transform.origin
 onready var body_original_local_translation = $Body.transform.origin
 onready var body_original_height = $Body.shape.height
@@ -96,12 +121,17 @@ func _ready() -> void:
 	var body_height = $Body.shape.height
 	headlimit_raycast.cast_to = Vector3.UP * (body_height - crouch_height)
 
+	# Init input pool for... pooling input.
+	for i in captured_events:
+		input_dict[i] = -1
+
 	# set all weapon to equipped
 	$Pivot/Camera/GunContainer/KF1.set_to_equipped()
 	$Pivot/Camera/GunContainer/PM9.set_to_equipped()
 
 
 func _unhandled_input(event):
+	input_pooling(event)
 	if event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		pivot.rotate_x(-event.relative.y * mouse_sensitivity)
 		rotate_y(-event.relative.x * mouse_sensitivity)
@@ -117,7 +147,6 @@ func _physics_process(delta: float) -> void:
 	handle_weapon_drop()
 	handle_weapon_selection()
 	fire_to_direction()
-	State.change_state("DEBUG_MISC", str(get_tree().get_node_count()))
 
 
 ###########################################################
@@ -189,7 +218,8 @@ func handle_movement(input_vector: Vector3, delta: float):
 	#
 	# EXAMPLE: if the desired velocity isn't changed, player who went up a slope
 	#          will have higher jumping velocity than the one going downwards.
-	if is_on_floor() and (Input.is_action_just_pressed("player_jump") or (AUTO_BHOP and Input.is_action_pressed("player_jump"))):
+	var action_pressed_jump = consume_input("player_jump")
+	if is_on_floor() and (action_pressed_jump or (AUTO_BHOP and action_pressed_jump)):
 		gravity_velocity = Vector3.UP * JUMP_IMPULSE_VELOCITY
 		desired_movement_velocity = input_vector * current_max_movement_velocity
 		desired_movement_velocity = Util.clamp_vector3(desired_movement_velocity, final_velocity.length())
@@ -252,7 +282,7 @@ func handle_weapon_selection() -> void:
 # TODO: use weapon information for ammo and reloading
 func fire_to_direction() -> void:
 	# FIRST TRIGGER
-	if Input.is_action_just_pressed("player_shoot_primary") and weapon.can_shoot():
+	if consume_input("player_shoot_primary") and weapon.can_shoot():
 		weapon.trigger_on()
 		shooting_routine(self, camera, weapon)
 	elif Input.is_action_just_released("player_shoot_primary"):
@@ -341,6 +371,30 @@ func handle_weapon_pickup() -> void:
 			# TODO make an option for auto switch on pickup
 			# Hide it at pickup
 			colliding.hide()
+
+###########################################################
+# Input Pooling Functions
+###########################################################
+
+### This function will refresh the pool action events that's inside of the
+### caputered_events array.
+func input_pooling(event: InputEvent) -> void:
+	for i in captured_events:
+		if event.is_action_pressed(i):
+			input_dict[i] = Engine.get_physics_frames()
+
+
+func consume_input(event_name: String) -> bool:
+	var current_physics_frame = Engine.get_physics_frames()
+	var timeout_frames = 1
+	var p_frame_input = input_dict[event_name]
+
+	# Reset it anyway
+	input_dict[event_name] = -1
+
+	# Return if the input hasn't expired yet
+	return p_frame_input + timeout_frames > current_physics_frame
+
 
 
 ###########################################################
