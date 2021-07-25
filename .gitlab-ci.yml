@@ -12,7 +12,7 @@ linux:
   script:
     - mkdir -v -p build/linux
     - cd compegodot
-    - cargo build
+    - cargo build --release
     - cp compegodot_library.gdnlib.release compegodot_library.gdnlib
     - godot -v --export "Linux X" ../build/linux/$EXPORT_NAME.x86_64
   artifacts:
