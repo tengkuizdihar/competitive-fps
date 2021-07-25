@@ -39,7 +39,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://interfaces/IInteract.gd"
 }, {
-"base": "",
+"base": "Node",
 "class": "ScoreDatabse",
 "language": "NativeScript",
 "path": "res://ScoreDatabase.gdns"
@@ -158,7 +158,10 @@ player_weapon_drop={
 [layer_names]
 
 3d_render/layer_1="WORLD"
+3d_physics/layer_1="WORLD"
 3d_render/layer_2="PLAYER"
+3d_physics/layer_2="TEAM_1"
+3d_physics/layer_3="TEAM_2"
 
 [physics]
 
