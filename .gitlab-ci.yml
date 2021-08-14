@@ -37,3 +37,7 @@ windows:
     name: $EXPORT_NAME-$CI_JOB_NAME
     paths:
       - build/windows
+  tags:
+    - shared-windows
+    - windows
+    - windows-1809
