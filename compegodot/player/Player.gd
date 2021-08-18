@@ -187,30 +187,33 @@ func handle_movement(input_vector: Vector3, delta: float):
 
 	# slide the input_vector so that it would be on the plane in which it walks
 	var input_slanted = input_vector
-	if is_on_floor():
-		input_slanted = input_vector.slide(get_floor_normal()).normalized()
+
 	if is_on_ceiling():
 		gravity_velocity = Vector3.ZERO
 	elif is_on_floor():
+		input_slanted = input_vector.slide(get_floor_normal()).normalized()
 		gravity_velocity = -self.get_floor_normal() * MAGIC_ON_GROUND_GRAVITY
 		current_acceleration = GROUND_ACCELERATION
+
+		# Player walk action that will decrease MAX_VELOCITY
+		if Input.is_action_pressed("player_walk") and is_crouching:
+			current_max_movement_velocity = MAX_WALK_VELOCITY * 0.5
+		elif Input.is_action_pressed("player_walk"):
+			current_max_movement_velocity = MAX_WALK_VELOCITY
+		elif is_crouching:
+			current_max_movement_velocity = MAX_WALK_VELOCITY * 0.75
+		desired_movement_velocity = desired_movement_velocity.move_toward(input_slanted * current_max_movement_velocity, current_acceleration * delta)
+
 	else:
 		gravity_velocity.x = 0
 		gravity_velocity.z = 0
 		gravity_velocity += Vector3.DOWN * (GRAVITY_CONSTANT * delta)
 		current_acceleration = AIR_ACCELERATION
-
-	# Player walk action that will decrease MAX_VELOCITY
-	if Input.is_action_pressed("player_walk") and is_crouching and is_on_floor():
-		current_max_movement_velocity = MAX_WALK_VELOCITY * 0.5
-	elif is_crouching and is_on_floor():
-		current_max_movement_velocity = MAX_WALK_VELOCITY * 0.75
-	elif Input.is_action_pressed("player_walk") and is_on_floor():
-		current_max_movement_velocity = MAX_WALK_VELOCITY
-	else:
 		current_max_movement_velocity = MAX_RUN_VELOCITY
+		
+		if input_vector.length() > 0:
+			desired_movement_velocity = desired_movement_velocity.move_toward(input_vector * current_max_movement_velocity, current_acceleration * delta)
 
-	desired_movement_velocity = desired_movement_velocity.move_toward(input_slanted * current_max_movement_velocity, current_acceleration * delta)
 
 	# Jumping mechanics, affects desired_movement_velocity. this is because
 	# the jumping height could be affected by the movement velocity, which is
