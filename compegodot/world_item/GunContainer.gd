@@ -5,6 +5,7 @@ export (NodePath) var world_camera_path
 
 var my_camera: Camera
 var world_camera: Camera
+onready var gun_viewport = $GunViewport
 
 
 func _get_configuration_warning() -> String:
@@ -18,8 +19,9 @@ func _ready() -> void:
 	if not Engine.editor_hint:
 		my_camera = $GunViewport/Camera
 		world_camera = get_node(world_camera_path)
-
+		gun_viewport.size = OS.window_size
 
 func _process(_delta: float) -> void:
 	if not Engine.editor_hint:
 		my_camera.global_transform = world_camera.global_transform
+		gun_viewport.size = OS.window_size
