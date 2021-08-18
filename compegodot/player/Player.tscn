@@ -40,7 +40,6 @@ mid_height = 3.0
 
 [node name="Player" type="KinematicBody"]
 script = ExtResource( 3 )
-CROUCH_SPEED = 4.0
 
 [node name="Body" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0 )

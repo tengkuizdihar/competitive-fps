@@ -41,6 +41,9 @@ var gravity_velocity = Vector3()
 ### The desired movement_velocity stored for acceleration purposes.
 var desired_movement_velocity = Vector3()
 
+### The velocity length before jumping
+var last_speed_on_ground = 0
+
 ### The final velocity used for debugging returned by move_and_slide
 var final_velocity = Vector3()
 
@@ -197,11 +200,14 @@ func handle_movement(input_vector: Vector3, delta: float):
 
 		# Player walk action that will decrease MAX_VELOCITY
 		if Input.is_action_pressed("player_walk") and is_crouching:
+			current_max_movement_velocity = MAX_WALK_VELOCITY * 0.25
+		elif is_crouching:
 			current_max_movement_velocity = MAX_WALK_VELOCITY * 0.5
 		elif Input.is_action_pressed("player_walk"):
 			current_max_movement_velocity = MAX_WALK_VELOCITY
-		elif is_crouching:
-			current_max_movement_velocity = MAX_WALK_VELOCITY * 0.75
+		else:
+			current_max_movement_velocity = MAX_RUN_VELOCITY
+
 		desired_movement_velocity = desired_movement_velocity.move_toward(input_slanted * current_max_movement_velocity, current_acceleration * delta)
 
 	else:
@@ -211,9 +217,9 @@ func handle_movement(input_vector: Vector3, delta: float):
 		current_acceleration = AIR_ACCELERATION
 		current_max_movement_velocity = MAX_RUN_VELOCITY
 		
+		# BUG: please set current max velocity to the last time velocity in ground
 		if input_vector.length() > 0:
-			desired_movement_velocity = desired_movement_velocity.move_toward(input_vector * current_max_movement_velocity, current_acceleration * delta)
-
+			desired_movement_velocity = desired_movement_velocity.move_toward(input_vector * last_speed_on_ground, current_acceleration * delta)
 
 	# Jumping mechanics, affects desired_movement_velocity. this is because
 	# the jumping height could be affected by the movement velocity, which is
@@ -224,6 +230,7 @@ func handle_movement(input_vector: Vector3, delta: float):
 	var action_pressed_jump = consume_input("player_jump")
 	if is_on_floor() and (action_pressed_jump or (AUTO_BHOP and action_pressed_jump)):
 		gravity_velocity = Vector3.UP * JUMP_IMPULSE_VELOCITY
+		last_speed_on_ground = desired_movement_velocity.length()
 		desired_movement_velocity = input_vector * current_max_movement_velocity
 		desired_movement_velocity = Util.clamp_vector3(desired_movement_velocity, final_velocity.length())
 
