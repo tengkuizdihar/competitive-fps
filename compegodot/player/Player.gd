@@ -40,8 +40,8 @@ var gravity_velocity = Vector3()
 ### The desired movement_velocity stored for acceleration purposes.
 var desired_movement_velocity = Vector3()
 
-### The velocity length before jumping
-var last_speed_on_ground = 0
+### The the max XZ velocity when in the air
+var max_air_velocity = 0
 
 ### The final velocity used for debugging returned by move_and_slide
 var final_velocity = Vector3()
@@ -90,6 +90,7 @@ export(float) var GRAVITY_CONSTANT = 25
 export(float) var MAX_RUN_VELOCITY = 13.0
 export(float) var MAX_WALK_VELOCITY = 6.0
 export(float) var MAX_VELOCITY = 30.0 # meter per second
+export(float) var MAX_JUMP_VELOCITY_FROM_STILL = 2.0
 
 ###########################################################
 # State Enum
@@ -217,9 +218,9 @@ func handle_movement(input_vector: Vector3, delta: float):
 
 		if input_vector.length() > 0:
 			if input_vector.dot(final_velocity.normalized()) < 0:
-				desired_movement_velocity = desired_movement_velocity.move_toward(input_vector * last_speed_on_ground, GROUND_ACCELERATION * delta)
+				desired_movement_velocity = desired_movement_velocity.move_toward(input_vector * max_air_velocity, GROUND_ACCELERATION * delta)
 			else:
-				desired_movement_velocity = desired_movement_velocity.move_toward(input_vector * last_speed_on_ground, AIR_ACCELERATION * delta)
+				desired_movement_velocity = desired_movement_velocity.move_toward(input_vector * max_air_velocity, AIR_ACCELERATION * delta)
 
 	# Jumping mechanics, affects desired_movement_velocity. this is because
 	# the jumping height could be affected by the movement velocity, which is
@@ -230,7 +231,7 @@ func handle_movement(input_vector: Vector3, delta: float):
 	var action_pressed_jump = consume_input("player_jump")
 	if is_on_floor() and (action_pressed_jump or (AUTO_BHOP and action_pressed_jump)):
 		gravity_velocity = Vector3.UP * JUMP_IMPULSE_VELOCITY
-		last_speed_on_ground = desired_movement_velocity.length()
+		max_air_velocity = max(desired_movement_velocity.length(), MAX_JUMP_VELOCITY_FROM_STILL)
 		desired_movement_velocity = input_vector * current_max_movement_velocity
 		desired_movement_velocity = Util.clamp_vector3(desired_movement_velocity, final_velocity.length())
 
