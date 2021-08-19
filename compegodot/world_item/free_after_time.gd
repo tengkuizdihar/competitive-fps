@@ -16,4 +16,5 @@ func _ready() -> void:
 	if not Engine.editor_hint:
 		emitting = true
 		timer = get_node(free_timer_path)
-		timer.connect("timeout", self, "queue_free")
+		if timer.connect("timeout", self, "queue_free"):
+			print("Failed connecting timer::timeout to self::queue_free")
