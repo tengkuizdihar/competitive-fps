@@ -32,11 +32,11 @@ func _process(delta: float) -> void:
 
 func get_ratio(render_delta: float) -> float:
 	var ratio = 1.0
+	self.accumulated_delta_render += render_delta
 
 	if self.accumulated_delta_render > self.latest_physics_delta:
 		ratio = 1.0
 	elif self.latest_physics_delta > 0.0:
-		self.accumulated_delta_render += render_delta
 		ratio = self.accumulated_delta_render / self.latest_physics_delta
 
-	return ratio
+	return abs(min(ratio, 1))
