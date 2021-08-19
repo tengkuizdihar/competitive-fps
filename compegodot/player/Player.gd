@@ -76,7 +76,7 @@ const captured_events = [
 	"player_left",
 ];
 
-onready var feet_original_local_translation = $Feet.transform.origin
+onready var pivot_original_local_translation = $Pivot.transform.origin
 onready var body_original_local_translation = $Body.transform.origin
 onready var body_original_height = $Body.shape.height
 onready var crouch_height = 1.75
@@ -164,10 +164,10 @@ func _physics_process(delta: float) -> void:
 ###     * Crouch
 ###     * Come to normal
 ### BUG: if crouching under moving platform, player would stand up and down repeatedly
-### BUG-SOLUTION: THE BODY AS A PIVOT SO THAT THE HEAD WOULD COME DOWN
+### TODO: NEW METHOD WHEN IN GROUND, CURRENT METHOD WHEN AIRBORNE
 func manage_crouching(delta: float):
 	if Input.is_action_pressed("player_crouch") or $Body.shape.height < body_original_height:
-		self.is_crouching = true
+		is_crouching = true
 
 	if not Input.is_action_pressed("player_crouch") and not headlimit_raycast.is_colliding():
 		is_crouching = false
@@ -175,18 +175,16 @@ func manage_crouching(delta: float):
 	if is_crouching:
 		var crouch_delta = CROUCH_SPEED * delta
 		var height_change = abs(crouch_height - body_original_height)
-		var body_trans_target = body_original_local_translation + Vector3.UP * height_change / 2
-		var feet_trans_target = feet_original_local_translation + Vector3.UP * height_change
+		var body_trans_target = body_original_local_translation + Vector3.DOWN * height_change / 2
 
 		$Body.shape.height = move_toward($Body.shape.height, crouch_height, crouch_delta)
-		$Body.transform.origin = $Body.transform.origin.move_toward(body_trans_target, crouch_delta)
-		$Feet.transform.origin = $Feet.transform.origin.move_toward(feet_trans_target, crouch_delta)
+		$Body.transform.origin = $Body.transform.origin.move_toward(body_trans_target, crouch_delta / 2)
+		$Pivot.transform.origin = $Body.transform.origin + Vector3.UP * $Body.shape.height / 2
 	else:
 		var crouch_delta = CROUCH_SPEED * 1.5 * delta
 		$Body.shape.height = move_toward($Body.shape.height, body_original_height, crouch_delta)
-		$Body.transform.origin = $Body.transform.origin.move_toward(body_original_local_translation, crouch_delta)
-		$Feet.transform.origin = $Feet.transform.origin.move_toward(feet_original_local_translation, crouch_delta)
-
+		$Body.transform.origin = $Body.transform.origin.move_toward(body_original_local_translation, crouch_delta / 2)
+		$Pivot.transform.origin = $Body.transform.origin + Vector3.UP * $Body.shape.height / 2
 
 # TODO: decouple these codes into other smaller more concise function
 func handle_movement(input_vector: Vector3, delta: float):
@@ -203,9 +201,9 @@ func handle_movement(input_vector: Vector3, delta: float):
 
 		# Player walk action that will decrease MAX_VELOCITY
 		if Input.is_action_pressed("player_walk") and is_crouching:
-			current_max_movement_velocity = MAX_WALK_VELOCITY * 0.25
+			current_max_movement_velocity = MAX_WALK_VELOCITY * 0.815
 		elif is_crouching:
-			current_max_movement_velocity = MAX_WALK_VELOCITY * 0.5
+			current_max_movement_velocity = MAX_WALK_VELOCITY
 		elif Input.is_action_pressed("player_walk"):
 			current_max_movement_velocity = MAX_WALK_VELOCITY
 		else:
