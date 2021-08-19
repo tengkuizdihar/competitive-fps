@@ -212,7 +212,6 @@ material/0 = null
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 41, 2, 18.819 )
 physics_material_override = SubResource( 1 )
 continuous_cd = true
-can_sleep = false
 __meta__ = {
 "_edit_group_": true
 }
@@ -229,7 +228,6 @@ material/0 = null
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 41, 4, 18.819 )
 physics_material_override = SubResource( 1 )
 continuous_cd = true
-can_sleep = false
 __meta__ = {
 "_edit_group_": true
 }
@@ -246,7 +244,6 @@ material/0 = null
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 41, 6, 18.819 )
 physics_material_override = SubResource( 1 )
 continuous_cd = true
-can_sleep = false
 __meta__ = {
 "_edit_group_": true
 }
@@ -263,7 +260,6 @@ material/0 = null
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 41, 8, 18.819 )
 physics_material_override = SubResource( 1 )
 continuous_cd = true
-can_sleep = false
 __meta__ = {
 "_edit_group_": true
 }
@@ -280,7 +276,6 @@ material/0 = null
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 41, 10, 18.819 )
 physics_material_override = SubResource( 1 )
 continuous_cd = true
-can_sleep = false
 __meta__ = {
 "_edit_group_": true
 }
@@ -294,10 +289,9 @@ mesh = ExtResource( 4 )
 material/0 = null
 
 [node name="Box6" type="RigidBody" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 41, 12, 18.819 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 41, 27, 18.819 )
 physics_material_override = SubResource( 1 )
 continuous_cd = true
-can_sleep = false
 __meta__ = {
 "_edit_group_": true
 }
