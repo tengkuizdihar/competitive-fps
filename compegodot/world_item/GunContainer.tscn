@@ -13,7 +13,6 @@ __meta__ = {
 }
 
 [node name="GunViewport" type="Viewport" parent="."]
-size = Vector2( 1366, 768 )
 size_override_stretch = true
 transparent_bg = true
 handle_input_locally = false
