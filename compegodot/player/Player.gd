@@ -15,7 +15,6 @@ onready var normal_input_direction = Vector3.ZERO # will be changed by outside a
 onready var camera = $Pivot/Camera
 onready var pivot = $Pivot
 onready var mouse_sensitivity = 0.0008  # radians/pixel, TODO: refactor to game settings
-onready var current_acceleration = GROUND_ACCELERATION
 
 ### Gun Variables
 onready var gun_container = $Pivot/Camera/GunContainer
@@ -184,6 +183,7 @@ func manage_crouching(delta: float):
 		$Body.transform.origin = $Body.transform.origin.move_toward(body_original_local_translation, crouch_delta)
 		$Feet.transform.origin = $Feet.transform.origin.move_toward(feet_original_local_translation, crouch_delta)
 
+
 # TODO: decouple these codes into other smaller more concise function
 func handle_movement(input_vector: Vector3, delta: float):
 	input_vector = input_vector.normalized()
@@ -196,7 +196,6 @@ func handle_movement(input_vector: Vector3, delta: float):
 	elif is_on_floor():
 		input_slanted = input_vector.slide(get_floor_normal()).normalized()
 		gravity_velocity = -self.get_floor_normal() * MAGIC_ON_GROUND_GRAVITY
-		current_acceleration = GROUND_ACCELERATION
 
 		# Player walk action that will decrease MAX_VELOCITY
 		if Input.is_action_pressed("player_walk") and is_crouching:
@@ -208,18 +207,19 @@ func handle_movement(input_vector: Vector3, delta: float):
 		else:
 			current_max_movement_velocity = MAX_RUN_VELOCITY
 
-		desired_movement_velocity = desired_movement_velocity.move_toward(input_slanted * current_max_movement_velocity, current_acceleration * delta)
+		desired_movement_velocity = desired_movement_velocity.move_toward(input_slanted * current_max_movement_velocity, GROUND_ACCELERATION * delta)
 
 	else:
 		gravity_velocity.x = 0
 		gravity_velocity.z = 0
 		gravity_velocity += Vector3.DOWN * (GRAVITY_CONSTANT * delta)
-		current_acceleration = AIR_ACCELERATION
 		current_max_movement_velocity = MAX_RUN_VELOCITY
-		
-		# BUG: please set current max velocity to the last time velocity in ground
+
 		if input_vector.length() > 0:
-			desired_movement_velocity = desired_movement_velocity.move_toward(input_vector * last_speed_on_ground, current_acceleration * delta)
+			if input_vector.dot(final_velocity.normalized()) < 0:
+				desired_movement_velocity = desired_movement_velocity.move_toward(input_vector * last_speed_on_ground, GROUND_ACCELERATION * delta)
+			else:
+				desired_movement_velocity = desired_movement_velocity.move_toward(input_vector * last_speed_on_ground, AIR_ACCELERATION * delta)
 
 	# Jumping mechanics, affects desired_movement_velocity. this is because
 	# the jumping height could be affected by the movement velocity, which is
@@ -243,7 +243,7 @@ func handle_movement(input_vector: Vector3, delta: float):
 	# apply to move and slide
 	final_velocity = self.move_and_slide(velocity_and_gravity, Vector3.UP, true, 4, 0.785398, false)
 
-	State.change_state("DEBUG_PLAYER_VELOCITY", stepify(final_velocity.length(), 0.01))
+	State.change_state("DEBUG_PLAYER_VELOCITY", stepify(desired_movement_velocity.length(), 0.01))
 
 
 func hide_all_weapon() -> void:
