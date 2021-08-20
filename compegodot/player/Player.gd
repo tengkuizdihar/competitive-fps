@@ -79,6 +79,7 @@ const captured_events = [
 onready var pivot_original_local_translation = $Pivot.transform.origin
 onready var body_original_local_translation = $Body.transform.origin
 onready var body_original_height = $Body.shape.height
+onready var feet_original_local_translation = $Feet.transform.origin
 onready var crouch_height = 1.75
 
 export(bool) var AUTO_BHOP = false
@@ -172,19 +173,41 @@ func manage_crouching(delta: float):
 	if not Input.is_action_pressed("player_crouch") and not headlimit_raycast.is_colliding():
 		is_crouching = false
 
-	if is_crouching:
-		var crouch_delta = CROUCH_SPEED * delta
-		var height_change = abs(crouch_height - body_original_height)
-		var body_trans_target = body_original_local_translation + Vector3.DOWN * height_change / 2
+	if is_on_floor():
+		if is_crouching:
+			var crouch_delta = CROUCH_SPEED * delta
+			var height_change = abs(crouch_height - body_original_height)
+			var body_trans_target = body_original_local_translation + Vector3.DOWN * height_change / 2
 
-		$Body.shape.height = move_toward($Body.shape.height, crouch_height, crouch_delta)
-		$Body.transform.origin = $Body.transform.origin.move_toward(body_trans_target, crouch_delta / 2)
-		$Pivot.transform.origin = $Body.transform.origin + Vector3.UP * $Body.shape.height / 2
+			$Body.shape.height = move_toward($Body.shape.height, crouch_height, crouch_delta)
+			$Body.transform.origin = $Body.transform.origin.move_toward(body_trans_target, crouch_delta / 2)
+			$Pivot.transform.origin = $Body.transform.origin + Vector3.UP * $Body.shape.height / 2
+			$Feet.transform.origin = $Body.transform.origin + Vector3.DOWN * ($Body.shape.height / 2 + $Body.shape.radius) + Vector3.UP * $Feet.shape.height / 2
+		else:
+			var crouch_delta = CROUCH_SPEED * 1.5 * delta
+			$Body.shape.height = move_toward($Body.shape.height, body_original_height, crouch_delta)
+			$Body.transform.origin = $Body.transform.origin.move_toward(body_original_local_translation, crouch_delta / 2)
+			$Pivot.transform.origin = $Body.transform.origin + Vector3.UP * $Body.shape.height / 2
+			$Feet.transform.origin = $Body.transform.origin + Vector3.DOWN * ($Body.shape.height / 2 + $Body.shape.radius) + Vector3.UP * $Feet.shape.height / 2
+
 	else:
-		var crouch_delta = CROUCH_SPEED * 1.5 * delta
-		$Body.shape.height = move_toward($Body.shape.height, body_original_height, crouch_delta)
-		$Body.transform.origin = $Body.transform.origin.move_toward(body_original_local_translation, crouch_delta / 2)
-		$Pivot.transform.origin = $Body.transform.origin + Vector3.UP * $Body.shape.height / 2
+		if is_crouching:
+			var height_change = abs(crouch_height - body_original_height)
+			var body_trans_target = body_original_local_translation + Vector3.UP * height_change / 2
+			var feet_trans_target = feet_original_local_translation + Vector3.UP * height_change
+
+			$Body.shape.height = move_toward($Body.shape.height, crouch_height, CROUCH_SPEED * delta)
+			$Body.transform.origin = $Body.transform.origin.move_toward(body_trans_target, CROUCH_SPEED * delta)
+			$Pivot.transform.origin = $Body.transform.origin + Vector3.UP * $Body.shape.height / 2
+			$Feet.transform.origin = $Feet.transform.origin.move_toward(feet_trans_target, CROUCH_SPEED * delta)
+		else:
+			var crouch_delta = CROUCH_SPEED * 1.5 * delta
+			$Body.shape.height = move_toward($Body.shape.height, body_original_height, crouch_delta)
+			$Body.transform.origin = $Body.transform.origin.move_toward(body_original_local_translation, crouch_delta)
+			$Pivot.transform.origin = $Body.transform.origin + Vector3.UP * $Body.shape.height / 2
+			$Feet.transform.origin = $Feet.transform.origin.move_toward(feet_original_local_translation, crouch_delta)
+
+
 
 # TODO: decouple these codes into other smaller more concise function
 func handle_movement(input_vector: Vector3, delta: float):
