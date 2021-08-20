@@ -83,7 +83,7 @@ onready var feet_original_local_translation = $Feet.transform.origin
 onready var crouch_height = 1.75
 
 export(bool) var AUTO_BHOP = false
-export(float) var CROUCH_SPEED = 3 # meter per second
+export(float) var CROUCH_SPEED = 5.5 # meter per second
 export(float) var JUMP_IMPULSE_VELOCITY = 12
 export(float) var AIR_ACCELERATION = 20
 export(float) var GROUND_ACCELERATION = 80
