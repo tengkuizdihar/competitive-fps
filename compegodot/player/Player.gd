@@ -76,9 +76,10 @@ const captured_events = [
 	"player_left",
 ];
 
-onready var feet_original_local_translation = $Feet.transform.origin
+onready var pivot_original_local_translation = $Pivot.transform.origin
 onready var body_original_local_translation = $Body.transform.origin
 onready var body_original_height = $Body.shape.height
+onready var feet_original_local_translation = $Feet.transform.origin
 onready var crouch_height = 1.75
 
 export(bool) var AUTO_BHOP = false
@@ -96,23 +97,24 @@ export(float) var MAX_JUMP_VELOCITY_FROM_STILL = 2.0
 # State Enum
 ###########################################################
 
-signal player_state_changed(enum_state)
-signal gun_state_changed(enum_state)
-
-enum PlayerState {
-	WALKING,
-	RUNNING,
-	FALLING,
-	DEAD,
-	CROUCHING_WALK,
-	CROUCHING_RUN,
-}
-
-enum GunState {
-	SHOOTING,
-	SHOOTING_OUT_OF_BULLETS,
-	RELOADING,
-}
+# Uncomment when you want to start refactoring it into states
+#signal player_state_changed(enum_state)
+#signal gun_state_changed(enum_state)
+#
+#enum PlayerState {
+#	WALKING,
+#	RUNNING,
+#	FALLING,
+#	DEAD,
+#	CROUCHING_WALK,
+#	CROUCHING_RUN,
+#}
+#
+#enum GunState {
+#	SHOOTING,
+#	SHOOTING_OUT_OF_BULLETS,
+#	RELOADING,
+#}
 
 ###########################################################
 # Engine Callbacks
@@ -163,26 +165,48 @@ func _physics_process(delta: float) -> void:
 ###     * Crouch
 ###     * Come to normal
 ### BUG: if crouching under moving platform, player would stand up and down repeatedly
+### TODO: NEW METHOD WHEN IN GROUND, CURRENT METHOD WHEN AIRBORNE
 func manage_crouching(delta: float):
 	if Input.is_action_pressed("player_crouch") or $Body.shape.height < body_original_height:
-		self.is_crouching = true
+		is_crouching = true
 
-	if not Input.is_action_pressed("player_crouch") and is_crouching and not headlimit_raycast.is_colliding():
+	if not Input.is_action_pressed("player_crouch") and not headlimit_raycast.is_colliding():
 		is_crouching = false
 
-	if is_crouching:
-		var height_change = abs(crouch_height - body_original_height)
-		var body_trans_target = body_original_local_translation + Vector3.UP * height_change / 2
-		var feet_trans_target = feet_original_local_translation + Vector3.UP * height_change
+	if is_on_floor():
+		if is_crouching:
+			var crouch_delta = CROUCH_SPEED * delta
+			var height_change = abs(crouch_height - body_original_height)
+			var body_trans_target = body_original_local_translation + Vector3.DOWN * height_change / 2
 
-		$Body.shape.height = move_toward($Body.shape.height, crouch_height, CROUCH_SPEED * delta)
-		$Body.transform.origin = $Body.transform.origin.move_toward(body_trans_target, CROUCH_SPEED * delta)
-		$Feet.transform.origin = $Feet.transform.origin.move_toward(feet_trans_target, CROUCH_SPEED * delta)
+			$Body.shape.height = move_toward($Body.shape.height, crouch_height, crouch_delta)
+			$Body.transform.origin = $Body.transform.origin.move_toward(body_trans_target, crouch_delta / 2)
+			$Pivot.transform.origin = $Body.transform.origin + Vector3.UP * $Body.shape.height / 2
+			$Feet.transform.origin = $Body.transform.origin + Vector3.DOWN * ($Body.shape.height / 2 + $Body.shape.radius) + Vector3.UP * $Feet.shape.height / 2
+		else:
+			var crouch_delta = CROUCH_SPEED * 1.5 * delta
+			$Body.shape.height = move_toward($Body.shape.height, body_original_height, crouch_delta)
+			$Body.transform.origin = $Body.transform.origin.move_toward(body_original_local_translation, crouch_delta / 2)
+			$Pivot.transform.origin = $Body.transform.origin + Vector3.UP * $Body.shape.height / 2
+			$Feet.transform.origin = $Body.transform.origin + Vector3.DOWN * ($Body.shape.height / 2 + $Body.shape.radius) + Vector3.UP * $Feet.shape.height / 2
+
 	else:
-		var crouch_delta = CROUCH_SPEED * 1.5 * delta
-		$Body.shape.height = move_toward($Body.shape.height, body_original_height, crouch_delta)
-		$Body.transform.origin = $Body.transform.origin.move_toward(body_original_local_translation, crouch_delta)
-		$Feet.transform.origin = $Feet.transform.origin.move_toward(feet_original_local_translation, crouch_delta)
+		if is_crouching:
+			var height_change = abs(crouch_height - body_original_height)
+			var body_trans_target = body_original_local_translation + Vector3.UP * height_change / 2
+			var feet_trans_target = feet_original_local_translation + Vector3.UP * height_change
+
+			$Body.shape.height = move_toward($Body.shape.height, crouch_height, CROUCH_SPEED * delta)
+			$Body.transform.origin = $Body.transform.origin.move_toward(body_trans_target, CROUCH_SPEED * delta)
+			$Pivot.transform.origin = $Body.transform.origin + Vector3.UP * $Body.shape.height / 2
+			$Feet.transform.origin = $Feet.transform.origin.move_toward(feet_trans_target, CROUCH_SPEED * delta)
+		else:
+			var crouch_delta = CROUCH_SPEED * 1.5 * delta
+			$Body.shape.height = move_toward($Body.shape.height, body_original_height, crouch_delta)
+			$Body.transform.origin = $Body.transform.origin.move_toward(body_original_local_translation, crouch_delta)
+			$Pivot.transform.origin = $Body.transform.origin + Vector3.UP * $Body.shape.height / 2
+			$Feet.transform.origin = $Feet.transform.origin.move_toward(feet_original_local_translation, crouch_delta)
+
 
 
 # TODO: decouple these codes into other smaller more concise function
@@ -200,9 +224,9 @@ func handle_movement(input_vector: Vector3, delta: float):
 
 		# Player walk action that will decrease MAX_VELOCITY
 		if Input.is_action_pressed("player_walk") and is_crouching:
-			current_max_movement_velocity = MAX_WALK_VELOCITY * 0.25
+			current_max_movement_velocity = MAX_WALK_VELOCITY * 0.815
 		elif is_crouching:
-			current_max_movement_velocity = MAX_WALK_VELOCITY * 0.5
+			current_max_movement_velocity = MAX_WALK_VELOCITY
 		elif Input.is_action_pressed("player_walk"):
 			current_max_movement_velocity = MAX_WALK_VELOCITY
 		else:
@@ -285,8 +309,6 @@ func handle_weapon_selection() -> void:
 			hide_all_weapon()
 			weapon = weapons[Global.WEAPON_SLOT.MELEE]
 			weapon.show()
-
-	var DEBUG_WEAPON_SLOT_KEYS = Global.WEAPON_SLOT.keys()
 
 
 # TODO: use weapon inaccuracy + movement inaccuracy
@@ -412,11 +434,11 @@ func consume_input(event_name: String) -> bool:
 # Static Function
 ###########################################################
 
-static func shooting_routine(player: KinematicBody, camera: Camera, weapon: GenericWeapon) -> void:
-	var from = camera.global_transform.origin
-	var to = from + -camera.global_transform.basis.z * weapon.max_distance
+static func shooting_routine(player: KinematicBody, c: Camera, w: GenericWeapon) -> void:
+	var from = c.global_transform.origin
+	var to = from + -c.global_transform.basis.z * w.max_distance
 
-	var space_state = camera.get_world().direct_space_state
+	var space_state = c.get_world().direct_space_state
 	var ray_result = space_state.intersect_ray(from, to, [player], 1)
 	var colliding = ray_result.get("collider")
 	var collision_point = ray_result.get("position")
@@ -424,7 +446,7 @@ static func shooting_routine(player: KinematicBody, camera: Camera, weapon: Gene
 	if colliding:
 		# change the health based on the weapon's damage
 		if "i_health" in colliding:
-			colliding.i_health.change_health(-weapon.base_damage)
+			colliding.i_health.change_health(-w.base_damage)
 
 		# interact with the object if interface exist
 		if "i_interact" in colliding:
@@ -432,14 +454,14 @@ static func shooting_routine(player: KinematicBody, camera: Camera, weapon: Gene
 
 		# push the object if it's hit by the weapon
 		if colliding is RigidBody:
-			var imp_direction = -camera.global_transform.basis.z.normalized()
+			var imp_direction = -c.global_transform.basis.z.normalized()
 			colliding.apply_impulse(collision_point - colliding.global_transform.origin, imp_direction * 10)
 
 		# spawn sparks
 		# TODO change the location where you preload sparks. Maybe in the global??
 		var sparks = preload("res://world_item/spark.tscn").instance()
 
-		for i in camera.get_tree().root.get_children():
+		for i in c.get_tree().root.get_children():
 			if i is Spatial:
 				i.add_child(sparks)
 				sparks.global_transform.origin = collision_point
