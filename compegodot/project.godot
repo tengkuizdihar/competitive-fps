@@ -39,7 +39,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://interfaces/IInteract.gd"
 }, {
-"base": "Node",
+"base": "",
 "class": "ScoreDatabse",
 "language": "NativeScript",
 "path": "res://ScoreDatabase.gdns"

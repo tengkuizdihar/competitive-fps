@@ -36,6 +36,7 @@ gun_animation_player_path = NodePath("AnimationPlayer")
 gun_shoot_audio_player = NodePath("AudioStreamPlayer")
 gun_mesh_instance = NodePath("Spatial/knife_sharp")
 round_per_second = 2.0
+movement_inaccuracy_multiplier = 0.0
 max_distance = 4.0
 
 [node name="Spatial" type="Spatial" parent="."]

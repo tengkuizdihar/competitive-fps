@@ -1,11 +1,10 @@
-[gd_resource type="CubeMesh" load_steps=3 format=2]
+[gd_resource type="SpatialMaterial" load_steps=3 format=2]
 
 [ext_resource path="res://assets/gridtextures/PNG/Green/texture_01.png" type="Texture" id=1]
+[ext_resource path="res://materials/xray_outline_material.tres" type="Material" id=2]
 
-[sub_resource type="SpatialMaterial" id=1]
+[resource]
+next_pass = ExtResource( 2 )
 flags_world_triplanar = true
 albedo_texture = ExtResource( 1 )
 uv1_scale = Vector3( 0.5, 0.5, 0.5 )
-
-[resource]
-material = SubResource( 1 )

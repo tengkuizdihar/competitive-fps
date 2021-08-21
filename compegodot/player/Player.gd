@@ -181,13 +181,11 @@ func manage_crouching(delta: float):
 
 			$Body.shape.height = move_toward($Body.shape.height, crouch_height, crouch_delta)
 			$Body.transform.origin = $Body.transform.origin.move_toward(body_trans_target, crouch_delta / 2)
-			$Pivot.transform.origin = $Body.transform.origin + Vector3.UP * $Body.shape.height / 2
 			$Feet.transform.origin = $Body.transform.origin + Vector3.DOWN * ($Body.shape.height / 2 + $Body.shape.radius) + Vector3.UP * $Feet.shape.height / 2
 		else:
 			var crouch_delta = CROUCH_SPEED * 1.5 * delta
 			$Body.shape.height = move_toward($Body.shape.height, body_original_height, crouch_delta)
 			$Body.transform.origin = $Body.transform.origin.move_toward(body_original_local_translation, crouch_delta / 2)
-			$Pivot.transform.origin = $Body.transform.origin + Vector3.UP * $Body.shape.height / 2
 			$Feet.transform.origin = $Body.transform.origin + Vector3.DOWN * ($Body.shape.height / 2 + $Body.shape.radius) + Vector3.UP * $Feet.shape.height / 2
 
 	else:
@@ -198,14 +196,15 @@ func manage_crouching(delta: float):
 
 			$Body.shape.height = move_toward($Body.shape.height, crouch_height, CROUCH_SPEED * delta)
 			$Body.transform.origin = $Body.transform.origin.move_toward(body_trans_target, CROUCH_SPEED * delta)
-			$Pivot.transform.origin = $Body.transform.origin + Vector3.UP * $Body.shape.height / 2
 			$Feet.transform.origin = $Feet.transform.origin.move_toward(feet_trans_target, CROUCH_SPEED * delta)
 		else:
 			var crouch_delta = CROUCH_SPEED * 1.5 * delta
 			$Body.shape.height = move_toward($Body.shape.height, body_original_height, crouch_delta)
 			$Body.transform.origin = $Body.transform.origin.move_toward(body_original_local_translation, crouch_delta)
-			$Pivot.transform.origin = $Body.transform.origin + Vector3.UP * $Body.shape.height / 2
 			$Feet.transform.origin = $Feet.transform.origin.move_toward(feet_original_local_translation, crouch_delta)
+
+	$Pivot.transform.origin = $Body.transform.origin + Vector3.UP * $Body.shape.height / 2
+	$HeadLimitRayCast.transform.origin = $Body.transform.origin + Vector3.UP * ($Body.shape.height / 2 + $Body.shape.radius)
 
 
 
@@ -434,9 +433,10 @@ func consume_input(event_name: String) -> bool:
 # Static Function
 ###########################################################
 
-static func shooting_routine(player: KinematicBody, c: Camera, w: GenericWeapon) -> void:
+static func shooting_routine(player, c: Camera, w: GenericWeapon) -> void:
 	var from = c.global_transform.origin
-	var to = from + -c.global_transform.basis.z * w.max_distance
+	var direction = get_shooting_direction(player, c, w)
+	var to = from + direction * w.max_distance
 
 	var space_state = c.get_world().direct_space_state
 	var ray_result = space_state.intersect_ray(from, to, [player], 1)
@@ -465,6 +465,24 @@ static func shooting_routine(player: KinematicBody, c: Camera, w: GenericWeapon)
 			if i is Spatial:
 				i.add_child(sparks)
 				sparks.global_transform.origin = collision_point
+
+
+static func get_shooting_direction(player, c: Camera, w: GenericWeapon) -> Vector3:
+	var forward = -c.global_transform.basis.z
+
+	var inaccuracy = w.get_inaccuracy()
+	var inh_inacc = inaccuracy.inherent
+	var spr_inacc = inaccuracy.spray
+
+	var movement_ratio_to_still = player.final_velocity.length() / player.MAX_RUN_VELOCITY
+	var movement_inaccuracy = 1 + (movement_ratio_to_still * w.movement_inaccuracy_multiplier)
+
+	# If rotated by a positive number, it goes to the right, vice versa
+	var horizontalized = forward.rotated(-c.global_transform.basis.y, (inh_inacc.horizontal * movement_inaccuracy) + spr_inacc.horizontal)
+
+	# If rotated by a positive number, it goes to the top, vice versa
+	var verticalized = horizontalized.rotated(c.global_transform.basis.x, (inh_inacc.vertical * movement_inaccuracy) + spr_inacc.vertical)
+	return verticalized
 
 ###########################################################
 # Stateless Function

@@ -130,17 +130,9 @@ world_camera_path = NodePath("../..")
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.619, -0.281, -0.844 )
 
 [node name="PM9" parent="Pivot/Camera/GunContainer" instance=ExtResource( 6 )]
-weapon_type = 1
-anim_shoot_name = "shoot"
-anim_shoot_secondary_name = "shoot_secondary"
-base_damage = 100.0
-max_distance = 300.0
 
 [node name="KF1" parent="Pivot/Camera/GunContainer" instance=ExtResource( 7 )]
 visible = false
-anim_shoot_name = "shoot"
-anim_shoot_secondary_name = "shoot_secondary"
-base_damage = 100.0
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, 0 )

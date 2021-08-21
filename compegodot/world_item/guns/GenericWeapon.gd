@@ -29,6 +29,12 @@ export (float) var base_damage = 100.0
 # The gun's rounds per second. Use 0 to disable it
 export (float) var round_per_second = 1
 
+# The gun's inaccuracy scale
+export (float) var inaccuracy_scale = 0
+
+# The gun's movement
+export (float) var movement_inaccuracy_multiplier = 1
+
 # The gun's maximum distance toward the target
 export (float) var max_distance = 300.0
 
@@ -40,6 +46,7 @@ var shoot_audio_player: AudioStreamPlayer
 
 # Internal timer reference for rate of fire
 var rof_timer: Timer
+
 
 func _is_animation_player() -> bool:
 	var test = get_node(gun_animation_player_path)
@@ -133,3 +140,35 @@ func set_to_world_object() -> void:
 	self.mode = RigidBody.MODE_RIGID
 	self.collision_layer = 1
 	self.collision_mask = 1
+
+# Will give a dictionary of inherent and spray inaccuracy filled with the
+# vertical and horizontal, measured in radians.
+#
+# For example:
+# {
+#     "inherent": {
+#         "vertical": 1.1,
+#         "horizontal": 1.2
+#     },
+#     "spray": {
+#         "vertical": -2.1,
+#         "horizontal": -2.2
+#     }
+# }
+#
+# Means the inherent inaccuracy will go up and right by 1.1 and 1.2 radian respectively.
+# It also means, the spray inaccuracy will down and left by 2.1 and 2.2 radian respectively.
+func get_inaccuracy() -> Dictionary:
+	randomize()
+	return {
+		"inherent": {
+			"vertical": rand_range(-inaccuracy_scale, inaccuracy_scale),
+			"horizontal": rand_range(-inaccuracy_scale, inaccuracy_scale)
+		},
+
+		# TODO: create a function to calculate the spray based on some timer
+		"spray": {
+			"vertical": 0.0,
+			"horizontal": 0.0
+		}
+	}
