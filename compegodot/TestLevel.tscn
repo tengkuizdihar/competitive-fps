@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://player/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://materials/LevelTestingMaterial.tres" type="Material" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://world_item/scoreboard/Scoreboard.tscn" type="PackedScene" id=5]
 [ext_resource path="res://world_item/RandomShootingArea.tscn" type="PackedScene" id=6]
 [ext_resource path="res://world_item/scoreboard/ScoreboardMenu.tscn" type="PackedScene" id=7]
+[ext_resource path="res://materials/LevelTestingMaterial_outline.tres" type="Material" id=8]
 
 [sub_resource type="PhysicsMaterial" id=1]
 rough = true
@@ -20,7 +21,12 @@ size = Vector3( 10, 2, 2 )
 
 [sub_resource type="BoxShape" id=4]
 
-[sub_resource type="GDScript" id=5]
+[sub_resource type="SphereMesh" id=5]
+material = ExtResource( 8 )
+
+[sub_resource type="SphereShape" id=6]
+
+[sub_resource type="GDScript" id=7]
 script/source = "# quick dirty platform codes for testing
 extends KinematicBody
 
@@ -52,22 +58,22 @@ func _physics_process(delta: float) -> void:
 		var _lmao = move_and_slide(current_direction * 5)
 "
 
-[sub_resource type="BoxShape" id=6]
+[sub_resource type="BoxShape" id=8]
 extents = Vector3( 5, 1, 6 )
 
-[sub_resource type="CubeMesh" id=7]
+[sub_resource type="CubeMesh" id=9]
 size = Vector3( 10, 2, 12 )
 
-[sub_resource type="BoxShape" id=8]
+[sub_resource type="BoxShape" id=10]
 extents = Vector3( 0.001, 4, 15 )
 
-[sub_resource type="ProceduralSky" id=9]
+[sub_resource type="ProceduralSky" id=11]
 sky_horizon_color = Color( 0.415686, 0.447059, 0.47451, 1 )
 sky_curve = 1.0
 
-[sub_resource type="Environment" id=10]
+[sub_resource type="Environment" id=12]
 background_mode = 2
-background_sky = SubResource( 9 )
+background_sky = SubResource( 11 )
 tonemap_mode = 2
 tonemap_exposure = 0.4
 
@@ -304,21 +310,36 @@ use_in_baked_light = true
 mesh = ExtResource( 4 )
 material/0 = null
 
+[node name="OutlineBall" type="RigidBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 33, 2, -9 )
+linear_damp = 1.0
+angular_damp = 1.0
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="MeshInstance" type="MeshInstance" parent="OutlineBall"]
+mesh = SubResource( 5 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="OutlineBall"]
+shape = SubResource( 6 )
+
 [node name="Player" parent="." instance=ExtResource( 1 )]
 transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 15, 3.5044, 14 )
 
 [node name="Platform2" type="KinematicBody" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -22, 6.4, 20 )
-script = SubResource( 5 )
+script = SubResource( 7 )
 __meta__ = {
 "_edit_group_": true
 }
 
 [node name="CollisionShape" type="CollisionShape" parent="Platform2"]
-shape = SubResource( 6 )
+shape = SubResource( 8 )
 
 [node name="MeshInstance" type="MeshInstance" parent="Platform2"]
-mesh = SubResource( 7 )
+mesh = SubResource( 9 )
 material/0 = null
 
 [node name="RandomShootingArea" parent="." instance=ExtResource( 6 )]
@@ -326,7 +347,7 @@ transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 17, 10,
 
 [node name="CollisionShape" type="CollisionShape" parent="RandomShootingArea"]
 transform = Transform( 1, 0, 2.62268e-08, 0, 1, 0, 2.62268e-08, 0, 0.4, 0, -2, 0 )
-shape = SubResource( 8 )
+shape = SubResource( 10 )
 
 [node name="DirectionalLight" type="DirectionalLight" parent="."]
 transform = Transform( 1, 0, 0, 0, -0.965926, 0.258819, 0, -0.258819, -0.965926, 0, 16, 0 )
@@ -336,7 +357,7 @@ directional_shadow_blend_splits = true
 [node name="Scoreboard" parent="." instance=ExtResource( 5 )]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource( 10 )
+environment = SubResource( 12 )
 
 [node name="ScoreboardMenu" parent="." instance=ExtResource( 7 )]
 transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 17, 2.5, 30 )
