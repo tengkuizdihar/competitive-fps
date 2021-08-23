@@ -14,7 +14,7 @@ enum WEAPON_SLOT {
 
 enum RENDER_LAYERS {
 	WORLD = 1,
-	PLAYER = 2 
+	PLAYER = 2
 }
 
 enum PHYSICS_LAYERS {

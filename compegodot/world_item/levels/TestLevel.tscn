@@ -2,12 +2,12 @@
 
 [ext_resource path="res://player/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://materials/LevelTestingMaterial.tres" type="Material" id=2]
-[ext_resource path="res://materials/LevelTestingMaterial2.tres" type="Material" id=3]
+[ext_resource path="res://materials/LevelTestingMaterial_outline.tres" type="Material" id=3]
 [ext_resource path="res://materials/ObjectTestMaterial.tres" type="CubeMesh" id=4]
-[ext_resource path="res://world_item/scoreboard/Scoreboard.tscn" type="PackedScene" id=5]
-[ext_resource path="res://world_item/RandomShootingArea.tscn" type="PackedScene" id=6]
-[ext_resource path="res://world_item/scoreboard/ScoreboardMenu.tscn" type="PackedScene" id=7]
-[ext_resource path="res://materials/LevelTestingMaterial_outline.tres" type="Material" id=8]
+[ext_resource path="res://materials/LevelTestingMaterial2.tres" type="Material" id=5]
+[ext_resource path="res://world_item/scoreboard/ScoreboardMenu.tscn" type="PackedScene" id=6]
+[ext_resource path="res://world_item/scoreboard/Scoreboard.tscn" type="PackedScene" id=7]
+[ext_resource path="res://world_item/RandomShootingArea.tscn" type="PackedScene" id=8]
 
 [sub_resource type="PhysicsMaterial" id=1]
 rough = true
@@ -16,13 +16,13 @@ rough = true
 extents = Vector3( 5, 1, 1 )
 
 [sub_resource type="CubeMesh" id=3]
-material = ExtResource( 3 )
+material = ExtResource( 5 )
 size = Vector3( 10, 2, 2 )
 
 [sub_resource type="BoxShape" id=4]
 
 [sub_resource type="SphereMesh" id=5]
-material = ExtResource( 8 )
+material = ExtResource( 3 )
 
 [sub_resource type="SphereShape" id=6]
 
@@ -342,7 +342,7 @@ shape = SubResource( 8 )
 mesh = SubResource( 9 )
 material/0 = null
 
-[node name="RandomShootingArea" parent="." instance=ExtResource( 6 )]
+[node name="RandomShootingArea" parent="." instance=ExtResource( 8 )]
 transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 17, 10, 43 )
 
 [node name="CollisionShape" type="CollisionShape" parent="RandomShootingArea"]
@@ -354,10 +354,10 @@ transform = Transform( 1, 0, 0, 0, -0.965926, 0.258819, 0, -0.258819, -0.965926,
 shadow_enabled = true
 directional_shadow_blend_splits = true
 
-[node name="Scoreboard" parent="." instance=ExtResource( 5 )]
+[node name="Scoreboard" parent="." instance=ExtResource( 7 )]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource( 12 )
 
-[node name="ScoreboardMenu" parent="." instance=ExtResource( 7 )]
+[node name="ScoreboardMenu" parent="." instance=ExtResource( 6 )]
 transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 17, 2.5, 30 )
