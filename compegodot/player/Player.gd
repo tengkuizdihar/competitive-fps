@@ -207,7 +207,6 @@ func manage_crouching(delta: float):
 	$HeadLimitRayCast.transform.origin = $Body.transform.origin + Vector3.UP * ($Body.shape.height / 2 + $Body.shape.radius)
 
 
-
 # TODO: decouple these codes into other smaller more concise function
 func handle_movement(input_vector: Vector3, delta: float):
 	input_vector = input_vector.normalized()
