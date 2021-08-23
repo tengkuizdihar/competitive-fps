@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://player/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://materials/LevelTestingMaterial.tres" type="Material" id=2]
@@ -66,16 +66,6 @@ size = Vector3( 10, 2, 12 )
 
 [sub_resource type="BoxShape" id=10]
 extents = Vector3( 0.001, 4, 15 )
-
-[sub_resource type="ProceduralSky" id=11]
-sky_horizon_color = Color( 0.415686, 0.447059, 0.47451, 1 )
-sky_curve = 1.0
-
-[sub_resource type="Environment" id=12]
-background_mode = 2
-background_sky = SubResource( 11 )
-tonemap_mode = 2
-tonemap_exposure = 0.4
 
 [node name="TestLevel" type="Spatial" groups=[
 "LEVEL",
@@ -355,9 +345,6 @@ shadow_enabled = true
 directional_shadow_blend_splits = true
 
 [node name="Scoreboard" parent="." instance=ExtResource( 7 )]
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource( 12 )
 
 [node name="ScoreboardMenu" parent="." instance=ExtResource( 6 )]
 transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 17, 2.5, 30 )
