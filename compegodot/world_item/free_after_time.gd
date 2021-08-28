@@ -17,4 +17,4 @@ func _ready() -> void:
 		emitting = true
 		timer = get_node(free_timer_path)
 		if timer.connect("timeout", self, "queue_free"):
-			print("Failed connecting timer::timeout to self::queue_free")
+			printerr("Failed connecting timer::timeout to self::queue_free")
