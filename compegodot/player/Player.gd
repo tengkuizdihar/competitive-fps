@@ -87,6 +87,7 @@ export(float) var CROUCH_SPEED = 5.5 # meter per second
 export(float) var JUMP_IMPULSE_VELOCITY = 12
 export(float) var AIR_ACCELERATION = 20
 export(float) var GROUND_ACCELERATION = 80
+export(float) var GROUND_FRICTION = 35
 export(float) var GRAVITY_CONSTANT = 25
 export(float) var MAX_RUN_VELOCITY = 13.0
 export(float) var MAX_WALK_VELOCITY = 6.0
@@ -216,6 +217,8 @@ func handle_movement(input_vector: Vector3, delta: float):
 
 	if is_on_ceiling():
 		gravity_velocity = Vector3.ZERO
+
+	# ON THE GROUND
 	elif is_on_floor():
 		input_slanted = input_vector.slide(get_floor_normal()).normalized()
 		gravity_velocity = -self.get_floor_normal() * MAGIC_ON_GROUND_GRAVITY
@@ -230,8 +233,16 @@ func handle_movement(input_vector: Vector3, delta: float):
 		else:
 			current_max_movement_velocity = MAX_RUN_VELOCITY
 
-		desired_movement_velocity = desired_movement_velocity.move_toward(input_slanted * current_max_movement_velocity, GROUND_ACCELERATION * delta)
+		# Apply Friction
+		if input_slanted.length() > 0:
+			if is_crouching:
+				desired_movement_velocity = desired_movement_velocity.move_toward(input_slanted * current_max_movement_velocity, GROUND_ACCELERATION * 0.5 * delta)
+			else:
+				desired_movement_velocity = desired_movement_velocity.move_toward(input_slanted * current_max_movement_velocity, GROUND_ACCELERATION * delta)
+		else:
+			desired_movement_velocity = apply_friction(desired_movement_velocity, GROUND_FRICTION, delta)
 
+	# IN THE AIR
 	else:
 		gravity_velocity.x = 0
 		gravity_velocity.z = 0
@@ -253,9 +264,8 @@ func handle_movement(input_vector: Vector3, delta: float):
 	var action_pressed_jump = consume_input("player_jump")
 	if is_on_floor() and (action_pressed_jump or (AUTO_BHOP and action_pressed_jump)):
 		gravity_velocity = Vector3.UP * JUMP_IMPULSE_VELOCITY
-		max_air_velocity = max(desired_movement_velocity.length(), MAX_JUMP_VELOCITY_FROM_STILL)
-		desired_movement_velocity = input_vector * current_max_movement_velocity
-		desired_movement_velocity = Util.clamp_vector3(desired_movement_velocity, final_velocity.length())
+		max_air_velocity = max(final_velocity.length(), MAX_JUMP_VELOCITY_FROM_STILL)
+		desired_movement_velocity = Util.clamp_vector3(input_vector * current_max_movement_velocity, final_velocity.length())
 
 	# finalize to current velocity
 	var velocity_and_gravity = desired_movement_velocity + gravity_velocity
@@ -284,29 +294,11 @@ func handle_weapon_selection() -> void:
 		weapon = weapons[current_weapon]
 		weapon.show()
 	if Input.is_action_just_pressed("player_weapon_gun_primary"):
-		if weapons[Global.WEAPON_SLOT.PRIMARY]:
-			if current_weapon != Global.WEAPON_SLOT.PRIMARY:
-				last_weapon_used = current_weapon
-				current_weapon = Global.WEAPON_SLOT.PRIMARY
-			hide_all_weapon()
-			weapon = weapons[Global.WEAPON_SLOT.PRIMARY]
-			weapon.show()
+		_switch_weapon_routine(Global.WEAPON_SLOT.PRIMARY)
 	if Input.is_action_just_pressed("player_weapon_gun_secondary"):
-		if weapons[Global.WEAPON_SLOT.SECONDARY]:
-			if current_weapon != Global.WEAPON_SLOT.SECONDARY:
-				last_weapon_used = current_weapon
-				current_weapon = Global.WEAPON_SLOT.SECONDARY
-			hide_all_weapon()
-			weapon = weapons[Global.WEAPON_SLOT.SECONDARY]
-			weapon.show()
+		_switch_weapon_routine(Global.WEAPON_SLOT.SECONDARY)
 	if Input.is_action_just_pressed("player_weapon_gun_knife"):
-		if weapons[Global.WEAPON_SLOT.MELEE]:
-			if current_weapon != Global.WEAPON_SLOT.MELEE:
-				last_weapon_used = current_weapon
-				current_weapon = Global.WEAPON_SLOT.MELEE
-			hide_all_weapon()
-			weapon = weapons[Global.WEAPON_SLOT.MELEE]
-			weapon.show()
+		_switch_weapon_routine(Global.WEAPON_SLOT.MELEE)
 
 
 # TODO: use weapon inaccuracy + movement inaccuracy
@@ -330,42 +322,7 @@ func fire_to_direction() -> void:
 
 func handle_weapon_drop() -> void:
 	if Input.is_action_just_pressed("player_weapon_drop") and weapon.weapon_type != Global.WEAPON_TYPE.KNIFE:
-
-		# remove from child
-		$Pivot/Camera/GunContainer.remove_child(weapon)
-
-		# make set_to_world_object
-		weapon.set_to_world_object()
-
-		# throw it into the world (for now just place it on the ground from where the camera origin is)
-		for i in get_tree().root.get_children():
-			if i is Spatial:
-				i.add_child(weapon)
-
-		randomize()
-		weapon.global_transform.origin = camera.global_transform.origin - global_transform.basis.z.normalized() * 2
-
-		# add force to the gun
-		weapon.apply_central_impulse(-camera.global_transform.basis.z * 70)
-		weapon.apply_torque_impulse(-camera.global_transform.basis.z.rotated(Vector3.UP, rand_range(-PI/2, PI/2)) * rand_range(2,3))
-
-		# make the weapons (dict) currenly equipped to null
-		weapons[current_weapon] = null
-
-		# make the current weapon the last equipped weapon
-		hide_all_weapon()
-		for k in weapons.keys():
-			var test = weapons.get(k)
-			if test:
-				current_weapon = k
-				weapon = test
-				weapon.show()
-
-		# set the last_weapon_used
-		for j in weapons.keys():
-			var test = weapons.get(j)
-			if test and j != current_weapon:
-				last_weapon_used = j
+		_drop_weapon(weapon)
 
 
 # TODO: add weapon pickup when near
@@ -380,28 +337,94 @@ func handle_weapon_pickup() -> void:
 		var colliding = ray_result.get("collider")
 
 		if colliding and colliding is GenericWeapon:
-			# TODO remove node from the world
-			var parent = colliding.get_parent()
-			parent.remove_child(colliding)
+			# set the weapon to the one chosen by the player
+			var existing_weapon = _set_weapon(colliding)
 
-			# TODO get weapon type
-			# TODO if there's a gun already in the inventory with same type
-			#      remove the gun and put it to the world
+			# if player already have a weapon in the chosen weapon slot
+			if existing_weapon:
+				_drop_weapon(existing_weapon)
 
-			# DEBUG: for now just give it to the secondary slot
-			weapons[Global.WEAPON_SLOT.SECONDARY] = colliding
-			last_weapon_used = Global.WEAPON_SLOT.SECONDARY
 
-			# Add to gun container
-			gun_container.add_child(colliding)
-			colliding.global_transform = gun_container.get_global_transform()
+# Drop the given weapon and then return whether the weapon is dropped or not.
+# Return true only when the weapon is dropped and false if the weapon can't be dropped.
+func _drop_weapon(w: GenericWeapon) -> void:
+	# remove from child
+	$Pivot/Camera/GunContainer.remove_child(w)
 
-			# Set the weapon to be equipped
-			colliding.set_to_equipped()
+	# make set_to_world_object
+	w.set_to_world_object()
 
-			# TODO make an option for auto switch on pickup
-			# Hide it at pickup
-			colliding.hide()
+	# throw it into the world (for now just place it on the ground from where the camera origin is)
+	for i in get_tree().root.get_children():
+		if i is Spatial:
+			i.add_child(w)
+
+	randomize()
+	w.global_transform.origin = camera.global_transform.origin - global_transform.basis.z.normalized() * 2
+
+	# add force to the gun
+	w.apply_central_impulse(-camera.global_transform.basis.z * 70)
+	w.apply_torque_impulse(-camera.global_transform.basis.z.rotated(Vector3.UP, rand_range(-PI/2, PI/2)) * rand_range(2,3))
+
+	# make the weapons (dict) currenly equipped to null
+	weapons[current_weapon] = null
+
+	# make the current weapon the last equipped weapon
+	hide_all_weapon()
+	for k in weapons.keys():
+		var test = weapons.get(k)
+		if test:
+			current_weapon = k
+			weapon = test
+			weapon.show()
+
+	# set the last_weapon_used
+	for j in weapons.keys():
+		var test = weapons.get(j)
+		if test and j != current_weapon:
+			last_weapon_used = j
+
+
+# Set the given weapon to the inventory then return an already existing weapon.
+# If player doesn't have weapon already, then return null.
+func _set_weapon(w: GenericWeapon) -> GenericWeapon:
+	var existing_weapon = weapons[w.weapon_slot]
+
+	# TODO remove node from the world
+	var parent = w.get_parent()
+	parent.remove_child(w)
+
+	# TODO get weapon type
+	# TODO if there's a gun already in the inventory with same type
+	#      remove the gun and put it to the world
+
+	# DEBUG: for now just give it to the secondary slot
+	weapons[w.weapon_slot] = w
+	last_weapon_used = w.weapon_slot
+
+	# Add to gun container
+	gun_container.add_child(w)
+	w.global_transform = gun_container.get_global_transform()
+
+	# Set the weapon to be equipped
+	w.set_to_equipped()
+
+	# TODO make an option for auto switch on pickup
+	# Hide it at pickup
+	w.hide()
+
+	return existing_weapon
+
+
+func _switch_weapon_routine(weapon_slot) -> void:
+	if weapons[weapon_slot]:
+		if current_weapon != weapon_slot:
+			last_weapon_used = current_weapon
+			current_weapon = weapon_slot
+		hide_all_weapon()
+		weapon = weapons[weapon_slot]
+		weapon.show()
+
 
 ###########################################################
 # Input Pooling Functions
@@ -470,6 +493,7 @@ static func get_shooting_direction(player, c: Camera, w: GenericWeapon) -> Vecto
 	var forward = -c.global_transform.basis.z
 
 	var inaccuracy = w.get_inaccuracy()
+
 	var inh_inacc = inaccuracy.inherent
 	var spr_inacc = inaccuracy.spray
 
@@ -500,3 +524,10 @@ static func get_movement_input(camera_basis: Basis) -> Vector3:
 
 	input_direction.y = 0
 	return input_direction.normalized()
+
+static func apply_friction(new_velocity: Vector3, friction_constant: float, delta: float) -> Vector3:
+	if new_velocity.length() <= friction_constant * delta:
+		return Vector3()
+	else:
+		var friction_vector = new_velocity.normalized() * friction_constant * delta
+		return new_velocity - friction_vector
