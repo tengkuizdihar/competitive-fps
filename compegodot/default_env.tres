@@ -9,4 +9,3 @@ panorama = ExtResource( 1 )
 background_mode = 2
 background_sky = SubResource( 1 )
 background_energy = 0.55
-ssao_enabled = true
