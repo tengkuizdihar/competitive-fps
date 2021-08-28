@@ -501,10 +501,10 @@ static func get_shooting_direction(player, c: Camera, w: GenericWeapon) -> Vecto
 	var movement_inaccuracy = 1 + (movement_ratio_to_still * w.movement_inaccuracy_multiplier)
 
 	# If rotated by a positive number, it goes to the right, vice versa
-	var horizontalized = forward.rotated(-c.global_transform.basis.y, (inh_inacc.horizontal * movement_inaccuracy) + spr_inacc.horizontal)
+	var horizontalized = forward.rotated(-c.global_transform.basis.y, (inh_inacc[0] * movement_inaccuracy) + spr_inacc[0])
 
 	# If rotated by a positive number, it goes to the top, vice versa
-	var verticalized = horizontalized.rotated(c.global_transform.basis.x, (inh_inacc.vertical * movement_inaccuracy) + spr_inacc.vertical)
+	var verticalized = horizontalized.rotated(c.global_transform.basis.x, (inh_inacc[1] * movement_inaccuracy) + spr_inacc[1])
 	return verticalized
 
 ###########################################################

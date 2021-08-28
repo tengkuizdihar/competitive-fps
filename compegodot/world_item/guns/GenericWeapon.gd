@@ -23,11 +23,20 @@ export (String) var anim_shoot_name = "shoot"
 # The secondary animation name in the gun AnimationPlayer
 export (String) var anim_shoot_secondary_name = "shoot_secondary"
 
+# An array of spray recoils that the gun will go through
+export (Array, String) var spray_recoils = []
+
+# An array of infinite spray recoils, used after spray_recoil is used up
+export (Array, String) var spray_infinite_recoils = []
+
 # The base damage inflicted for this gun
 export (float) var base_damage = 100.0
 
 # The gun's rounds per second. Use 0 to disable it
 export (float) var round_per_second = 1
+
+# The gun's spray reset time in second.
+export (float) var spray_reset_time = 1
 
 # The gun's inaccuracy scale
 export (float) var inaccuracy_scale = 0
@@ -47,6 +56,15 @@ var shoot_audio_player: AudioStreamPlayer
 # Internal timer reference for rate of fire
 var rof_timer: Timer
 
+# Internal timer reference for spray pattern
+var spray_timer: Timer
+
+# The index used for the spray recoil
+var spray_array_index: int = 0
+
+# The sum of the current spray's recoil
+# Will get reset when spray timer reach 0
+var spray_cummulative = [0.0, 0.0]
 
 func _is_animation_player() -> bool:
 	var test = get_node(gun_animation_player_path)
@@ -90,6 +108,17 @@ func _ready() -> void:
 		rof_timer.process_mode = Timer.TIMER_PROCESS_PHYSICS
 		add_child(rof_timer)
 
+		# init rate of fire timer
+		spray_timer = Timer.new()
+		spray_timer.wait_time = spray_reset_time
+		spray_timer.one_shot = true
+		spray_timer.process_mode = Timer.TIMER_PROCESS_PHYSICS
+		add_child(spray_timer)
+
+		# Init recoil arrays
+		transform_to_recoil_array(spray_recoils)
+		transform_to_recoil_array(spray_infinite_recoils)
+
 
 func can_shoot() -> bool:
 	return rof_timer.is_stopped()
@@ -103,6 +132,8 @@ func trigger_on() -> void:
 		rof_timer.start()
 		anim_player.stop()
 		anim_player.play(anim_shoot_name)
+		_spray_routine()
+
 
 func trigger_off() -> void:
 	if Global.WEAPON_TYPE.SEMI_AUTOMATIC:
@@ -141,19 +172,45 @@ func set_to_world_object() -> void:
 	self.collision_layer = 1
 	self.collision_mask = 1
 
+
+func _spray_routine():
+	if spray_timer.is_stopped():
+		spray_array_index = 0
+		spray_cummulative = [0.0, 0.0]
+	else:
+		var spray = get_spray_inaccuracy()
+		spray_cummulative[0] = spray_cummulative[0] + spray[0]
+		spray_cummulative[1] = spray_cummulative[1] + spray[1]
+		spray_array_index += 1
+
+	spray_timer.start()
+
+
+func transform_to_recoil_array(recoil_array: Array):
+	for i in range(recoil_array.size()):
+		recoil_array[i] = parse_json(recoil_array[i])
+
+
+func get_spray_inaccuracy():
+	var default_recoil = [0.0, 0.0]
+
+	if spray_array_index > spray_recoils.size() - 1:
+		var infinite_index = spray_array_index - spray_recoils.size()
+		infinite_index = wrapi(infinite_index, 0, spray_infinite_recoils.size())
+
+		return Util.array_get(spray_infinite_recoils, infinite_index, default_recoil)
+
+	else:
+		return Util.array_get(spray_recoils, spray_array_index, default_recoil)
+
+
 # Will give a dictionary of inherent and spray inaccuracy filled with the
 # vertical and horizontal, measured in radians.
 #
 # For example:
 # {
-#     "inherent": {
-#         "vertical": 1.1,
-#         "horizontal": 1.2
-#     },
-#     "spray": {
-#         "vertical": -2.1,
-#         "horizontal": -2.2
-#     }
+#     "inherent": [1.1, 1.2]
+#     "spray": [-2.1, -2.2]
 # }
 #
 # Means the inherent inaccuracy will go up and right by 1.1 and 1.2 radian respectively.
@@ -161,14 +218,10 @@ func set_to_world_object() -> void:
 func get_inaccuracy() -> Dictionary:
 	randomize()
 	return {
-		"inherent": {
-			"vertical": rand_range(-inaccuracy_scale, inaccuracy_scale),
-			"horizontal": rand_range(-inaccuracy_scale, inaccuracy_scale)
-		},
+		"inherent": [
+			rand_range(-inaccuracy_scale, inaccuracy_scale),
+			rand_range(-inaccuracy_scale, inaccuracy_scale)
+		],
 
-		# TODO: create a function to calculate the spray based on some timer
-		"spray": {
-			"vertical": 0.0,
-			"horizontal": 0.0
-		}
+		"spray": spray_cummulative
 	}
