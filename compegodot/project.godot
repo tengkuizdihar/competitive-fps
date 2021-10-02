@@ -38,11 +38,6 @@ _global_script_classes=[ {
 "class": "IInteract",
 "language": "GDScript",
 "path": "res://interfaces/IInteract.gd"
-}, {
-"base": "",
-"class": "ScoreDatabse",
-"language": "NativeScript",
-"path": "res://ScoreDatabase.gdns"
 } ]
 _global_script_class_icons={
 "ArrayUtils": "",
@@ -50,8 +45,7 @@ _global_script_class_icons={
 "CameraSmoothPhysics": "",
 "GenericWeapon": "",
 "IHealth": "",
-"IInteract": "",
-"ScoreDatabse": ""
+"IInteract": ""
 }
 
 [application]
@@ -65,7 +59,7 @@ config/icon="res://icon.png"
 Util="*res://util.gd"
 State="*res://state.gd"
 Global="*res://global.gd"
-ScoreDatabase="*res://ScoreDatabase.gdns"
+Score="*res://score.gd"
 
 [display]
 
