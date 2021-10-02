@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://assets/gun_model/pink.material" type="Material" id=1]
 [ext_resource path="res://world_item/guns/GenericWeapon.gd" type="Script" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://assets/gun_model/darkMetal.material" type="Material" id=5]
 [ext_resource path="res://assets/sounds/gun_shot.wav" type="AudioStream" id=6]
 [ext_resource path="res://world_item/guns/GenericWeaponPhysicsMaterial.tres" type="PhysicsMaterial" id=7]
+[ext_resource path="res://assets/sounds/empty_gun_shot.wav" type="AudioStream" id=8]
 
 [sub_resource type="ArrayMesh" id=1]
 resource_name = "blasterC"
@@ -60,7 +61,36 @@ surfaces/3 = {
 }
 
 [sub_resource type="Animation" id=2]
-resource_name = "shoot"
+resource_name = "reload"
+length = 0.6
+tracks/0/type = "value"
+tracks/0/path = NodePath("Spatial:transform")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2, 0.3, 0.4, 0.5, 0.6 ),
+"transitions": PoolRealArray( 1, 0.999999, 0.999999, 1, 1, 1 ),
+"update": 0,
+"values": [ Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 ), Transform( 1, 0, 0, 0, -5.96046e-08, -1, 0, 1, -5.96046e-08, 0, -0.1, -0.3 ), Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, -0.1, -0.3 ), Transform( 1, 0, 0, 0, -0.939693, -0.34202, 0, 0.34202, -0.939693, 0, -0.0888889, -0.266667 ), Transform( 1, 0, 0, 0, 0.422618, -0.906308, 0, 0.906308, 0.422618, 0, -0.0777778, -0.233333 ), Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 ) ]
+}
+tracks/1/type = "method"
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0.6 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "_reload_routine"
+} ]
+}
+
+[sub_resource type="Animation" id=3]
 length = 0.3
 tracks/0/type = "value"
 tracks/0/path = NodePath("Spatial:transform")
@@ -75,30 +105,49 @@ tracks/0/keys = {
 "values": [ Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 ), Transform( 1, 0, 0, 0, 0.879873, -0.47521, 0, 0.47521, 0.879873, 0, -0.0704469, 0.200603 ), Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 ) ]
 }
 
-[sub_resource type="BoxShape" id=3]
-extents = Vector3( 0.0845181, 0.203704, 0.262221 )
+[sub_resource type="Animation" id=4]
+resource_name = "startup"
+tracks/0/type = "value"
+tracks/0/path = NodePath("Spatial:transform")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2, 0.4, 0.7, 1 ),
+"transitions": PoolRealArray( 1, 1, 0.183011, 0.203064, 1 ),
+"update": 0,
+"values": [ Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, -0.4, 1 ), Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 ), Transform( 0.885646, -0.426777, 0.183013, 0.426777, 0.592752, -0.683013, 0.183013, 0.683013, 0.707107, -0.1, 0, 0.3 ), Transform( 0.885646, -0.426777, 0.183013, 0.426777, 0.592752, -0.683013, 0.183013, 0.683013, 0.707107, -0.1, -0.1, 0.4 ), Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 ) ]
+}
+
+[sub_resource type="BoxShape" id=5]
+margin = 0.001
+extents = Vector3( 0.1, 0.2, 0.3 )
 
 [node name="PM9" type="RigidBody"]
-mass = 10.0
+collision_layer = 8
 physics_material_override = ExtResource( 7 )
-gravity_scale = 1.2
 continuous_cd = true
 script = ExtResource( 2 )
+magazine_ammo = 12
+total_ammo = 36
+round_per_second = 4.45
 weapon_slot = 1
 gun_animation_player_path = NodePath("AnimationPlayer")
 gun_shoot_audio_player = NodePath("GunShoot")
+gun_shoot_empty_audio_player = NodePath("GunShootEmpty")
 gun_mesh_instance = NodePath("Spatial/blasterC2")
 spray_recoils = [ "[0.000, 0.004]", "[0.000, 0.004]", "[0.000, 0.004]", "[0.000, 0.004]", "[0.000, 0.004]", "[0.000, 0.004]", "[0.000, 0.004]" ]
 spray_infinite_recoils = [ "[0.05, 0.01]", "[-0.05, 0.01]" ]
-round_per_second = 4.45
 spray_reset_time = 0.5
 inaccuracy_scale = 0.005
-movement_inaccuracy_multiplier = 10.0
+movement_inaccuracy_multiplier = 2.5
+jumping_inaccuracy_multiplier = 2.0
 
 [node name="Spatial" type="Spatial" parent="."]
 
 [node name="blasterC2" type="MeshInstance" parent="Spatial"]
-transform = Transform( -1, 0, -2.06632e-07, 0, 1, 0, 2.06632e-07, 0, -1, 0, 0, 0 )
+transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0 )
 mesh = SubResource( 1 )
 material/0 = null
 material/1 = null
@@ -106,11 +155,17 @@ material/2 = null
 material/3 = null
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/shoot = SubResource( 2 )
+anims/reload = SubResource( 2 )
+anims/shoot = SubResource( 3 )
+anims/startup = SubResource( 4 )
 
 [node name="GunShoot" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 6 )
 volume_db = -15.0
 
+[node name="GunShootEmpty" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 8 )
+volume_db = -15.0
+
 [node name="CollisionShape" type="CollisionShape" parent="."]
-shape = SubResource( 3 )
+shape = SubResource( 5 )

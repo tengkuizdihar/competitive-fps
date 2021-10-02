@@ -15,11 +15,21 @@ A living document of an unnamed 5 versus 5 competitive FPS, similar to Counter-S
   - [Time](#time)
   - [Objective](#objective)
   - [Economic System](#economic-system)
-  - [Weapon](#weapon)
+  - [Weapon - Mechanics](#weapon---mechanics)
+    - [Ammunition](#ammunition)
+    - [Recoils](#recoils)
+    - [Audio Hints](#audio-hints)
+  - [Weapon - Variety](#weapon---variety)
+  - [Melee](#melee)
+    - [Pistols](#pistols)
+    - [Rifles](#rifles)
+    - [(Sub) Machine Guns](#sub-machine-guns)
+    - [Antiques](#antiques)
   - [Movement](#movement)
   - [Utility](#utility)
   - [Health Management](#health-management)
   - [Interaction](#interaction)
+  - [Communication](#communication)
 - [Media](#media)
 - [Afterwords & Credits](#afterwords--credits)
 - [Glossary](#glossary)
@@ -140,9 +150,67 @@ In a competitive game such as The Solver Series, there's a need for a system to 
 
 TODO: details how each team get punished and rewarded through the economic system that transcend rounds but not matches.
 
-## Weapon
+## Weapon - Mechanics
 
-TODO: describe every single weapon that's in the game, their role, and statistics.
+This section will detail the way most concepts that will be used when implementing a weapon.
+
+### Ammunition
+
+TODO: explain the total amount of ammo, the ammo in the magazine, and knife which has no ammo.
+
+### Recoils
+
+When designing a weapon (at least a "regular" one where it only shoot one bullet at a time, there's a need to introduce some concepts that would balance and tweak each gun's strengths and weaknesses.
+
+1. Innate Inaccuracy
+
+    Every gun will have a certain amount of inaccuracy that's uncontrollable and unpredictable. For example, even if you're standing still, not moving, and centering your crosshair on a target, your gun will never fire exactly at the center of your crosshair. For example, an SMG would be less accurate than a regular rifle, which in turn make it less reliable when engaging in a mid to long distance fire fight.
+
+    The role of this concept would be to make characterization and much needed balance for every weapon that's in the game.
+
+2. Movement Inaccuracy
+
+    One of the many ethos that this game would have is the fact that it isn't a "call of duty" like game, in which every single character may run-and-gun their way through victory. There's a need to implement some sort of punishment system for player that move while shooting their gun. This in turn would lead to a more "tactical" gameplay that prefer pin point precision of coordination between the movement of the player and the way they shoot.
+
+    Every gun may have a different amount of movement inaccuracy to for balance and specialization of certain weapons. For example, a sniper rifle might have a very high penalty when used whilst moving, in contrast to pistols and sub-machine guns. It may also be recorded that being airborne would also add another penalty, complementing the velocity penalty of the weapon.
+
+3. Spray Patterns
+
+    To add some certainty and skill towards controlling a fully automatic weapon, we chose to utilize a concept, most notably used in Counter-Strike: Global Offensive. When the player is firing an automatic rifle on a wall, the will realize that there's a pattern that would emerge. The pattern itself is predetermined and predictable by the player. This pattern should be an indication that spraying the gun is a viable way to kill an opponent even if at first it seems unpredictable.
+
+4. Recoil Punch with Recoil Decay
+
+    Let's call the point which we're aiming right now as "origin". Whilst not moving your mouse, fire your weapon *once*. You will soon realise that there's going to be a slight nudge to your aim, most commonly towards the upwards direction. After a certain amount of time, your crosshair will return to its "origin".
+
+    The phenomenon when your aim is "nudged" as you fire a weapon is called **recoil punch**. The recovery of your crosshair towards the "origin" as soon as you're stop firing is called **recoil decay**. The amount and direction to which your aim is nudged, is calculated based upon the next value of the spray patterns. For example, if the next bullet fired would have a recoil that will send the bullet 1 up and 1 right (in degrees), then your screen will be nudged by 0.5 up and 0.5 right.
+
+### Audio Hints
+
+TODO: walking, scoping, using utilities, reloading, firing your gun (and maybe silencers), and dropping from high enough places.
+
+## Weapon - Variety
+
+TODO: explain the many kinds of weapon variety and why variety is needed.
+
+## Melee
+
+TODO: for short range fight, style, and embarrassing the enemy.
+
+### Pistols
+
+TODO: for short range firefight, enemy without much protection, rushing, and when your other weapon's ammunition is spent.
+
+### Rifles
+
+TODO: for most of the engagement in the game and also add sniper rifles.
+
+### (Sub) Machine Guns
+
+TODO: for rushing, close to mid range firefight, against an "eco" enemy, and embarrassing the enemy if the enemy bought rifles.
+
+### Antiques
+
+TODO: for a very specific play style and situation.
 
 ## Movement
 
@@ -158,7 +226,11 @@ TODO: explain that every single person in the game have 100 health and the damag
 
 ## Interaction
 
-TODO: explain the way that player can interact with the world. Dropping guns and utilities for their friends, defusing the bomb, opening and closing doors, manipulating sound cues like going through a checkpoint, killing a teammate, pinging a location, drawing on the map, voice chat, and team/inter-team chat etc.
+TODO: explain the way that player can interact with the world. Dropping guns and utilities for their friends, defusing the bomb, opening and closing doors, manipulating sound cues like going through a checkpoint, killing a teammate, pinging a location, drawing on the map
+
+## Communication
+
+TODO: voice chat, and team/inter-team chat etc.
 
 # Media
 
@@ -166,13 +238,13 @@ TODO: concept art that expresses the identity of the game, the art style that it
 
 # Afterwords & Credits
 
-Thank you for reading the proposal of the game. May it flourish into something that others enjoy.
+Thank you for reading the proposal of the game. May it flourish into something that other people would enjoy.
 
 - Author: Tengku Izdihar Rahman Amanullah
 
 # Glossary
 
-Below are all of the more uncommon words that we use for this document. What matters here is the intent of the word rather than the exact definition of it, so be careful when translating the document to other languages.
+Below are all of the more uncommon terms that we use for this document. What matters here is the intent of the word rather than the exact definition of it, so be careful when translating the document to other languages.
 
 - **Counter Strike: Global Offensive**: A competitive tactical shooter with unique mechanics that's being developed by Valve.
 - **Economic System**: A system that regulates, awards, and punish the action of the player through the means in-game cash.

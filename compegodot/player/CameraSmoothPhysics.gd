@@ -5,6 +5,10 @@ var latest_physics_origin = Vector3.ZERO
 var latest_physics_delta = 1.0
 var accumulated_delta_render = 0.0
 
+var rotated_angle_horizontal = 0.0
+var rotated_angle_vertical = 0.0
+
+
 export(bool) var tps_view = false
 export(float) var tps_distance = 7.0
 
@@ -29,6 +33,10 @@ func _process(delta: float) -> void:
 	var interp_origin = current_origin.linear_interpolate(target_origin, ratio)
 
 	self.global_transform.origin = interp_origin
+
+	self.rotate_y(-Global.PHI * rotated_angle_horizontal)
+	self.rotate_x(-Global.PHI * rotated_angle_vertical)
+
 
 func get_ratio(render_delta: float) -> float:
 	var ratio = 1.0

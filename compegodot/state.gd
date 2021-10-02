@@ -7,6 +7,7 @@ const SIGNAL_PREFIX = "STATE_"
 onready var _state = {
 	"DEBUG_PLAYER_VELOCITY": 0.0,
 	"DEBUG_MISC": "NOT USED",
+	"DEBUG_AMMO": "NOT USED",
 }
 
 

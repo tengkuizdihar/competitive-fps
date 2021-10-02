@@ -154,6 +154,11 @@ player_weapon_drop={
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":71,"unicode":0,"echo":false,"script":null)
  ]
 }
+player_reload={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":82,"unicode":0,"echo":false,"script":null)
+ ]
+}
 
 [layer_names]
 
@@ -162,6 +167,7 @@ player_weapon_drop={
 3d_render/layer_2="PLAYER"
 3d_physics/layer_2="TEAM_1"
 3d_physics/layer_3="TEAM_2"
+3d_physics/layer_4="GUN"
 
 [physics]
 

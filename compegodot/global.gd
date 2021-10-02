@@ -20,8 +20,11 @@ enum RENDER_LAYERS {
 enum PHYSICS_LAYERS {
 	WORLD = 1,
 	TEAM_1 = 2,
-	TEAM_2 = 4
+	TEAM_2 = 4,
+	GUN = 8
 }
 
 class GROUP:
 	const LEVEL = "LEVEL"
+
+const PHI = 1.61803399
