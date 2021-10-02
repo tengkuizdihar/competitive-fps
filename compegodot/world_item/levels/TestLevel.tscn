@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://player/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://materials/LevelTestingMaterial.tres" type="Material" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://world_item/scoreboard/ScoreboardMenu.tscn" type="PackedScene" id=6]
 [ext_resource path="res://world_item/scoreboard/Scoreboard.tscn" type="PackedScene" id=7]
 [ext_resource path="res://world_item/RandomShootingArea.tscn" type="PackedScene" id=8]
+[ext_resource path="res://world_item/guns/PM9.tscn" type="PackedScene" id=9]
 
 [sub_resource type="PhysicsMaterial" id=1]
 rough = true
@@ -352,7 +353,7 @@ transform = Transform( 1, 0, 2.62268e-08, 0, 1, 0, 2.62268e-08, 0, 0.4, 0, -2, 0
 shape = SubResource( 10 )
 
 [node name="DirectionalLight" type="DirectionalLight" parent="."]
-transform = Transform( 1, 0, 0, 0, -0.965926, 0.258819, 0, -0.258819, -0.965926, 0, 16, 0 )
+transform = Transform( 0.5, 0.224144, 0.836516, -7.45058e-08, -0.965926, 0.258819, 0.866025, -0.12941, -0.482963, 0, 16, 0 )
 shadow_enabled = true
 directional_shadow_blend_splits = true
 
@@ -360,3 +361,12 @@ directional_shadow_blend_splits = true
 
 [node name="ScoreboardMenu" parent="." instance=ExtResource( 6 )]
 transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 17, 2.5, 30 )
+
+[node name="PM9" parent="." instance=ExtResource( 9 )]
+transform = Transform( 0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0, 1, 27, 6, 26 )
+
+[node name="PM10" parent="." instance=ExtResource( 9 )]
+transform = Transform( 0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0, 1, 26, 6, 26 )
+
+[node name="PM11" parent="." instance=ExtResource( 9 )]
+transform = Transform( 0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0, 1, 25, 6, 26 )
