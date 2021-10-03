@@ -57,6 +57,7 @@ margin_top = 698.0
 margin_right = 300.0
 margin_bottom = 718.0
 text = "Exit"
+
 [connection signal="pressed" from="ColumnContainer/MarginContainer/VBoxContainer/Start" to="." method="_on_Start_pressed"]
 [connection signal="pressed" from="ColumnContainer/MarginContainer/VBoxContainer/Option" to="." method="_on_Option_pressed"]
 [connection signal="pressed" from="ColumnContainer/MarginContainer/VBoxContainer/Exit" to="." method="_on_Exit_pressed"]
