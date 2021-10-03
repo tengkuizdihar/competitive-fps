@@ -9,7 +9,7 @@ func _ready() -> void:
 
 
 func add_hit_count() -> void:
-	ScoreDatabase.add_score()
+	Score.add_score()
 
 
 func _on_ShootingTarget_dead() -> void:

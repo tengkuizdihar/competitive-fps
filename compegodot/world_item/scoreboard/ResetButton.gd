@@ -9,4 +9,4 @@ func _ready() -> void:
 
 
 func _on_interacted() -> void:
-	ScoreDatabase.reset_score()
+	Score.reset_score()
