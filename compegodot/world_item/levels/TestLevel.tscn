@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://player/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://materials/LevelTestingMaterial.tres" type="Material" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://world_item/scoreboard/Scoreboard.tscn" type="PackedScene" id=7]
 [ext_resource path="res://world_item/RandomShootingArea.tscn" type="PackedScene" id=8]
 [ext_resource path="res://world_item/guns/PM9.tscn" type="PackedScene" id=9]
+[ext_resource path="res://world_item/guns/RF7.tscn" type="PackedScene" id=10]
 
 [sub_resource type="PhysicsMaterial" id=1]
 rough = true
@@ -370,3 +371,9 @@ transform = Transform( 0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0, 1, 2
 
 [node name="PM11" parent="." instance=ExtResource( 9 )]
 transform = Transform( 0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0, 1, 25, 6, 26 )
+
+[node name="RF7" parent="." instance=ExtResource( 10 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 29, 5, 23 )
+
+[node name="RF8" parent="." instance=ExtResource( 10 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 5, 23 )

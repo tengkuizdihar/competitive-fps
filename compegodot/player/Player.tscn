@@ -173,4 +173,5 @@ material/0 = null
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0 )
 enabled = true
 cast_to = Vector3( 0, 0, 0 )
+
 [connection signal="body_entered" from="Area" to="." method="_on_Area_body_entered"]
