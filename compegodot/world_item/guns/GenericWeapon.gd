@@ -136,6 +136,9 @@ var current_ammo = 0
 # Amount of ammo that the gun has
 var current_total_ammo = 0
 
+# Flag to allow semi automatic or knife to be used
+var semi_could_shoot = true
+
 # An array of spray recoils that the gun will go through
 var _spray_recoils = []
 
@@ -199,6 +202,7 @@ func _ready() -> void:
 		spray_timer.one_shot = true
 		spray_timer.process_mode = Timer.TIMER_PROCESS_PHYSICS
 		add_child(spray_timer)
+		Util.print_err(spray_timer.connect("timeout", self, "_on_spray_timer_timeout"))
 
 		# init rate of fire timer
 		auto_pickupable_timer = Timer.new()
@@ -238,35 +242,52 @@ func can_reload() -> bool:
 # Returns the state of the gun, whether it's firing or not
 # It might not be able to fire because it's out of bullets for example
 func trigger_on() -> bool:
-	var is_ammo_usable = _ammo_depletion_routine()
+	if weapon_type == Global.WEAPON_TYPE.SEMI_AUTOMATIC or weapon_type == Global.WEAPON_TYPE.KNIFE:
+		if semi_could_shoot:
+			var is_ammo_usable = _ammo_depletion_routine()
+			semi_could_shoot = false
+			if is_ammo_usable:
+				shoot_audio_player.play()
+				rof_timer.start()
+				anim_player.stop()
+				anim_player.play(anim_shoot_name)
+				_spray_routine()
+				return true
+			else:
+				shoot_empty_audio_player.play()
+				return false
+	elif weapon_type == Global.WEAPON_TYPE.AUTOMATIC:
+		var is_ammo_usable = _ammo_depletion_routine()
+		if is_ammo_usable:
+			shoot_audio_player.play()
+			rof_timer.start()
+			anim_player.stop()
+			anim_player.play(anim_shoot_name)
+			_spray_routine()
+			return true
 
-	if is_ammo_usable:
-		shoot_audio_player.play()
-		rof_timer.start()
-		anim_player.stop()
-		anim_player.play(anim_shoot_name)
-		_spray_routine()
-		return true
-	else:
-		shoot_empty_audio_player.play()
-		return false
+		if semi_could_shoot:
+			semi_could_shoot = false
+			shoot_empty_audio_player.play()
+			return false
+
+	return false
 
 
 func trigger_off() -> void:
-	if Global.WEAPON_TYPE.SEMI_AUTOMATIC:
-		pass
+	semi_could_shoot = true
 
 
 # TODO add second audio
 func second_trigger_on() -> void:
-	if Global.WEAPON_TYPE.KNIFE:
+	if weapon_type == Global.WEAPON_TYPE.KNIFE:
 		rof_timer.start()
 		anim_player.stop()
 		anim_player.play(anim_shoot_secondary_name)
 
 
 func second_trigger_off() -> void:
-	if Global.WEAPON_TYPE.KNIFE:
+	if weapon_type == Global.WEAPON_TYPE.KNIFE:
 		pass
 
 
@@ -312,6 +333,7 @@ func set_to_world_object() -> void:
 	self.collision_mask = Global.PHYSICS_LAYERS.WORLD
 
 	auto_pickupable_timer.start()
+	semi_could_shoot = false
 
 
 func is_auto_pickupable() -> bool:
@@ -319,16 +341,15 @@ func is_auto_pickupable() -> bool:
 
 
 func _spray_routine():
-	if spray_timer.is_stopped():
-		spray_array_index = 0
-		spray_cummulative = [0.0, 0.0]
-	else:
-		var spray = get_spray_inaccuracy(spray_array_index)
-		spray_cummulative[0] = spray_cummulative[0] + spray[0]
-		spray_cummulative[1] = spray_cummulative[1] + spray[1]
-		spray_array_index += 1
-
 	spray_timer.start()
+	var spray = get_spray_inaccuracy(spray_array_index)
+
+	var ratio = (spray_timer.time_left + (1 / round_per_second)) / spray_timer.wait_time
+
+	spray_cummulative[0] = spray_cummulative[0] * min(ratio, 1) + spray[0]
+	spray_cummulative[1] = spray_cummulative[1] * min(ratio, 1) + spray[1]
+	spray_array_index += 1
+
 
 
 func _ammo_depletion_routine() -> bool:
@@ -356,10 +377,10 @@ func get_spray_inaccuracy(spray_index: int):
 		var infinite_index = spray_index - _spray_recoils.size()
 		infinite_index = wrapi(infinite_index, 0, _spray_infinite_recoils.size())
 
-		return Util.array_get(_spray_infinite_recoils, infinite_index, default_recoil)
+		return Util.array_get(_spray_infinite_recoils, infinite_index, default_recoil).duplicate()
 
 	else:
-		return Util.array_get(_spray_recoils, spray_index, default_recoil)
+		return Util.array_get(_spray_recoils, spray_index, default_recoil).duplicate()
 
 
 # Will do a routine where the gun is switched on to
@@ -397,9 +418,23 @@ func get_inaccuracy() -> Dictionary:
 	}
 
 
-func get_knockback_inaccuracy() -> Dictionary:
-	return get_spray_inaccuracy(spray_array_index + 1)
+# BUG: first shot will always have get_aim_punch_ratio of 0
+func get_knockback_inaccuracy():
+	var spray = get_spray_inaccuracy(spray_array_index + 1)
+
+	var aim_punch_ratio = spray_timer.time_left / spray_timer.wait_time
+	aim_punch_ratio = ease(aim_punch_ratio, 1.5)
+
+	spray[0] = (spray_cummulative[0] * aim_punch_ratio + spray[0] * aim_punch_ratio) * 0.5
+	spray[1] = (spray_cummulative[1] * aim_punch_ratio + spray[1] * aim_punch_ratio) * 0.5
+
+	return spray
 
 
 func get_aim_punch_ratio() -> float:
 	return spray_timer.time_left / spray_timer.wait_time
+
+
+func _on_spray_timer_timeout() -> void:
+	spray_array_index = 0
+	spray_cummulative = [0.0, 0.0]

@@ -146,7 +146,7 @@ The other silent enemy of the attackers is the time itself. If an attacking team
 
 ## Economic System
 
-In a competitive game such as The Solver Series, there's a need for a system to regulates, awards, and punish the action of the player. In this game, that system will be implemented through the means of in-game cash. The in-game cash is reset after the half-time and when the game is over.
+In a competitive game such as this one, there's a need for a system to regulates, awards, and punish the action of the player. In this game, that system will be implemented through the means of in-game cash. The in-game cash is reset after the half-time and when the game is over.
 
 TODO: details how each team get punished and rewarded through the economic system that transcend rounds but not matches.
 

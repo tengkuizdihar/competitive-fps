@@ -74,7 +74,7 @@ const captured_events = [
 	"player_backward",
 	"player_right",
 	"player_left",
-];
+]
 
 onready var pivot_original_local_translation = $Pivot.transform.origin
 onready var body_original_local_translation = $Body.transform.origin
@@ -159,7 +159,7 @@ func _physics_process(delta: float) -> void:
 	apply_shooting_knockback(self, camera, weapon)
 
 	State.change_state("DEBUG_AMMO", "%d - %d" % [weapon.current_ammo, weapon.current_total_ammo])
-	State.change_state("DEBUG_MISC", str(pivot.global_transform.basis))
+	State.change_state("DEBUG_MISC", str(weapons))
 
 
 ###########################################################
@@ -175,10 +175,10 @@ func _physics_process(delta: float) -> void:
 ### BUG: if crouching under moving platform, player would stand up and down repeatedly
 ### TODO: NEW METHOD WHEN IN GROUND, CURRENT METHOD WHEN AIRBORNE
 func manage_crouching(delta: float):
-	if Input.is_action_pressed("player_crouch") or $Body.shape.height < body_original_height:
+	if LLInput.is_action_pressed("player_crouch") or $Body.shape.height < body_original_height:
 		is_crouching = true
 
-	if not Input.is_action_pressed("player_crouch") and not headlimit_raycast.is_colliding():
+	if not LLInput.is_action_pressed("player_crouch") and not headlimit_raycast.is_colliding():
 		is_crouching = false
 
 	if is_on_floor():
@@ -231,11 +231,11 @@ func handle_movement(input_vector: Vector3, delta: float):
 		gravity_velocity = -self.get_floor_normal() * MAGIC_ON_GROUND_GRAVITY
 
 		# Player walk action that will decrease MAX_VELOCITY
-		if Input.is_action_pressed("player_walk") and is_crouching:
+		if LLInput.is_action_pressed("player_walk") and is_crouching:
 			current_max_movement_velocity = MAX_WALK_VELOCITY * 0.815
 		elif is_crouching:
 			current_max_movement_velocity = MAX_WALK_VELOCITY
-		elif Input.is_action_pressed("player_walk"):
+		elif LLInput.is_action_pressed("player_walk"):
 			current_max_movement_velocity = MAX_WALK_VELOCITY
 		else:
 			current_max_movement_velocity = MAX_RUN_VELOCITY
@@ -268,7 +268,7 @@ func handle_movement(input_vector: Vector3, delta: float):
 	#
 	# EXAMPLE: if the desired velocity isn't changed, player who went up a slope
 	#          will have higher jumping velocity than the one going downwards.
-	var action_pressed_jump = consume_input("player_jump")
+	var action_pressed_jump = LLInput.consume_input("player_jump|pressed")
 	var is_pressed_jump = Input.is_action_pressed("player_jump")
 	if is_on_floor() and (action_pressed_jump or (AUTO_BHOP and is_pressed_jump)):
 		gravity_velocity = Vector3.UP * JUMP_IMPULSE_VELOCITY
@@ -308,9 +308,10 @@ func handle_weapon_selection() -> void:
 # TODO: use weapon information for ammo and reloading
 func fire_to_direction() -> void:
 	# FIRST TRIGGER
-	if consume_input("player_shoot_primary") and weapon.can_shoot() and weapon.trigger_on():
+	if LLInput.is_action_pressed("player_shoot_primary") and weapon.can_shoot() and weapon.trigger_on():
 		shooting_routine(self, pivot, weapon)
-	elif Input.is_action_just_released("player_shoot_primary"):
+
+	if LLInput.consume_input("player_shoot_primary|released"):
 		weapon.trigger_off()
 
 
@@ -324,7 +325,7 @@ func fire_to_direction() -> void:
 
 
 func handle_weapon_drop() -> void:
-	if Input.is_action_just_pressed("player_weapon_drop") and weapon.weapon_type != Global.WEAPON_TYPE.KNIFE:
+	if Input.is_action_just_pressed("player_weapon_drop") and weapon.weapon_slot != Global.WEAPON_SLOT.MELEE:
 		_drop_weapon(weapon)
 
 
@@ -353,7 +354,7 @@ func _weapon_pickup_routine(w: GenericWeapon) -> void:
 
 
 func handle_weapon_reload() -> void:
-	if Input.is_action_pressed("player_reload") and weapon.can_reload():
+	if LLInput.is_action_pressed("player_reload") and weapon.can_reload():
 		weapon.reload_trigger()
 
 
@@ -528,16 +529,15 @@ static func get_shooting_direction(player, p: Spatial, w: GenericWeapon) -> Vect
 	return verticalized
 
 
-static func apply_shooting_knockback(player, c: CameraSmoothPhysics, w: GenericWeapon):
-	var inaccuracy = w.get_inaccuracy()
-	var inaccuracy_time_ratio = w.get_aim_punch_ratio()
+# TODO: use the player variable and knock the head upwards when getting headshot
+static func apply_shooting_knockback(_player, c: CameraSmoothPhysics, w: GenericWeapon):
 	var spr_inacc = w.get_knockback_inaccuracy()
 
 	# If rotated by a positive number, it goes to the right, vice versa
-	c.rotated_angle_horizontal = spr_inacc[0] * 0.5 * inaccuracy_time_ratio
+	c.rotated_angle_horizontal = spr_inacc[0]
 
 	# If rotated by a positive number, it goes to the top, vice versa
-	c.rotated_angle_vertical = spr_inacc[1] * 0.5 * inaccuracy_time_ratio
+	c.rotated_angle_vertical = spr_inacc[1]
 
 ###########################################################
 # Stateless Function
@@ -545,13 +545,13 @@ static func apply_shooting_knockback(player, c: CameraSmoothPhysics, w: GenericW
 
 static func get_movement_input(camera_basis: Basis) -> Vector3:
 	var input_direction = Vector3.ZERO
-	if Input.is_action_pressed("player_forward"):
+	if LLInput.is_action_pressed("player_forward"):
 		input_direction += -camera_basis.z
-	if Input.is_action_pressed("player_backward"):
+	if LLInput.is_action_pressed("player_backward"):
 		input_direction += camera_basis.z
-	if Input.is_action_pressed("player_right"):
+	if LLInput.is_action_pressed("player_right"):
 		input_direction += camera_basis.x
-	if Input.is_action_pressed("player_left"):
+	if LLInput.is_action_pressed("player_left"):
 		input_direction += -camera_basis.x
 
 	input_direction.y = 0

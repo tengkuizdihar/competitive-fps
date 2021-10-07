@@ -4,7 +4,7 @@ export (String) var scoreboard_prefix = "HIT COUNT: "
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	Score.connect("score_changed", self, "_on_scoreboard_hit_count")
+	Util.print_err(Score.connect("score_changed", self, "_on_scoreboard_hit_count"))
 	$Scoreboard.text = "SHOOT TARGETS TO START THE COUNT"
 
 

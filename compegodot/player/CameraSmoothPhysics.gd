@@ -34,8 +34,8 @@ func _process(delta: float) -> void:
 
 	self.global_transform.origin = interp_origin
 
-	self.rotate_y(-Global.PHI * rotated_angle_horizontal)
-	self.rotate_x(-Global.PHI * rotated_angle_vertical)
+	self.rotate(-self.global_transform.basis.y, rotated_angle_horizontal)
+	self.rotate(self.global_transform.basis.x, rotated_angle_vertical)
 
 
 func get_ratio(render_delta: float) -> float:
