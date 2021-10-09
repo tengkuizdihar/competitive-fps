@@ -55,7 +55,7 @@ func _input(event):
 	for c in CAPTURED_EVENTS_PRESSED_ONLY:
 		if event.is_action_pressed(c):
 			inputs["%s|%s" % [c, "pressed"]] = Engine.get_physics_frames()
-		elif event.is_action_released(c):
+		if event.is_action_released(c):
 			inputs["%s|%s" % [c, "released"]] = Engine.get_physics_frames()
 
 
@@ -71,13 +71,6 @@ func consume_input(event_name: String) -> bool:
 		print_stack()
 		printerr("Event name %s isn't registered in CAPTURED_EVENTS" % event_name)
 		return false
-
-
-func is_action_still_pressed(event_name: String) -> bool:
-	var pressed_input = inputs.get(event_name + "|pressed")
-	var released_input = inputs.get(event_name + "|released")
-
-	return pressed_input >= released_input
 
 
 func is_action_pressed(event_name: String) -> bool:

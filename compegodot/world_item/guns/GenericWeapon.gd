@@ -344,12 +344,11 @@ func _spray_routine():
 	spray_timer.start()
 	var spray = get_spray_inaccuracy(spray_array_index)
 
-	var ratio = (spray_timer.time_left + (1 / round_per_second)) / spray_timer.wait_time
+	var ratio = spray_timer.time_left / spray_timer.wait_time
 
-	spray_cummulative[0] = spray_cummulative[0] * min(ratio, 1) + spray[0]
-	spray_cummulative[1] = spray_cummulative[1] * min(ratio, 1) + spray[1]
+	spray_cummulative[0] = spray_cummulative[0] * ratio + spray[0] * ratio
+	spray_cummulative[1] = spray_cummulative[1] * ratio + spray[1] * ratio
 	spray_array_index += 1
-
 
 
 func _ammo_depletion_routine() -> bool:
@@ -423,7 +422,6 @@ func get_knockback_inaccuracy():
 	var spray = get_spray_inaccuracy(spray_array_index + 1)
 
 	var aim_punch_ratio = spray_timer.time_left / spray_timer.wait_time
-	aim_punch_ratio = ease(aim_punch_ratio, 1.5)
 
 	spray[0] = (spray_cummulative[0] * aim_punch_ratio + spray[0] * aim_punch_ratio) * 0.5
 	spray[1] = (spray_cummulative[1] * aim_punch_ratio + spray[1] * aim_punch_ratio) * 0.5
