@@ -159,7 +159,6 @@ func _physics_process(delta: float) -> void:
 	apply_shooting_knockback(self, camera, weapon)
 
 	State.change_state("DEBUG_AMMO", "%d - %d" % [weapon.current_ammo, weapon.current_total_ammo])
-	State.change_state("DEBUG_MISC", str(weapons))
 
 
 ###########################################################
@@ -308,7 +307,7 @@ func handle_weapon_selection() -> void:
 # TODO: use weapon information for ammo and reloading
 func fire_to_direction() -> void:
 	# FIRST TRIGGER
-	if LLInput.is_action_pressed("player_shoot_primary") and weapon.can_shoot() and weapon.trigger_on():
+	if (LLInput.consume_input("player_shoot_primary|pressed") or LLInput.is_action_pressed("player_shoot_primary")) and weapon.can_shoot() and weapon.trigger_on():
 		shooting_routine(self, pivot, weapon)
 
 	if LLInput.consume_input("player_shoot_primary|released"):
