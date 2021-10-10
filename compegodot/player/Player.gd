@@ -18,11 +18,11 @@ onready var mouse_sensitivity = 0.0008  # radians/pixel, TODO: refactor to game 
 
 ### Gun Variables
 onready var gun_container = $Pivot/Camera/GunContainer
-onready var weapon: GenericWeapon = $Pivot/Camera/GunContainer/PM9
-onready var current_weapon = Global.WEAPON_SLOT.SECONDARY
-onready var last_weapon_used = Global.WEAPON_SLOT.MELEE
+onready var weapon: GenericWeapon = $Pivot/Camera/GunContainer/RF7
+onready var current_weapon = Global.WEAPON_SLOT.PRIMARY
+onready var last_weapon_used = Global.WEAPON_SLOT.PRIMARY
 onready var weapons = {
-	Global.WEAPON_SLOT.PRIMARY: null,
+	Global.WEAPON_SLOT.PRIMARY: $Pivot/Camera/GunContainer/RF7,
 	Global.WEAPON_SLOT.SECONDARY: $Pivot/Camera/GunContainer/PM9,
 	Global.WEAPON_SLOT.MELEE: $Pivot/Camera/GunContainer/KF1
 }
@@ -51,30 +51,6 @@ var is_crouching = false
 var debug_position_one_frame_ago = Vector3.ZERO
 var held_weapon = null
 
-### Storage for Input Pools
-### The storage is structured as such that the key corresponds to the action
-### and its value depends on whether or not it was unconsumed (true) or consumed (false).
-### {
-###   [action_name]: boolean
-### }
-var input_dict = {}
-const captured_events = [
-	"player_crouch",
-	"player_walk",
-	"player_jump",
-	"player_weapon_swap",
-	"player_weapon_gun_primary",
-	"player_weapon_gun_secondary",
-	"player_weapon_gun_knife",
-	"player_shoot_primary",
-	"player_shoot_secondary",
-	"player_weapon_drop",
-	"player_interact",
-	"player_forward",
-	"player_backward",
-	"player_right",
-	"player_left",
-]
 
 onready var pivot_original_local_translation = $Pivot.transform.origin
 onready var body_original_local_translation = $Body.transform.origin
@@ -85,8 +61,8 @@ onready var crouch_height = 1.75
 export(bool) var AUTO_BHOP = true
 export(float) var CROUCH_SPEED = 5.5 # meter per second
 export(float) var JUMP_IMPULSE_VELOCITY = 12
-export(float) var AIR_ACCELERATION = 60
-export(float) var GROUND_ACCELERATION = 100
+export(float) var AIR_ACCELERATION = 20
+export(float) var GROUND_ACCELERATION = 65
 export(float) var GROUND_FRICTION = 35
 export(float) var GRAVITY_CONSTANT = 25
 export(float) var MAX_RUN_VELOCITY = 13.0
@@ -127,17 +103,13 @@ func _ready() -> void:
 	var body_height = $Body.shape.height
 	headlimit_raycast.cast_to = Vector3.UP * (body_height - crouch_height)
 
-	# Init input pool for... pooling input.
-	for i in captured_events:
-		input_dict[i] = -1
-
 	# set all weapon to equipped
 	$Pivot/Camera/GunContainer/KF1.set_to_equipped()
 	$Pivot/Camera/GunContainer/PM9.set_to_equipped()
+	$Pivot/Camera/GunContainer/RF7.set_to_equipped()
 
 
 func _unhandled_input(event):
-	input_pooling(event)
 	if event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		pivot.rotate_x(-event.relative.y * mouse_sensitivity)
 		rotate_y(-event.relative.x * mouse_sensitivity)
@@ -307,10 +279,10 @@ func handle_weapon_selection() -> void:
 # TODO: use weapon information for ammo and reloading
 func fire_to_direction() -> void:
 	# FIRST TRIGGER
-	if (LLInput.consume_input("player_shoot_primary|pressed") or LLInput.is_action_pressed("player_shoot_primary")) and weapon.can_shoot() and weapon.trigger_on():
+	if LLInput.is_action_pressed("player_shoot_primary") and weapon.can_shoot() and weapon.trigger_on():
 		shooting_routine(self, pivot, weapon)
 
-	if LLInput.consume_input("player_shoot_primary|released"):
+	if LLInput.is_action_released("player_shoot_primary"):
 		weapon.trigger_off()
 
 
@@ -443,31 +415,6 @@ func _switch_weapon_routine(weapon_slot) -> void:
 # TODO: an effect where the player's sight is "nudged" when hit on the head
 func handle_aim_punch() -> void:
 	pass
-
-
-###########################################################
-# Input Pooling Functions
-###########################################################
-
-### This function will refresh the pool action events that's inside of the
-### caputered_events array.
-func input_pooling(event: InputEvent) -> void:
-	for i in captured_events:
-		if event.is_action_pressed(i):
-			input_dict[i] = Engine.get_physics_frames()
-
-
-func consume_input(event_name: String) -> bool:
-	var current_physics_frame = Engine.get_physics_frames()
-	var timeout_frames = 1
-	var p_frame_input = input_dict[event_name]
-
-	# Reset it anyway
-	input_dict[event_name] = -1
-
-	# Return if the input hasn't expired yet
-	return p_frame_input + timeout_frames > current_physics_frame
-
 
 
 ###########################################################

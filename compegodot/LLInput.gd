@@ -23,9 +23,6 @@ const CAPTURED_EVENTS = [
 	"player_reload",
 	"player_shoot_primary",
 	"player_shoot_secondary",
-]
-
-const CAPTURED_EVENTS_PRESSED_ONLY = [
 	"player_jump",
 	"player_shoot_primary",
 	"player_shoot_secondary",
@@ -38,21 +35,12 @@ var inputs = {}
 
 func _ready():
 	for c in CAPTURED_EVENTS:
-		inputs[c] = NO_DATA_VALUE
-
-	for c in CAPTURED_EVENTS_PRESSED_ONLY:
 		inputs["%s|%s" % [c, "pressed"]] = NO_DATA_VALUE
 		inputs["%s|%s" % [c, "released"]] = NO_DATA_VALUE
 
 
 func _input(event):
 	for c in CAPTURED_EVENTS:
-		if event.is_action_pressed(c):
-			inputs[c] = Engine.get_physics_frames()
-		elif event.is_action_released(c):
-			inputs[c] = NO_DATA_VALUE
-
-	for c in CAPTURED_EVENTS_PRESSED_ONLY:
 		if event.is_action_pressed(c):
 			inputs["%s|%s" % [c, "pressed"]] = Engine.get_physics_frames()
 		if event.is_action_released(c):
@@ -74,11 +62,22 @@ func consume_input(event_name: String) -> bool:
 
 
 func is_action_pressed(event_name: String) -> bool:
-	var input_value = inputs.get(event_name)
+	var input_key = "%s|%s" % [event_name, "pressed"]
+	var input_value = inputs.get(input_key)
 
 	if input_value:
-		var is_pressed = input_value > NO_DATA_VALUE
-		return is_pressed
+		return Input.is_action_pressed(event_name) or consume_input(input_key)
+	else:
+		print_stack()
+		printerr("Event name %s isn't registered in CAPTURED_EVENTS" % event_name)
+		return false
+
+func is_action_released(event_name: String) -> bool:
+	var input_key = "%s|%s" % [event_name, "released"]
+	var input_value = inputs.get(input_key)
+
+	if input_value:
+		return !Input.is_action_pressed(event_name) or consume_input(input_key)
 	else:
 		print_stack()
 		printerr("Event name %s isn't registered in CAPTURED_EVENTS" % event_name)
