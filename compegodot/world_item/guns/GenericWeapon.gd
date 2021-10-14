@@ -241,7 +241,7 @@ func can_reload() -> bool:
 #
 # Returns the state of the gun, whether it's firing or not
 # It might not be able to fire because it's out of bullets for example
-func trigger_on() -> bool:
+func trigger_on(delta) -> bool:
 	if weapon_type == Global.WEAPON_TYPE.SEMI_AUTOMATIC or weapon_type == Global.WEAPON_TYPE.KNIFE:
 		if semi_could_shoot:
 			var is_ammo_usable = _ammo_depletion_routine()
@@ -251,7 +251,7 @@ func trigger_on() -> bool:
 				rof_timer.start()
 				anim_player.stop()
 				anim_player.play(anim_shoot_name)
-				_spray_routine()
+				_spray_routine(delta)
 				return true
 			else:
 				shoot_empty_audio_player.play()
@@ -263,7 +263,7 @@ func trigger_on() -> bool:
 			rof_timer.start()
 			anim_player.stop()
 			anim_player.play(anim_shoot_name)
-			_spray_routine()
+			_spray_routine(delta)
 			return true
 
 		if semi_could_shoot:
@@ -340,15 +340,17 @@ func is_auto_pickupable() -> bool:
 	return auto_pickupable_timer.is_stopped()
 
 
-func _spray_routine():
-	spray_timer.start()
+func _spray_routine(delta):
 	var spray = get_spray_inaccuracy(spray_array_index)
 
-	var ratio = spray_timer.time_left / spray_timer.wait_time
+	var ratio = (spray_timer.time_left + (1.0 / round_per_second) + delta) / spray_timer.wait_time
+	ratio = min(1, ratio)
 
-	spray_cummulative[0] = spray_cummulative[0] * ratio + spray[0] * ratio
-	spray_cummulative[1] = spray_cummulative[1] * ratio + spray[1] * ratio
+	spray_cummulative[0] = spray_cummulative[0] * ratio + spray[0]
+	spray_cummulative[1] = spray_cummulative[1] * ratio + spray[1]
 	spray_array_index += 1
+
+	spray_timer.start()
 
 
 func _ammo_depletion_routine() -> bool:

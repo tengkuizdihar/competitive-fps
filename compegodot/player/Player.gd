@@ -63,7 +63,7 @@ export(float) var CROUCH_SPEED = 5.5 # meter per second
 export(float) var JUMP_IMPULSE_VELOCITY = 12
 export(float) var AIR_ACCELERATION = 20
 export(float) var GROUND_ACCELERATION = 65
-export(float) var GROUND_FRICTION = 35
+export(float) var GROUND_FRICTION = 40
 export(float) var GRAVITY_CONSTANT = 25
 export(float) var MAX_RUN_VELOCITY = 13.0
 export(float) var MAX_WALK_VELOCITY = 6.0
@@ -127,7 +127,7 @@ func _physics_process(delta: float) -> void:
 	handle_weapon_reload()
 
 #	handle_aim_punch()
-	fire_to_direction()
+	fire_to_direction(delta)
 	apply_shooting_knockback(self, camera, weapon)
 
 	State.change_state("DEBUG_AMMO", "%d - %d" % [weapon.current_ammo, weapon.current_total_ammo])
@@ -277,9 +277,9 @@ func handle_weapon_selection() -> void:
 
 # TODO: use weapon inaccuracy + movement inaccuracy
 # TODO: use weapon information for ammo and reloading
-func fire_to_direction() -> void:
+func fire_to_direction(delta) -> void:
 	# FIRST TRIGGER
-	if LLInput.is_action_pressed("player_shoot_primary") and weapon.can_shoot() and weapon.trigger_on():
+	if LLInput.is_action_pressed("player_shoot_primary") and weapon.can_shoot() and weapon.trigger_on(delta):
 		shooting_routine(self, pivot, weapon)
 
 	if LLInput.is_action_released("player_shoot_primary"):

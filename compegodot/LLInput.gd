@@ -63,9 +63,9 @@ func consume_input(event_name: String) -> bool:
 
 func is_action_pressed(event_name: String) -> bool:
 	var input_key = "%s|%s" % [event_name, "pressed"]
-	var input_value = inputs.get(input_key)
+	var input_value = inputs.get(input_key, NAN)
 
-	if input_value:
+	if input_value != NAN:
 		return Input.is_action_pressed(event_name) or consume_input(input_key)
 	else:
 		print_stack()
@@ -74,10 +74,10 @@ func is_action_pressed(event_name: String) -> bool:
 
 func is_action_released(event_name: String) -> bool:
 	var input_key = "%s|%s" % [event_name, "released"]
-	var input_value = inputs.get(input_key)
+	var input_value = inputs.get(input_key, NAN)
 
-	if input_value:
-		return !Input.is_action_pressed(event_name) or consume_input(input_key)
+	if input_value != NAN:
+		return Input.is_action_just_released(event_name) or consume_input(input_key)
 	else:
 		print_stack()
 		printerr("Event name %s isn't registered in CAPTURED_EVENTS" % event_name)
