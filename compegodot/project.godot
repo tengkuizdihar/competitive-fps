@@ -62,6 +62,10 @@ Global="*res://global.gd"
 Score="*res://score.gd"
 LLInput="*res://LLInput.gd"
 
+[debug]
+
+settings/fps/force_fps=512
+
 [display]
 
 window/size/width=1366
