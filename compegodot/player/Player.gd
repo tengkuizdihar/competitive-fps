@@ -62,7 +62,7 @@ export(bool) var AUTO_BHOP = true
 export(float) var CROUCH_SPEED = 5.5 # meter per second
 export(float) var JUMP_IMPULSE_VELOCITY = 12
 export(float) var AIR_ACCELERATION = 20
-export(float) var GROUND_ACCELERATION = 65
+export(float) var GROUND_ACCELERATION = 50
 export(float) var GROUND_FRICTION = 40
 export(float) var GRAVITY_CONSTANT = 25
 export(float) var MAX_RUN_VELOCITY = 13.0
@@ -213,7 +213,9 @@ func handle_movement(input_vector: Vector3, delta: float):
 
 		# Apply Friction
 		if input_slanted.length() > 0:
-			if is_crouching:
+			if desired_movement_velocity.normalized().dot(input_slanted.normalized()) < -0.8:
+				desired_movement_velocity = desired_movement_velocity.move_toward(input_slanted * current_max_movement_velocity, GROUND_ACCELERATION * 3 * delta)
+			elif is_crouching:
 				desired_movement_velocity = desired_movement_velocity.move_toward(input_slanted * current_max_movement_velocity, GROUND_ACCELERATION * 0.5 * delta)
 			else:
 				desired_movement_velocity = desired_movement_velocity.move_toward(input_slanted * current_max_movement_velocity, GROUND_ACCELERATION * delta)
