@@ -255,13 +255,9 @@ func handle_movement(input_vector: Vector3, delta: float):
 	velocity_and_gravity = Util.clamp_vector3(velocity_and_gravity, MAX_VELOCITY)
 
 	# apply to move and slide
-	var final_velocity_movement = self.move_and_slide(velocity_and_gravity, Vector3.UP, false, 4, 0.785398, false)
-	var final_velocity_gravity = self.move_and_slide(gravity_velocity, Vector3.UP, false, 4, 0.785398, false)
-	final_velocity = final_velocity_gravity + final_velocity_movement
+	final_velocity = self.move_and_slide(velocity_and_gravity, Vector3.UP, false, 4, 0.785398, false)
 
-	desired_movement_velocity = final_velocity_movement
-
-	State.change_state("DEBUG_PLAYER_VELOCITY", stepify(final_velocity.length(), 0.01))
+	State.change_state("DEBUG_PLAYER_VELOCITY", stepify(desired_movement_velocity.length(), 0.01))
 
 
 func hide_all_weapon() -> void:

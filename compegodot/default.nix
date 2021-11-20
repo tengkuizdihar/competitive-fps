@@ -7,7 +7,7 @@ let
     nixgl = import (fetchTarball "https://github.com/guibou/nixGL/archive/7d6bc1b21316bab6cf4a6520c2639a11c25a220e.tar.gz") {};
 
     # Pin the version of the nix package repository
-    pkgs = import (fetchTarball "https://github.com/nixos/nixpkgs/archive/b32b998d21d062730bba435795120af6f634e98c.tar.gz") {};
+    pkgs = import (fetchTarball "https://github.com/nixos/nixpkgs/archive/8f5073b59e731e8fbb2fa363f674669b714e222f.tar.gz") {};
 in
     pkgs.mkShell {
         buildInputs = [

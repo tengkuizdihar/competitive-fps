@@ -69,9 +69,7 @@ size = Vector3( 10, 2, 12 )
 [sub_resource type="BoxShape" id=10]
 extents = Vector3( 0.001, 4, 15 )
 
-[node name="TestLevel" type="Spatial" groups=[
-"LEVEL",
-]]
+[node name="TestLevel" type="Spatial" groups=["LEVEL"]]
 
 [node name="CSGLevel" type="CSGCombiner" parent="."]
 material_override = ExtResource( 2 )
@@ -118,7 +116,7 @@ polygon = PoolVector2Array( -7, 0, 0, 3, 7, 3, 7, 0 )
 depth = 10.0
 
 [node name="CSGPolygon6" type="CSGPolygon" parent="CSGLevel"]
-transform = Transform( 0.999999, 0, 0, 0, 1, 0, 0, 0, 0.999999, -11, 1, -8 )
+transform = Transform( 0.999999, 0, 0, 0, 1, 0, 0, 0, 0.999999, -13, 1, -8 )
 use_in_baked_light = true
 polygon = PoolVector2Array( -5, 0, 1, 5, 15, 0, 1, 0 )
 mode = 1
