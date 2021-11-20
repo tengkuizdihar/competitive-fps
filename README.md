@@ -34,7 +34,7 @@ The first game in Project Solver that's all about aiming and training. It featur
   - [x] Crouch Jumping
   - [x] Bunny Hopping
   - [x] Air Strafing
-  - [ ] Counter Strafing
+  - [x] Counter Strafing
 - [x] Light weight experience that's not only targeting the toaster, but also your beefed up $500,000, NASA made, super computer.
 
 ### **Project Solver: 1v1**
