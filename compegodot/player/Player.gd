@@ -213,8 +213,8 @@ func handle_movement(input_vector: Vector3, delta: float):
 
 		# Apply Friction
 		if input_slanted.length() > 0:
-			if desired_movement_velocity.normalized().dot(input_slanted.normalized()) < -0.8:
-				desired_movement_velocity = desired_movement_velocity.move_toward(input_slanted * current_max_movement_velocity, GROUND_ACCELERATION * 3 * delta)
+			if desired_movement_velocity.normalized().dot(input_slanted.normalized()) < -0.98:
+				desired_movement_velocity = desired_movement_velocity.move_toward(input_slanted * current_max_movement_velocity, GROUND_ACCELERATION * 2 * delta)
 			elif is_crouching:
 				desired_movement_velocity = desired_movement_velocity.move_toward(input_slanted * current_max_movement_velocity, GROUND_ACCELERATION * 0.5 * delta)
 			else:
@@ -255,9 +255,13 @@ func handle_movement(input_vector: Vector3, delta: float):
 	velocity_and_gravity = Util.clamp_vector3(velocity_and_gravity, MAX_VELOCITY)
 
 	# apply to move and slide
-	final_velocity = self.move_and_slide(velocity_and_gravity, Vector3.UP, true, 4, 0.785398, false)
+	var final_velocity_movement = self.move_and_slide(velocity_and_gravity, Vector3.UP, false, 4, 0.785398, false)
+	var final_velocity_gravity = self.move_and_slide(gravity_velocity, Vector3.UP, false, 4, 0.785398, false)
+	final_velocity = final_velocity_gravity + final_velocity_movement
 
-	State.change_state("DEBUG_PLAYER_VELOCITY", stepify(desired_movement_velocity.length(), 0.01))
+	desired_movement_velocity = final_velocity_movement
+
+	State.change_state("DEBUG_PLAYER_VELOCITY", stepify(final_velocity.length(), 0.01))
 
 
 func hide_all_weapon() -> void:
