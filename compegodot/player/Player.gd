@@ -189,6 +189,7 @@ func manage_crouching(delta: float):
 # TODO: decouple these codes into other smaller more concise function
 func handle_movement(input_vector: Vector3, delta: float):
 	input_vector = input_vector.normalized()
+	desired_movement_velocity = Util.clamp_vector3(desired_movement_velocity, final_velocity.length())
 
 	# slide the input_vector so that it would be on the plane in which it walks
 	var input_slanted = input_vector
