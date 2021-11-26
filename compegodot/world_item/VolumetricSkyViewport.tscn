@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://materials/volumetric_sky.tres" type="Shader" id=1]
+
+[sub_resource type="StreamTexture" id=3]
+flags = 7
+load_path = "res://.import/noise.png-c29f7e52963a096aeaf0c1efd1a79456.s3tc.stex"
+
+[sub_resource type="ShaderMaterial" id=1]
+shader = ExtResource( 1 )
+shader_param/iTime = null
+shader_param/iFrame = null
+shader_param/COVERAGE = 0.5
+shader_param/THICKNESS = 25.0
+shader_param/ABSORPTION = 1.031
+shader_param/STEPS = 25
+shader_param/iChannel0 = SubResource( 3 )
+
+[sub_resource type="ImageTexture" id=2]
+size = Vector2( 1280, 720 )
+
+[node name="Viewport" type="Viewport"]
+size = Vector2( 1280, 720 )
+render_target_update_mode = 3
+
+[node name="Sprite" type="Sprite" parent="."]
+material = SubResource( 1 )
+texture = SubResource( 2 )
+centered = false

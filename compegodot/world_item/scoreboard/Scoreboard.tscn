@@ -4,12 +4,10 @@
 [ext_resource path="res://world_item/scoreboard/Scoreboard.gd" type="Script" id=2]
 [ext_resource path="res://assets/sounds/target_hit_ding.wav" type="AudioStream" id=3]
 
-
 [node name="Scoreboard" type="Spatial"]
 script = ExtResource( 2 )
 
 [node name="Scoreboard" type="Spatial" parent="."]
-transform = Transform( -1, 0, 5.96046e-08, 0, 1, 0, -5.96046e-08, 0, -1, 17, 13, 43.855 )
 script = ExtResource( 1 )
 text = "HIT COUNT: 9999"
 text_size = 1.25

@@ -1,12 +1,18 @@
 extends Control
 
 export (PackedScene) var level_scene
+export (PackedScene) var training_scene
 
-onready var start_button = $ColumnContainer/MarginContainer/VBoxContainer/Start
+onready var start_button = $ColumnContainer/MarginContainer/VBoxContainer/StartTesting
 
 func _ready():
 	# Focus the player's cursor to the start button
 	start_button.grab_focus()
+
+
+func _on_StartTraining_pressed():
+	if get_tree().change_scene_to(training_scene) > 0:
+		printerr("ERROR: can't instantiate level_scene")
 
 
 func _on_Start_pressed():

@@ -430,7 +430,8 @@ static func shooting_routine(player, p: Spatial, w: GenericWeapon) -> void:
 	var to = from + direction * w.max_distance
 
 	var space_state = player.get_world().direct_space_state
-	var ray_result = space_state.intersect_ray(from, to, [player], 1)
+	var shootable_collision_mask = Global.PHYSICS_LAYERS.WORLD | Global.PHYSICS_LAYERS.GUN
+	var ray_result = space_state.intersect_ray(from, to, [player], shootable_collision_mask)
 	var colliding = ray_result.get("collider")
 	var collision_point = ray_result.get("position")
 
