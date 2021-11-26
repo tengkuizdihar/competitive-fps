@@ -38,6 +38,11 @@ _global_script_classes=[ {
 "class": "IInteract",
 "language": "GDScript",
 "path": "res://interfaces/IInteract.gd"
+}, {
+"base": "Spatial",
+"class": "VolumetricSky",
+"language": "GDScript",
+"path": "res://VolumetricSky.gd"
 } ]
 _global_script_class_icons={
 "ArrayUtils": "",
@@ -45,7 +50,8 @@ _global_script_class_icons={
 "CameraSmoothPhysics": "",
 "GenericWeapon": "",
 "IHealth": "",
-"IInteract": ""
+"IInteract": "",
+"VolumetricSky": ""
 }
 
 [application]

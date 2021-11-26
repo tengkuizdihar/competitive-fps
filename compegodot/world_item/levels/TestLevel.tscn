@@ -357,6 +357,7 @@ shadow_enabled = true
 directional_shadow_blend_splits = true
 
 [node name="Scoreboard" parent="." instance=ExtResource( 7 )]
+transform = Transform( -1, 0, 6.23986e-06, 0, 1, 0, -6.23986e-06, 0, -1, 16.92, 13.59, 43.85 )
 
 [node name="ScoreboardMenu" parent="." instance=ExtResource( 6 )]
 transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 17, 2.5, 30 )
