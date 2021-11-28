@@ -20,7 +20,7 @@ func _ready() -> void:
 				break
 
 	spawn_target(collision_area.global_transform.origin)
-	Util.print_err(Score.connect("score_changed", self, "_on_hit_count"))
+	Util.handle_err(Score.connect("score_changed", self, "_on_hit_count"))
 
 
 func spawn_target(target_origin: Vector3 = Vector3.INF) -> void:

@@ -10,6 +10,7 @@
 [ext_resource path="res://world_item/RandomShootingArea.tscn" type="PackedScene" id=8]
 [ext_resource path="res://world_item/guns/PM9.tscn" type="PackedScene" id=9]
 [ext_resource path="res://world_item/guns/RF7.tscn" type="PackedScene" id=10]
+[ext_resource path="res://world_item/levels/TestLevelPlatform.gd" type="Script" id=11]
 
 [sub_resource type="PhysicsMaterial" id=1]
 rough = true
@@ -27,38 +28,6 @@ size = Vector3( 10, 2, 2 )
 material = ExtResource( 3 )
 
 [sub_resource type="SphereShape" id=6]
-
-[sub_resource type="GDScript" id=7]
-script/source = "# quick dirty platform codes for testing
-extends KinematicBody
-
-class Direction:
-	const forward = Vector3(-1,0,0)
-	const right = Vector3(0,0,-1)
-	const backward = Vector3(1,0,0)
-	const left = Vector3(0,0,1)
-
-var timing = 4 # second
-var right_now = timing
-var current_direction = Direction.forward
-
-func _physics_process(delta: float) -> void:
-	if right_now <= 0:
-		right_now = timing
-
-		# cycle through direction to make a loop
-		if current_direction == Direction.forward:
-			current_direction = Direction.right
-		elif current_direction == Direction.right:
-			current_direction = Direction.backward
-		elif current_direction == Direction.backward:
-			current_direction = Direction.left
-		elif current_direction == Direction.left:
-			current_direction = Direction.forward
-	else:
-		right_now -= delta
-		var _lmao = move_and_slide(current_direction * 5)
-"
 
 [sub_resource type="BoxShape" id=8]
 extents = Vector3( 5, 1, 6 )
@@ -144,16 +113,18 @@ depth = 10.0
 [node name="CSGBox2" type="CSGBox" parent="CSGLevel"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 42, 2.5, -13 )
 use_in_baked_light = true
+width = 10.0
 height = 4.0
 
 [node name="CSGBox5" type="CSGBox" parent="CSGLevel"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 47, 2.5, -13 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 46, 4.45, -13 )
 use_in_baked_light = true
-height = 4.0
+height = 8.0
 
 [node name="CSGBox6" type="CSGBox" parent="CSGLevel"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 52, 2.5, -13 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 49.1, 2.5, -13 )
 use_in_baked_light = true
+width = 6.0
 height = 4.0
 
 [node name="CrouchBridge" type="CSGBox" parent="CSGLevel"]
@@ -332,7 +303,7 @@ transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 15, 3.5
 
 [node name="Platform2" type="KinematicBody" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -22, 6.4, 20 )
-script = SubResource( 7 )
+script = ExtResource( 11 )
 __meta__ = {
 "_edit_group_": true
 }
