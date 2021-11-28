@@ -8,7 +8,7 @@ extends KinematicBody
 ### Is a constant used by the kinematic for making the player stay on the ground.
 ### For example: It's used so that the player wouldn't fly off when going up and down
 ###              ramps.
-const MAGIC_ON_GROUND_GRAVITY = 9 # m/s
+const MAGIC_ON_GROUND_GRAVITY = 5 # m/s
 
 onready var headlimit_raycast = $HeadLimitRayCast
 onready var normal_input_direction = Vector3.ZERO # will be changed by outside actors
@@ -104,13 +104,12 @@ func _ready() -> void:
 	headlimit_raycast.cast_to = Vector3.UP * (body_height - crouch_height)
 
 	# set all weapon to equipped
-	$Pivot/Camera/GunContainer/KF1.set_to_equipped()
-	$Pivot/Camera/GunContainer/PM9.set_to_equipped()
-	$Pivot/Camera/GunContainer/RF7.set_to_equipped()
-
+	for i in weapons.keys():
+		if weapons[i]:
+			weapons[i].set_to_equipped()
 
 func _unhandled_input(event):
-	if event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
+	if !State.get_state("PLAYER_PAUSED") and event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		pivot.rotate_x(-event.relative.y * mouse_sensitivity)
 		rotate_y(-event.relative.x * mouse_sensitivity)
 		pivot.rotation.x = clamp(pivot.rotation.x, -PI/2 + 0.01, PI/2 - 0.01)
@@ -119,18 +118,22 @@ func _unhandled_input(event):
 func _physics_process(delta: float) -> void:
 	# TODO-BIG: refactor input so that it would be outside of this script
 	#           this will ensure possibilities for multiplayer in the future
-	manage_crouching(delta)
+
+	if Input.is_action_just_pressed("ui_cancel"):
+		State.set_state("PLAYER_PAUSED", !State.get_state("PLAYER_PAUSED"))
+
 	handle_movement(get_movement_input(self.global_transform.basis), delta)
+	manage_crouching(delta)
+
 	handle_weapon_pickup()
 	handle_weapon_drop()
-	handle_weapon_selection()
 	handle_weapon_reload()
+	handle_weapon_selection()
 
-#	handle_aim_punch()
 	fire_to_direction(delta)
 	apply_shooting_knockback(self, camera, weapon)
 
-	State.change_state("DEBUG_AMMO", "%d - %d" % [weapon.current_ammo, weapon.current_total_ammo])
+	State.set_state("DEBUG_AMMO", "%d - %d" % [weapon.current_ammo, weapon.current_total_ammo])
 
 
 ###########################################################
@@ -146,10 +149,13 @@ func _physics_process(delta: float) -> void:
 ### BUG: if crouching under moving platform, player would stand up and down repeatedly
 ### TODO: NEW METHOD WHEN IN GROUND, CURRENT METHOD WHEN AIRBORNE
 func manage_crouching(delta: float):
-	if LLInput.is_action_pressed("player_crouch") or $Body.shape.height < body_original_height:
+	# Handle pausing by zero-ing the input vector
+	var is_paused = State.get_state("PLAYER_PAUSED")
+
+	if not is_paused and LLInput.is_action_pressed("player_crouch") or $Body.shape.height < body_original_height:
 		is_crouching = true
 
-	if not LLInput.is_action_pressed("player_crouch") and not headlimit_raycast.is_colliding():
+	if not is_paused and not LLInput.is_action_pressed("player_crouch") and not headlimit_raycast.is_colliding():
 		is_crouching = false
 
 	if is_on_floor():
@@ -188,6 +194,11 @@ func manage_crouching(delta: float):
 
 # TODO: decouple these codes into other smaller more concise function
 func handle_movement(input_vector: Vector3, delta: float):
+	# Handle pausing by zero-ing the input vector
+	var is_paused = State.get_state("PLAYER_PAUSED")
+	if is_paused:
+		input_vector = Vector3.ZERO
+
 	input_vector = input_vector.normalized()
 	desired_movement_velocity = Util.clamp_vector3(desired_movement_velocity, final_velocity.length())
 
@@ -244,7 +255,7 @@ func handle_movement(input_vector: Vector3, delta: float):
 	#          will have higher jumping velocity than the one going downwards.
 	var action_pressed_jump = LLInput.consume_input("player_jump|pressed")
 	var is_pressed_jump = Input.is_action_pressed("player_jump")
-	if is_on_floor() and (action_pressed_jump or (AUTO_BHOP and is_pressed_jump)):
+	if not is_paused and is_on_floor() and (action_pressed_jump or (AUTO_BHOP and is_pressed_jump)):
 		gravity_velocity = Vector3.UP * JUMP_IMPULSE_VELOCITY
 		max_air_velocity = max(final_velocity.length(), MAX_JUMP_VELOCITY_FROM_STILL)
 		desired_movement_velocity = Util.clamp_vector3(input_vector * current_max_movement_velocity, final_velocity.length())
@@ -258,7 +269,7 @@ func handle_movement(input_vector: Vector3, delta: float):
 	# apply to move and slide
 	final_velocity = self.move_and_slide(velocity_and_gravity, Vector3.UP, false, 4, 0.785398, false)
 
-	State.change_state("DEBUG_PLAYER_VELOCITY", stepify(desired_movement_velocity.length(), 0.01))
+	State.set_state("DEBUG_PLAYER_VELOCITY", stepify(desired_movement_velocity.length(), 0.01))
 
 
 func hide_all_weapon() -> void:
@@ -268,24 +279,29 @@ func hide_all_weapon() -> void:
 
 
 func handle_weapon_selection() -> void:
-	if Input.is_action_just_pressed("player_weapon_swap"):
-		_switch_weapon_routine(last_weapon_used)
-	if Input.is_action_just_pressed("player_weapon_gun_primary"):
-		_switch_weapon_routine(Global.WEAPON_SLOT.PRIMARY)
-	if Input.is_action_just_pressed("player_weapon_gun_secondary"):
-		_switch_weapon_routine(Global.WEAPON_SLOT.SECONDARY)
-	if Input.is_action_just_pressed("player_weapon_gun_knife"):
-		_switch_weapon_routine(Global.WEAPON_SLOT.MELEE)
+	var is_paused = State.get_state("PLAYER_PAUSED")
+
+	if not is_paused:
+		if Input.is_action_just_pressed("player_weapon_swap"):
+			_switch_weapon_routine(last_weapon_used)
+		if Input.is_action_just_pressed("player_weapon_gun_primary"):
+			_switch_weapon_routine(Global.WEAPON_SLOT.PRIMARY)
+		if Input.is_action_just_pressed("player_weapon_gun_secondary"):
+			_switch_weapon_routine(Global.WEAPON_SLOT.SECONDARY)
+		if Input.is_action_just_pressed("player_weapon_gun_knife"):
+			_switch_weapon_routine(Global.WEAPON_SLOT.MELEE)
 
 
 # TODO: use weapon inaccuracy + movement inaccuracy
 # TODO: use weapon information for ammo and reloading
 func fire_to_direction(delta) -> void:
+	var is_paused = State.get_state("PLAYER_PAUSED")
+
 	# FIRST TRIGGER
-	if LLInput.is_action_pressed("player_shoot_primary") and weapon.can_shoot() and weapon.trigger_on(delta):
+	if not is_paused and LLInput.is_action_pressed("player_shoot_primary") and weapon.can_shoot() and weapon.trigger_on(delta):
 		shooting_routine(self, pivot, weapon)
 
-	if LLInput.is_action_released("player_shoot_primary"):
+	if not is_paused and LLInput.is_action_released("player_shoot_primary"):
 		weapon.trigger_off()
 
 
@@ -328,7 +344,8 @@ func _weapon_pickup_routine(w: GenericWeapon) -> void:
 
 
 func handle_weapon_reload() -> void:
-	if LLInput.is_action_pressed("player_reload") and weapon.can_reload():
+	var is_paused = State.get_state("PLAYER_PAUSED")
+	if not is_paused and LLInput.is_action_pressed("player_reload") and weapon.can_reload():
 		weapon.reload_trigger()
 
 

@@ -11,11 +11,13 @@ func _ready():
 
 
 func _on_StartTraining_pressed():
+	State.reset_state()
 	if get_tree().change_scene_to(training_scene) > 0:
 		printerr("ERROR: can't instantiate level_scene")
 
 
 func _on_Start_pressed():
+	State.reset_state()
 	if get_tree().change_scene_to(level_scene) > 0:
 		printerr("ERROR: can't instantiate level_scene")
 

@@ -202,7 +202,7 @@ func _ready() -> void:
 		spray_timer.one_shot = true
 		spray_timer.process_mode = Timer.TIMER_PROCESS_PHYSICS
 		add_child(spray_timer)
-		Util.print_err(spray_timer.connect("timeout", self, "_on_spray_timer_timeout"))
+		Util.handle_err(spray_timer.connect("timeout", self, "_on_spray_timer_timeout"))
 
 		# init rate of fire timer
 		auto_pickupable_timer = Timer.new()

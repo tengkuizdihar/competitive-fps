@@ -143,6 +143,7 @@ extents = Vector3( 0.0817758, 0.178731, 0.430424 )
 
 [node name="RF7" type="RigidBody"]
 collision_layer = 8
+mass = 2.5
 physics_material_override = ExtResource( 9 )
 continuous_cd = true
 script = ExtResource( 1 )

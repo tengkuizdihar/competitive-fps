@@ -126,6 +126,7 @@ extents = Vector3( 0.1, 0.2, 0.3 )
 
 [node name="PM9" type="RigidBody"]
 collision_layer = 8
+mass = 2.5
 physics_material_override = ExtResource( 7 )
 continuous_cd = true
 script = ExtResource( 2 )

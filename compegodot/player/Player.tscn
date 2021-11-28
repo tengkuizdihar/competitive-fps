@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://assets/crosshair_temp/default_crosshair.tres" type="Texture" id=1]
 [ext_resource path="res://player/CameraSmoothPhysics.gd" type="Script" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://world_item/guns/PM9.tscn" type="PackedScene" id=6]
 [ext_resource path="res://world_item/guns/KF1.tscn" type="PackedScene" id=7]
 [ext_resource path="res://world_item/guns/RF7.tscn" type="PackedScene" id=8]
+[ext_resource path="res://ui/PauseMenu.tscn" type="PackedScene" id=9]
 
 [sub_resource type="CylinderShape" id=1]
 radius = 2.2
@@ -18,7 +19,6 @@ margin = 0.001
 height = 3.0
 
 [sub_resource type="CylinderShape" id=3]
-margin = 0.001
 height = 1.0
 
 [sub_resource type="GDScript" id=4]
@@ -155,6 +155,8 @@ anchor_bottom = 1.0
 margin_right = 0.0
 margin_bottom = 0.0
 world_camera_path = NodePath("../..")
+
+[node name="PauseMenu" parent="Pivot/Camera/Control" instance=ExtResource( 9 )]
 
 [node name="GunContainer" type="Spatial" parent="Pivot/Camera"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.619, -0.281, -0.844 )

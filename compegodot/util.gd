@@ -36,6 +36,6 @@ func array_get(array: Array, index: int, default = null):
 		return array[index]
 
 
-func print_err(error_code: int) -> void:
+func handle_err(error_code: int) -> void:
 	if error_code > 0:
 		printerr("ERROR CODE: ", error_code, "\n", get_stack())
