@@ -8,7 +8,7 @@ extends KinematicBody
 ### Is a constant used by the kinematic for making the player stay on the ground.
 ### For example: It's used so that the player wouldn't fly off when going up and down
 ###              ramps.
-const MAGIC_ON_GROUND_GRAVITY = 5 # m/s
+const MAGIC_ON_GROUND_GRAVITY = 2.5 # m/s
 
 onready var headlimit_raycast = $HeadLimitRayCast
 onready var normal_input_direction = Vector3.ZERO # will be changed by outside actors
@@ -109,7 +109,7 @@ func _ready() -> void:
 			weapons[i].set_to_equipped()
 
 func _unhandled_input(event):
-	if !State.get_state("PLAYER_PAUSED") and event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
+	if !State.get_state("player_paused") and event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		pivot.rotate_x(-event.relative.y * mouse_sensitivity)
 		rotate_y(-event.relative.x * mouse_sensitivity)
 		pivot.rotation.x = clamp(pivot.rotation.x, -PI/2 + 0.01, PI/2 - 0.01)
@@ -120,7 +120,7 @@ func _physics_process(delta: float) -> void:
 	#           this will ensure possibilities for multiplayer in the future
 
 	if Input.is_action_just_pressed("ui_cancel"):
-		State.set_state("PLAYER_PAUSED", !State.get_state("PLAYER_PAUSED"))
+		State.set_state("player_paused", !State.get_state("player_paused"))
 
 	handle_movement(get_movement_input(self.global_transform.basis), delta)
 	manage_crouching(delta)
@@ -133,7 +133,7 @@ func _physics_process(delta: float) -> void:
 	fire_to_direction(delta)
 	apply_shooting_knockback(self, camera, weapon)
 
-	State.set_state("DEBUG_AMMO", "%d - %d" % [weapon.current_ammo, weapon.current_total_ammo])
+	State.set_state("debug_ammo", "%d - %d" % [weapon.current_ammo, weapon.current_total_ammo])
 
 
 ###########################################################
@@ -150,7 +150,7 @@ func _physics_process(delta: float) -> void:
 ### TODO: NEW METHOD WHEN IN GROUND, CURRENT METHOD WHEN AIRBORNE
 func manage_crouching(delta: float):
 	# Handle pausing by zero-ing the input vector
-	var is_paused = State.get_state("PLAYER_PAUSED")
+	var is_paused = State.get_state("player_paused")
 
 	if not is_paused and LLInput.is_action_pressed("player_crouch") or $Body.shape.height < body_original_height:
 		is_crouching = true
@@ -195,7 +195,7 @@ func manage_crouching(delta: float):
 # TODO: decouple these codes into other smaller more concise function
 func handle_movement(input_vector: Vector3, delta: float):
 	# Handle pausing by zero-ing the input vector
-	var is_paused = State.get_state("PLAYER_PAUSED")
+	var is_paused = State.get_state("player_paused")
 	if is_paused:
 		input_vector = Vector3.ZERO
 
@@ -269,7 +269,7 @@ func handle_movement(input_vector: Vector3, delta: float):
 	# apply to move and slide
 	final_velocity = self.move_and_slide(velocity_and_gravity, Vector3.UP, false, 4, 0.785398, false)
 
-	State.set_state("DEBUG_PLAYER_VELOCITY", stepify(desired_movement_velocity.length(), 0.01))
+	State.set_state("debug_player_velocity", stepify(desired_movement_velocity.length(), 0.01))
 
 
 func hide_all_weapon() -> void:
@@ -279,7 +279,7 @@ func hide_all_weapon() -> void:
 
 
 func handle_weapon_selection() -> void:
-	var is_paused = State.get_state("PLAYER_PAUSED")
+	var is_paused = State.get_state("player_paused")
 
 	if not is_paused:
 		if Input.is_action_just_pressed("player_weapon_swap"):
@@ -295,7 +295,7 @@ func handle_weapon_selection() -> void:
 # TODO: use weapon inaccuracy + movement inaccuracy
 # TODO: use weapon information for ammo and reloading
 func fire_to_direction(delta) -> void:
-	var is_paused = State.get_state("PLAYER_PAUSED")
+	var is_paused = State.get_state("player_paused")
 
 	# FIRST TRIGGER
 	if not is_paused and LLInput.is_action_pressed("player_shoot_primary") and weapon.can_shoot() and weapon.trigger_on(delta):
@@ -344,8 +344,9 @@ func _weapon_pickup_routine(w: GenericWeapon) -> void:
 
 
 func handle_weapon_reload() -> void:
-	var is_paused = State.get_state("PLAYER_PAUSED")
+	var is_paused = State.get_state("player_paused")
 	if not is_paused and LLInput.is_action_pressed("player_reload") and weapon.can_reload():
+		State.set_state("player_reloaded", Engine.get_physics_frames())
 		weapon.reload_trigger()
 
 

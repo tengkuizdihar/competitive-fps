@@ -1,6 +1,5 @@
 extends Node
 
-
 # Clamping the length of a single vector3
 func clamp_vector3(vec: Vector3, max_length: float) -> Vector3:
 	return Vector3(clamp(vec.x, -max_length, max_length), clamp(vec.y, -max_length, max_length), clamp(vec.z, -max_length, max_length))
@@ -39,3 +38,8 @@ func array_get(array: Array, index: int, default = null):
 func handle_err(error_code: int) -> void:
 	if error_code > 0:
 		printerr("ERROR CODE: ", error_code, "\n", get_stack())
+
+
+func change_level(scene_path: String) -> void:
+	State.reset_game()
+	handle_err(get_tree().change_scene(scene_path))

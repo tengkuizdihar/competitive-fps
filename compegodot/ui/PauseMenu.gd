@@ -4,8 +4,8 @@ export (String, FILE, "*.tscn") var main_menu_scene_path
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	Util.handle_err(State.connect("STATE_PLAYER_PAUSED", self, "_on_state_player_paused"))
-	handle_visibility(State.get_state("PLAYER_PAUSED"))
+	Util.handle_err(State.connect("state_player_paused", self, "_on_state_player_paused"))
+	handle_visibility(State.get_state("player_paused"))
 
 
 func handle_visibility(is_visible: bool):
@@ -22,11 +22,11 @@ func _on_state_player_paused(is_paused: bool):
 
 
 func _on_ResumeButton_pressed():
-	State.set_state("PLAYER_PAUSED", false)
+	State.set_state("player_paused", false)
 
 
 func _on_MainMenuButton_pressed():
-	Util.handle_err(get_tree().change_scene(main_menu_scene_path))
+	Util.change_level(main_menu_scene_path)
 
 
 func _on_ExitButton_pressed():
