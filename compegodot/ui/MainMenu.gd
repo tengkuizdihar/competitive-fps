@@ -1,25 +1,22 @@
 extends Control
 
-export (PackedScene) var level_scene
-export (PackedScene) var training_scene
+export (String, FILE, "*.tscn") var level_scene_path
+export (String, FILE, "*.tscn") var training_scene_path
 
-onready var start_button = $ColumnContainer/MarginContainer/VBoxContainer/StartTesting
+onready var start_button = $ColumnContainer/MarginContainer/VBoxContainer/StartTraining
 
 func _ready():
 	# Focus the player's cursor to the start button
 	start_button.grab_focus()
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 
 func _on_StartTraining_pressed():
-	State.reset_state()
-	if get_tree().change_scene_to(training_scene) > 0:
-		printerr("ERROR: can't instantiate level_scene")
+	Util.change_level(training_scene_path)
 
 
 func _on_Start_pressed():
-	State.reset_state()
-	if get_tree().change_scene_to(level_scene) > 0:
-		printerr("ERROR: can't instantiate level_scene")
+	Util.change_level(level_scene_path)
 
 
 func _on_Option_pressed():

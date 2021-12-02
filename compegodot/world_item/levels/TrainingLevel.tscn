@@ -1,13 +1,16 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://materials/LevelTestingMaterial.tres" type="Material" id=1]
 [ext_resource path="res://player/Player.tscn" type="PackedScene" id=2]
-[ext_resource path="res://world_item/RandomShootingArea.tscn" type="PackedScene" id=3]
+[ext_resource path="res://world_item/shooting_area/RandomShootingArea.tscn" type="PackedScene" id=3]
 [ext_resource path="res://world_item/scoreboard/ResetButton.tscn" type="PackedScene" id=4]
 [ext_resource path="res://world_item/scoreboard/Scoreboard.tscn" type="PackedScene" id=5]
 [ext_resource path="res://world_item/guns/RF7.tscn" type="PackedScene" id=6]
 [ext_resource path="res://world_item/guns/PM9.tscn" type="PackedScene" id=7]
 [ext_resource path="res://addons/SIsilicon.3d.text/label_3d.gd" type="Script" id=8]
+[ext_resource path="res://world_item/scoreboard/RandomModeButton.tscn" type="PackedScene" id=9]
+[ext_resource path="res://world_item/scoreboard/SprayModeButton.tscn" type="PackedScene" id=10]
+[ext_resource path="res://world_item/scoreboard/ShootingModeLabel.gd" type="Script" id=11]
 
 [sub_resource type="GIProbeData" id=1]
 bounds = AABB( -74.5, -18.49, -60.5, 149, 36.98, 121 )
@@ -29,7 +32,7 @@ transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0
 [node name="Light" type="Spatial" parent="."]
 
 [node name="OmniLight2" type="OmniLight" parent="Light"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28.5, 5.75, -21.5 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28.5, 5.75, -18 )
 shadow_enabled = true
 omni_range = 6.0
 
@@ -76,12 +79,15 @@ height = 13.0
 depth = 22.0
 
 [node name="CSGTable" type="CSGBox" parent="CSGCombiner"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 29, 2.5, -21.5 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 29, 2.5, -18 )
 width = 4.0
 height = 1.0
 depth = 9.0
 
 [node name="ShootingGallery" type="Spatial" parent="."]
+
+[node name="Scoreboard" parent="ShootingGallery" instance=ExtResource( 5 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 35.5, 12.5, 0 )
 
 [node name="RandomShootingGallery" parent="ShootingGallery" instance=ExtResource( 3 )]
 transform = Transform( -1, 0, 3.25841e-07, 0, 1, 0, -3.25841e-07, 0, -1, 35, 6.5, 0 )
@@ -92,8 +98,32 @@ shape = SubResource( 2 )
 [node name="ResetButton" parent="ShootingGallery" instance=ExtResource( 4 )]
 transform = Transform( -2.57045e-07, 0, -1, 0, 1, 0, 1, 0, -2.57045e-07, 30.5, 0.5, 0 )
 
-[node name="Scoreboard" parent="ShootingGallery" instance=ExtResource( 5 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 35.5, 12.5, 0 )
+[node name="SprayModeButton" parent="ShootingGallery" instance=ExtResource( 10 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 30.5, 4, 16 )
+
+[node name="RandomModeButton" parent="ShootingGallery" instance=ExtResource( 9 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 30.5, 3, 16 )
+
+[node name="ShootingModeLabel" type="Spatial" parent="ShootingGallery"]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 30.4, 6, 16.05 )
+script = ExtResource( 11 )
+
+[node name="Label3D" type="Spatial" parent="ShootingGallery/ShootingModeLabel"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.150001, -0.5, 0 )
+script = ExtResource( 8 )
+text = "MODE: RANDOM"
+text_size = 1.0
+font = null
+align = 2
+billboard = false
+color = Color( 1, 1, 1, 1 )
+metallic = 0.0
+roughness = 0.5
+emission_color = Color( 1, 1, 1, 1 )
+emission_strength = 0.0
+extrude = 0.0
+min_steps = 32
+max_steps = 256
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
 transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 16.5, 2.533, 0 )
@@ -101,7 +131,7 @@ transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 16.5, 2
 [node name="Guns" type="Spatial" parent="."]
 
 [node name="GunsLabel" type="Spatial" parent="Guns"]
-transform = Transform( -5.96046e-08, 0, -1, 0, 1, 0, 1, 0, -5.96046e-08, 30.45, 5.5, -21.5 )
+transform = Transform( -5.96046e-08, 0, -1, 0, 1, 0, 1, 0, -5.96046e-08, 30.45, 5.5, -18 )
 script = ExtResource( 8 )
 text = "GUNS"
 text_size = 1.0
@@ -118,43 +148,43 @@ min_steps = 32
 max_steps = 256
 
 [node name="RF7" parent="Guns" instance=ExtResource( 6 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 3.5, -25.5 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 3.5, -22 )
 
 [node name="RF8" parent="Guns" instance=ExtResource( 6 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 3.5, -24.5 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 3.5, -21 )
 
 [node name="RF9" parent="Guns" instance=ExtResource( 6 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 3.5, -23.5 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 3.5, -20 )
 
 [node name="RF10" parent="Guns" instance=ExtResource( 6 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28.5, 3.5, -23.5 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28.5, 3.5, -20 )
 
 [node name="RF11" parent="Guns" instance=ExtResource( 6 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28.5, 3.5, -24.5 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28.5, 3.5, -21 )
 
 [node name="RF12" parent="Guns" instance=ExtResource( 6 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28.5, 3.5, -25.5 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28.5, 3.5, -22 )
 
 [node name="PM9" parent="Guns" instance=ExtResource( 7 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 3.5, -20.9291 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 3.5, -17.4291 )
 
 [node name="PM10" parent="Guns" instance=ExtResource( 7 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 3.5, -19.9291 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 3.5, -16.4291 )
 
 [node name="PM11" parent="Guns" instance=ExtResource( 7 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 3.5, -18.9291 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 3.5, -15.4291 )
 
 [node name="PM12" parent="Guns" instance=ExtResource( 7 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 3.5, -17.9291 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 3.5, -14.4291 )
 
 [node name="PM13" parent="Guns" instance=ExtResource( 7 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28.5, 3.5, -20.9291 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28.5, 3.5, -17.4291 )
 
 [node name="PM14" parent="Guns" instance=ExtResource( 7 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28.5, 3.5, -19.9291 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28.5, 3.5, -16.4291 )
 
 [node name="PM15" parent="Guns" instance=ExtResource( 7 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28.5, 3.5, -18.9291 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28.5, 3.5, -15.4291 )
 
 [node name="PM16" parent="Guns" instance=ExtResource( 7 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28.5, 3.5, -17.9291 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28.5, 3.5, -14.4291 )

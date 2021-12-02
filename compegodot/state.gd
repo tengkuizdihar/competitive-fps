@@ -1,12 +1,15 @@
 extends Node
 
-const SIGNAL_PREFIX = "STATE_"
+const SIGNAL_PREFIX = "state_"
 
 const INITIAL_STATE = {
-	"DEBUG_PLAYER_VELOCITY": 0.0,
-	"DEBUG_MISC": "NOT USED",
-	"DEBUG_AMMO": "NOT USED",
-	"PLAYER_PAUSED": false
+	"debug_player_velocity": 0.0,
+	"debug_misc": "NOT USED",
+	"debug_ammo": "NOT USED",
+	"player_paused": false,
+
+	# The physics frame which the player reloaded
+	"player_reloaded": 0
 }
 
 # To add state, make sure that the key is STRING and the value is anything
@@ -45,3 +48,10 @@ func get_state(state_name:String):
 func reset_state():
 	for k in INITIAL_STATE.keys():
 		set_state(k, INITIAL_STATE[k])
+
+
+# Reset the state and other autoloads that have in game knowledge that we
+# need to reset.
+func reset_game():
+	reset_state()
+	Score.reset_state()

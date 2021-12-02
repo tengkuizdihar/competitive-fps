@@ -32,21 +32,21 @@ func _process(_delta: float) -> void:
 script/source = "extends Label
 
 func _process(_delta: float) -> void:
-	text = \"VELOCITY: \" + str(State.get_state(\"DEBUG_PLAYER_VELOCITY\"))
+	text = \"VELOCITY: \" + str(State.get_state(\"debug_player_velocity\"))
 "
 
 [sub_resource type="GDScript" id=6]
 script/source = "extends Label
 
 func _process(_delta: float) -> void:
-	text = \"Debug Ammo: \" + str(State.get_state(\"DEBUG_AMMO\"))
+	text = \"Debug Ammo: \" + str(State.get_state(\"debug_ammo\"))
 "
 
 [sub_resource type="GDScript" id=7]
 script/source = "extends Label
 
 func _process(_delta: float) -> void:
-	text = \"Debug Misc: \" + str(State.get_state(\"DEBUG_MISC\"))
+	text = \"Debug Misc: \" + str(State.get_state(\"debug_misc\"))
 "
 
 [sub_resource type="CapsuleMesh" id=8]
