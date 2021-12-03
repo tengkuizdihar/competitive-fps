@@ -163,10 +163,12 @@ anims/startup = SubResource( 4 )
 [node name="GunShoot" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 6 )
 volume_db = -15.0
+bus = "Gameplay"
 
 [node name="GunShootEmpty" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 8 )
 volume_db = -15.0
+bus = "Gameplay"
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 shape = SubResource( 5 )
