@@ -110,8 +110,9 @@ func _ready() -> void:
 
 func _unhandled_input(event):
 	if !State.get_state("player_paused") and event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
-		pivot.rotate_x(-event.relative.y * mouse_sensitivity)
-		rotate_y(-event.relative.x * mouse_sensitivity)
+		var speed = Config.state.player.mouse_speed * mouse_sensitivity
+		pivot.rotate_x(-event.relative.y * speed)
+		rotate_y(-event.relative.x * speed)
 		pivot.rotation.x = clamp(pivot.rotation.x, -PI/2 + 0.01, PI/2 - 0.01)
 
 

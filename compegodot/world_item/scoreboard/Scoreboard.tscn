@@ -26,3 +26,4 @@ max_steps = 256
 [node name="DingPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 3 )
 volume_db = -10.0
+bus = "Gameplay"
