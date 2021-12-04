@@ -5,6 +5,10 @@ func clamp_vector3(vec: Vector3, max_length: float) -> Vector3:
 	return Vector3(clamp(vec.x, -max_length, max_length), clamp(vec.y, -max_length, max_length), clamp(vec.z, -max_length, max_length))
 
 
+func clamp_vector3_y_axis(vec: Vector3, max_length: float) -> Vector3:
+	return Vector3(clamp(vec.x, -max_length, max_length), vec.y, clamp(vec.z, -max_length, max_length))
+
+
 func init_interface_node(target: Node, interface: Node) -> Node:
 	target.add_child(interface)
 	return interface

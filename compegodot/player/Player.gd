@@ -27,24 +27,14 @@ onready var weapons = {
 	Global.WEAPON_SLOT.MELEE: $Pivot/Camera/GunContainer/KF1
 }
 
-### A counter that will increase as many times as it jumps until it's on the floor again
-var jump_counter = 0
-
 ### The currently used max velocity for movement input
-var current_max_movement_velocity = MAX_RUN_VELOCITY
-
-### The current velocity for the gravity applied to the character. Will change based
-### on the situation. For example it could be the same as MAGIC_ON_GROUND_GRAVITY.
-var gravity_velocity = Vector3()
+var current_max_movement_velocity = max_run_velocity
 
 ### The desired movement_velocity stored for acceleration purposes.
 var desired_movement_velocity = Vector3()
 
 ### The the max XZ velocity when in the air
 var max_air_velocity = 0
-
-### The final velocity used for debugging returned by move_and_slide
-var final_velocity = Vector3()
 
 ### Flag for crouching
 var is_crouching = false
@@ -58,17 +48,17 @@ onready var body_original_height = $Body.shape.height
 onready var feet_original_local_translation = $Feet.transform.origin
 onready var crouch_height = 1.75
 
-export(bool) var AUTO_BHOP = true
-export(float) var CROUCH_SPEED = 5.5 # meter per second
-export(float) var JUMP_IMPULSE_VELOCITY = 12
-export(float) var AIR_ACCELERATION = 20
-export(float) var GROUND_ACCELERATION = 50
-export(float) var GROUND_FRICTION = 40
-export(float) var GRAVITY_CONSTANT = 25
-export(float) var MAX_RUN_VELOCITY = 13.0
-export(float) var MAX_WALK_VELOCITY = 6.0
-export(float) var MAX_VELOCITY = 30.0 # meter per second
-export(float) var MAX_JUMP_VELOCITY_FROM_STILL = 2.0
+export(bool) var auto_bhop = true
+export(float) var crouch_speed = 5.5 # meter per second
+export(float) var jump_impulse_velocity = 12
+export(float) var air_acceleration = 20
+export(float) var ground_acceleration = 50
+export(float) var ground_friction = 40
+export(float) var gravity_constant = 25
+export(float) var max_run_velocity = 13.0
+export(float) var max_walk_velocity = 6.0
+export(float) var max_velocity = 30.0 # meter per second
+export(float) var max_jump_velocity_from_still = 2.0
 
 ###########################################################
 # State Enum
@@ -161,7 +151,7 @@ func manage_crouching(delta: float):
 
 	if is_on_floor():
 		if is_crouching:
-			var crouch_delta = CROUCH_SPEED * delta
+			var crouch_delta = crouch_speed * delta
 			var height_change = abs(crouch_height - body_original_height)
 			var body_trans_target = body_original_local_translation + Vector3.DOWN * height_change / 2
 
@@ -169,7 +159,7 @@ func manage_crouching(delta: float):
 			$Body.transform.origin = $Body.transform.origin.move_toward(body_trans_target, crouch_delta / 2)
 			$Feet.transform.origin = $Body.transform.origin + Vector3.DOWN * ($Body.shape.height / 2 + $Body.shape.radius) + Vector3.UP * $Feet.shape.height / 2
 		else:
-			var crouch_delta = CROUCH_SPEED * 1.5 * delta
+			var crouch_delta = crouch_speed * 1.5 * delta
 			$Body.shape.height = move_toward($Body.shape.height, body_original_height, crouch_delta)
 			$Body.transform.origin = $Body.transform.origin.move_toward(body_original_local_translation, crouch_delta / 2)
 			$Feet.transform.origin = $Body.transform.origin + Vector3.DOWN * ($Body.shape.height / 2 + $Body.shape.radius) + Vector3.UP * $Feet.shape.height / 2
@@ -180,11 +170,11 @@ func manage_crouching(delta: float):
 			var body_trans_target = body_original_local_translation + Vector3.UP * height_change / 2
 			var feet_trans_target = feet_original_local_translation + Vector3.UP * height_change
 
-			$Body.shape.height = move_toward($Body.shape.height, crouch_height, CROUCH_SPEED * delta)
-			$Body.transform.origin = $Body.transform.origin.move_toward(body_trans_target, CROUCH_SPEED * delta)
-			$Feet.transform.origin = $Feet.transform.origin.move_toward(feet_trans_target, CROUCH_SPEED * delta)
+			$Body.shape.height = move_toward($Body.shape.height, crouch_height, crouch_speed * delta)
+			$Body.transform.origin = $Body.transform.origin.move_toward(body_trans_target, crouch_speed * delta)
+			$Feet.transform.origin = $Feet.transform.origin.move_toward(feet_trans_target, crouch_speed * delta)
 		else:
-			var crouch_delta = CROUCH_SPEED * 1.5 * delta
+			var crouch_delta = crouch_speed * 1.5 * delta
 			$Body.shape.height = move_toward($Body.shape.height, body_original_height, crouch_delta)
 			$Body.transform.origin = $Body.transform.origin.move_toward(body_original_local_translation, crouch_delta)
 			$Feet.transform.origin = $Feet.transform.origin.move_toward(feet_original_local_translation, crouch_delta)
@@ -201,52 +191,62 @@ func handle_movement(input_vector: Vector3, delta: float):
 		input_vector = Vector3.ZERO
 
 	input_vector = input_vector.normalized()
-	desired_movement_velocity = Util.clamp_vector3(desired_movement_velocity, final_velocity.length())
 
 	# slide the input_vector so that it would be on the plane in which it walks
 	var input_slanted = input_vector
 
+	# vector used for snapping the character when on the ground
+	var snap_vector = Vector3.ZERO
+
 	if is_on_ceiling():
-		gravity_velocity = Vector3.ZERO
+		desired_movement_velocity.y = 0
 
 	# ON THE GROUND
 	elif is_on_floor():
 		input_slanted = input_vector.slide(get_floor_normal()).normalized()
-		gravity_velocity = -self.get_floor_normal() * MAGIC_ON_GROUND_GRAVITY
+		snap_vector = -self.get_floor_normal()
 
-		# Player walk action that will decrease MAX_VELOCITY
+		# Player walk action that will decrease max_velocity
 		if LLInput.is_action_pressed("player_walk") and is_crouching:
-			current_max_movement_velocity = MAX_WALK_VELOCITY * 0.815
+			current_max_movement_velocity = max_walk_velocity * 0.815
 		elif is_crouching:
-			current_max_movement_velocity = MAX_WALK_VELOCITY
+			current_max_movement_velocity = max_walk_velocity
 		elif LLInput.is_action_pressed("player_walk"):
-			current_max_movement_velocity = MAX_WALK_VELOCITY
+			current_max_movement_velocity = max_walk_velocity
 		else:
-			current_max_movement_velocity = MAX_RUN_VELOCITY
+			current_max_movement_velocity = max_run_velocity
 
 		# Apply Friction
 		if input_slanted.length() > 0:
 			if desired_movement_velocity.normalized().dot(input_slanted.normalized()) < -0.98:
-				desired_movement_velocity = desired_movement_velocity.move_toward(input_slanted * current_max_movement_velocity, GROUND_ACCELERATION * 2 * delta)
+				desired_movement_velocity = desired_movement_velocity.move_toward(input_slanted * current_max_movement_velocity, ground_acceleration * 2 * delta)
 			elif is_crouching:
-				desired_movement_velocity = desired_movement_velocity.move_toward(input_slanted * current_max_movement_velocity, GROUND_ACCELERATION * 0.5 * delta)
+				desired_movement_velocity = desired_movement_velocity.move_toward(input_slanted * current_max_movement_velocity, ground_acceleration * 0.5 * delta)
 			else:
-				desired_movement_velocity = desired_movement_velocity.move_toward(input_slanted * current_max_movement_velocity, GROUND_ACCELERATION * delta)
+				desired_movement_velocity = desired_movement_velocity.move_toward(input_slanted * current_max_movement_velocity, ground_acceleration * delta)
 		else:
-			desired_movement_velocity = apply_friction(desired_movement_velocity, GROUND_FRICTION, delta)
+			desired_movement_velocity = apply_friction(desired_movement_velocity, ground_friction, delta)
 
 	# IN THE AIR
 	else:
-		gravity_velocity.x = 0
-		gravity_velocity.z = 0
-		gravity_velocity += Vector3.DOWN * (GRAVITY_CONSTANT * delta)
-		current_max_movement_velocity = MAX_RUN_VELOCITY
+		snap_vector = Vector3.ZERO
+
+		# Temporarily disable velocity.y because we're about to calculate movement in the air
+		# apart from the downward velocity of the player
+		var current_gravity_velocity = desired_movement_velocity.y
+		desired_movement_velocity.y = 0
 
 		if input_vector.length() > 0:
-			if input_vector.dot(final_velocity.normalized()) < 0:
-				desired_movement_velocity = desired_movement_velocity.move_toward(input_vector * max_air_velocity, GROUND_ACCELERATION * delta)
+			if input_vector.dot(desired_movement_velocity.normalized()) < 0:
+				desired_movement_velocity = desired_movement_velocity.move_toward(input_vector * max_air_velocity, ground_acceleration * delta)
 			else:
-				desired_movement_velocity = desired_movement_velocity.move_toward(input_vector * max_air_velocity, AIR_ACCELERATION * delta)
+				desired_movement_velocity = desired_movement_velocity.move_toward(input_vector * max_air_velocity, air_acceleration * delta)
+
+		# Give back the original velocity.y after the air movement is calculated
+		desired_movement_velocity.y = current_gravity_velocity
+
+		desired_movement_velocity.y -= (gravity_constant * delta)
+		current_max_movement_velocity = max_run_velocity
 
 	# Jumping mechanics, affects desired_movement_velocity. this is because
 	# the jumping height could be affected by the movement velocity, which is
@@ -256,19 +256,17 @@ func handle_movement(input_vector: Vector3, delta: float):
 	#          will have higher jumping velocity than the one going downwards.
 	var action_pressed_jump = LLInput.consume_input("player_jump|pressed")
 	var is_pressed_jump = Input.is_action_pressed("player_jump")
-	if not is_paused and is_on_floor() and (action_pressed_jump or (AUTO_BHOP and is_pressed_jump)):
-		gravity_velocity = Vector3.UP * JUMP_IMPULSE_VELOCITY
-		max_air_velocity = max(final_velocity.length(), MAX_JUMP_VELOCITY_FROM_STILL)
-		desired_movement_velocity = Util.clamp_vector3(input_vector * current_max_movement_velocity, final_velocity.length())
-
-	# finalize to current velocity
-	var velocity_and_gravity = desired_movement_velocity + gravity_velocity
+	if not is_paused and is_on_floor() and (action_pressed_jump or (auto_bhop and is_pressed_jump)):
+		snap_vector = Vector3.ZERO
+		max_air_velocity = max(desired_movement_velocity.length(), max_jump_velocity_from_still)
+		desired_movement_velocity = Util.clamp_vector3(input_vector * current_max_movement_velocity, desired_movement_velocity.length())
+		desired_movement_velocity.y = jump_impulse_velocity
 
 	# clamp the velocity and gravity to max speed
-	velocity_and_gravity = Util.clamp_vector3(velocity_and_gravity, MAX_VELOCITY)
+	desired_movement_velocity = Util.clamp_vector3_y_axis(desired_movement_velocity, max_velocity)
 
 	# apply to move and slide
-	final_velocity = self.move_and_slide(velocity_and_gravity, Vector3.UP, false, 4, 0.785398, false)
+	desired_movement_velocity = self.move_and_slide_with_snap(desired_movement_velocity, snap_vector, Vector3.UP, false, 4, 0.785398, false)
 
 	State.set_state("debug_player_velocity", stepify(desired_movement_velocity.length(), 0.01))
 
@@ -372,7 +370,7 @@ func _drop_weapon(w: GenericWeapon) -> void:
 	w.global_transform.origin = camera.global_transform.origin - camera.global_transform.basis.z.normalized() * 2
 
 	# add force to the gun
-	w.apply_central_impulse(-camera.global_transform.basis.z * (10 + final_velocity.length() / 2))
+	w.apply_central_impulse(-camera.global_transform.basis.z * (10 + desired_movement_velocity.length() / 2))
 	w.apply_torque_impulse(-camera.global_transform.basis.z.rotated(Vector3.UP, rand_range(-PI/2, PI/2)) * rand_range(0.1,0.5))
 
 	# make the weapons (dict) currenly equipped to null
@@ -486,7 +484,7 @@ static func get_shooting_direction(player, p: Spatial, w: GenericWeapon) -> Vect
 	var inh_inacc = inaccuracy.inherent
 	var spr_inacc = inaccuracy.spray
 
-	var movement_ratio_to_still = player.final_velocity.length() / player.MAX_RUN_VELOCITY
+	var movement_ratio_to_still = player.desired_movement_velocity.length() / player.max_run_velocity
 	var movement_inaccuracy = 1 + (movement_ratio_to_still * w.movement_inaccuracy_multiplier)
 	var jumping_inaccuracy = 1 + (int(!player.is_on_floor())  * w.jumping_inaccuracy_multiplier)
 
