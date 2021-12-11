@@ -9,7 +9,10 @@ const INITIAL_STATE = {
 	"player_paused": false,
 
 	# The physics frame which the player reloaded
-	"player_reloaded": 0
+	"player_reloaded": 0,
+
+	# Use Global.WEAPON_ZOOM_MODE.DEFAULT for default value
+	"player_zoom_mode": 0
 }
 
 # To add state, make sure that the key is STRING and the value is anything

@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://materials/LevelTestingMaterial.tres" type="Material" id=1]
 [ext_resource path="res://player/Player.tscn" type="PackedScene" id=2]
@@ -11,6 +11,7 @@
 [ext_resource path="res://world_item/scoreboard/RandomModeButton.tscn" type="PackedScene" id=9]
 [ext_resource path="res://world_item/scoreboard/SprayModeButton.tscn" type="PackedScene" id=10]
 [ext_resource path="res://world_item/scoreboard/ShootingModeLabel.gd" type="Script" id=11]
+[ext_resource path="res://world_item/guns/RailGun.tscn" type="PackedScene" id=12]
 
 [sub_resource type="GIProbeData" id=1]
 bounds = AABB( -74.5, -18.49, -60.5, 149, 36.98, 121 )
@@ -188,3 +189,6 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28.5, 3.5, -15.4291 )
 
 [node name="PM16" parent="Guns" instance=ExtResource( 7 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28.5, 3.5, -14.4291 )
+
+[node name="RailGun" parent="Guns" instance=ExtResource( 12 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 27.5, 3.5, -18.5 )

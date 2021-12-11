@@ -8,9 +8,16 @@ var accumulated_delta_render = 0.0
 var rotated_angle_horizontal = 0.0
 var rotated_angle_vertical = 0.0
 
+const FOV_DEFAULT = 70.0
+const FOV_SNIPER_ZOOMED_1 = 40.0
+const FOV_SNIPER_ZOOMED_2 = 10.0
 
 export(bool) var tps_view = false
 export(float) var tps_distance = 7.0
+
+
+func _ready():
+	Util.handle_err(State.connect("state_player_zoom_mode", self, "_on_state_player_zoom_mode"))
 
 
 func _physics_process(delta: float) -> void:
@@ -48,3 +55,15 @@ func get_ratio(render_delta: float) -> float:
 		ratio = self.accumulated_delta_render / self.latest_physics_delta
 
 	return abs(min(ratio, 1))
+
+
+func _on_state_player_zoom_mode(value: int):
+	match value:
+		Global.WEAPON_ZOOM_MODE.DEFAULT:
+			fov = FOV_DEFAULT
+		Global.WEAPON_ZOOM_MODE.SNIPER_ZOOMED_1:
+			fov = FOV_SNIPER_ZOOMED_1
+		Global.WEAPON_ZOOM_MODE.SNIPER_ZOOMED_2:
+			fov = FOV_SNIPER_ZOOMED_2
+		_:
+			fov = FOV_DEFAULT

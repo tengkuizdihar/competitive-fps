@@ -98,7 +98,7 @@ func _ready() -> void:
 		if weapons[i]:
 			weapons[i].set_to_equipped()
 
-func _unhandled_input(event):
+func _input(event):
 	if !State.get_state("player_paused") and event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		var speed = Config.state.player.mouse_speed * mouse_sensitivity
 		pivot.rotate_x(-event.relative.y * speed)
@@ -306,11 +306,10 @@ func fire_to_direction(delta) -> void:
 
 	# SECOND TRIGGER
 	# TODO: make shooting routine to have many modes
-#	elif Input.is_action_just_pressed("player_shoot_secondary") and weapon.can_shoot():
-#		weapon.second_trigger_on()
-#		shooting_routine(self, camera, weapon)
-#	elif Input.is_action_just_released("player_shoot_secondary"):
-#		weapon.second_trigger_off()
+	if not is_paused and Input.is_action_just_pressed("player_shoot_secondary"):
+		weapon.second_trigger_on()
+	if not is_paused and Input.is_action_just_released("player_shoot_secondary"):
+		weapon.second_trigger_off()
 
 
 func handle_weapon_drop() -> void:
@@ -479,20 +478,23 @@ static func shooting_routine(player, p: Spatial, w: GenericWeapon) -> void:
 static func get_shooting_direction(player, p: Spatial, w: GenericWeapon) -> Vector3:
 	var forward = -p.global_transform.basis.z
 
-	var inaccuracy = w.get_inaccuracy()
+	var movement_ratio_to_still = player.desired_movement_velocity.length() / player.max_run_velocity
+	var movement_modifier = 1 + (movement_ratio_to_still * w.movement_inaccuracy_multiplier)
+	var jumping_modifier = 1 + (int(!player.is_on_floor())  * w.jumping_inaccuracy_multiplier)
+
+	var inaccuracy = w.get_inaccuracy(movement_modifier, jumping_modifier)
 
 	var inh_inacc = inaccuracy.inherent
 	var spr_inacc = inaccuracy.spray
 
-	var movement_ratio_to_still = player.desired_movement_velocity.length() / player.max_run_velocity
-	var movement_inaccuracy = 1 + (movement_ratio_to_still * w.movement_inaccuracy_multiplier)
-	var jumping_inaccuracy = 1 + (int(!player.is_on_floor())  * w.jumping_inaccuracy_multiplier)
+	var total_horizontal_inaccuracy = inh_inacc[0] + spr_inacc[0]
+	var total_vertical_inaccuracy = inh_inacc[1] + spr_inacc[1]
 
 	# If rotated by a positive number, it goes to the right, vice versa
-	var horizontalized = forward.rotated(-p.global_transform.basis.y, (inh_inacc[0] * movement_inaccuracy * jumping_inaccuracy) + spr_inacc[0])
+	var horizontalized = forward.rotated(-p.global_transform.basis.y, total_horizontal_inaccuracy)
 
 	# If rotated by a positive number, it goes to the top, vice versa
-	var verticalized = horizontalized.rotated(p.global_transform.basis.x, (inh_inacc[1] * movement_inaccuracy * jumping_inaccuracy) + spr_inacc[1])
+	var verticalized = horizontalized.rotated(p.global_transform.basis.x, total_vertical_inaccuracy)
 	return verticalized
 
 

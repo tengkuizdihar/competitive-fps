@@ -1,0 +1,214 @@
+[gd_scene load_steps=15 format=2]
+
+[ext_resource path="res://player/PlayerGui.gd" type="Script" id=1]
+[ext_resource path="res://assets/crosshair_temp/default_crosshair.tres" type="Texture" id=2]
+[ext_resource path="res://icon.png" type="Texture" id=3]
+[ext_resource path="res://middlescreen.gd" type="Script" id=4]
+[ext_resource path="res://world_item/GunContainer.tscn" type="PackedScene" id=5]
+[ext_resource path="res://ui/PauseMenu.tscn" type="PackedScene" id=6]
+[ext_resource path="res://assets/crosshair_temp/scope-black.png" type="Texture" id=7]
+
+[sub_resource type="GDScript" id=4]
+script/source = "extends Label
+
+func _process(_delta: float) -> void:
+	text = \"FPS: \" + str(Engine.get_frames_per_second())
+"
+
+[sub_resource type="GDScript" id=5]
+script/source = "extends Label
+
+func _process(_delta: float) -> void:
+	text = \"VELOCITY: \" + str(State.get_state(\"debug_player_velocity\"))
+"
+
+[sub_resource type="GDScript" id=6]
+script/source = "extends Label
+
+func _process(_delta: float) -> void:
+	text = \"Debug Ammo: \" + str(State.get_state(\"debug_ammo\"))
+"
+
+[sub_resource type="GDScript" id=7]
+script/source = "extends Label
+
+func _process(_delta: float) -> void:
+	text = \"Debug Misc: \" + str(State.get_state(\"debug_misc\"))
+"
+
+[sub_resource type="Shader" id=8]
+code = "shader_type canvas_item;
+
+uniform vec4 color : hint_color;
+
+void fragment(){
+  COLOR = color;
+}"
+
+[sub_resource type="ShaderMaterial" id=9]
+shader = SubResource( 8 )
+shader_param/color = null
+
+[sub_resource type="AtlasTexture" id=10]
+flags = 4
+atlas = ExtResource( 7 )
+region = Rect2( 157, 162, 1498, 1499 )
+
+[node name="PlayerGui" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_right = 153.0
+margin_bottom = 50.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FPSDebug" type="Label" parent="VBoxContainer"]
+margin_right = 157.0
+margin_bottom = 14.0
+text = "FPS: 0"
+script = SubResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VelocityDebug" type="Label" parent="VBoxContainer"]
+margin_top = 18.0
+margin_right = 157.0
+margin_bottom = 32.0
+text = "VELOCITY: 0"
+script = SubResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AmmoDebug" type="Label" parent="VBoxContainer"]
+margin_top = 36.0
+margin_right = 157.0
+margin_bottom = 50.0
+text = "Debug Ammo: 999 - 999"
+script = SubResource( 6 )
+
+[node name="MiscDebug" type="Label" parent="VBoxContainer"]
+margin_top = 54.0
+margin_right = 157.0
+margin_bottom = 68.0
+text = "Misc Debug: NOT USED"
+script = SubResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Crosshair" type="TextureRect" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -24.0
+margin_top = -12.0
+margin_right = 24.0
+margin_bottom = 12.0
+mouse_filter = 2
+texture = ExtResource( 2 )
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GunContainer" parent="." instance=ExtResource( 5 )]
+anchor_right = 1.0
+anchor_bottom = 1.0
+world_camera_path = NodePath("../..")
+
+[node name="SniperScope" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+custom_constants/separation = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="SniperScope"]
+margin_right = 1366.0
+margin_bottom = 34.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 0
+
+[node name="TextureRect" type="TextureRect" parent="SniperScope/HBoxContainer2"]
+material = SubResource( 9 )
+margin_right = 1366.0
+margin_bottom = 34.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource( 3 )
+expand = true
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="SniperScope"]
+margin_top = 34.0
+margin_right = 1366.0
+margin_bottom = 733.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 20.0
+custom_constants/separation = 0
+
+[node name="TextureRect" type="TextureRect" parent="SniperScope/HBoxContainer3"]
+material = SubResource( 9 )
+margin_right = 273.0
+margin_bottom = 699.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource( 3 )
+expand = true
+
+[node name="TextureRect2" type="TextureRect" parent="SniperScope/HBoxContainer3"]
+margin_left = 273.0
+margin_right = 1092.0
+margin_bottom = 699.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 3.0
+texture = SubResource( 10 )
+expand = true
+
+[node name="TextureRect3" type="TextureRect" parent="SniperScope/HBoxContainer3"]
+material = SubResource( 9 )
+margin_left = 1092.0
+margin_right = 1366.0
+margin_bottom = 699.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource( 3 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="SniperScope"]
+margin_top = 733.0
+margin_right = 1366.0
+margin_bottom = 768.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 0
+
+[node name="TextureRect" type="TextureRect" parent="SniperScope/HBoxContainer4"]
+material = SubResource( 9 )
+margin_right = 1366.0
+margin_bottom = 35.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource( 3 )
+expand = true
+
+[node name="PauseMenu" parent="." instance=ExtResource( 6 )]
+visible = false

@@ -221,15 +221,15 @@ func _ready() -> void:
 
 
 func can_shoot() -> bool:
-	var is_not_playing_reload = not (anim_player.current_animation == "reload")
-	var is_not_starting_up = not (anim_player.current_animation == "startup")
+	var is_not_playing_reload = not (anim_player.current_animation == anim_reload_name)
+	var is_not_starting_up = not (anim_player.current_animation == anim_startup_name)
 
 	return rof_timer.is_stopped() and is_not_playing_reload and is_not_starting_up
 
 
 func can_reload() -> bool:
-	var is_not_playing_reload = not (anim_player.current_animation == "reload")
-	var is_not_starting_up = not (anim_player.current_animation == "startup")
+	var is_not_playing_reload = not (anim_player.current_animation == anim_reload_name)
+	var is_not_starting_up = not (anim_player.current_animation == anim_startup_name)
 	var is_ammo_exist = current_total_ammo > 0
 	var is_ammo_not_full = current_ammo < magazine_ammo
 
@@ -242,7 +242,7 @@ func can_reload() -> bool:
 # Returns the state of the gun, whether it's firing or not
 # It might not be able to fire because it's out of bullets for example
 func trigger_on(delta) -> bool:
-	if weapon_type == Global.WEAPON_TYPE.SEMI_AUTOMATIC or weapon_type == Global.WEAPON_TYPE.KNIFE:
+	if weapon_type == Global.WEAPON_TYPE.SEMI_AUTOMATIC or weapon_type == Global.WEAPON_TYPE.KNIFE or weapon_type == Global.WEAPON_TYPE.SNIPER_SEMI_AUTOMATIC:
 		if semi_could_shoot:
 			var is_ammo_usable = _ammo_depletion_routine()
 			semi_could_shoot = false
@@ -284,14 +284,16 @@ func second_trigger_on() -> void:
 		rof_timer.start()
 		anim_player.stop()
 		anim_player.play(anim_shoot_secondary_name)
+	if weapon_type == Global.WEAPON_TYPE.SNIPER_SEMI_AUTOMATIC:
+		handle_sniper_zoom()
 
 
 func second_trigger_off() -> void:
-	if weapon_type == Global.WEAPON_TYPE.KNIFE:
-		pass
+	pass
 
 
 func reload_trigger() -> void:
+	reset_sniper_zoom()
 	anim_player.stop()
 	anim_player.play(anim_reload_name)
 
@@ -394,6 +396,7 @@ func activate():
 # For example, reseting a reload animation in the middle.
 func deactivate():
 	anim_player.stop()
+	reset_sniper_zoom()
 
 
 # Will give a dictionary of inherent and spray inaccuracy filled with the
@@ -407,15 +410,34 @@ func deactivate():
 #
 # Means the inherent inaccuracy will go up and right by 1.1 and 1.2 radian respectively.
 # It also means, the spray inaccuracy will down and left by 2.1 and 2.2 radian respectively.
-func get_inaccuracy() -> Dictionary:
+func get_inaccuracy(movement_modifier: float, jumping_modifier: float) -> Dictionary:
 	randomize()
+
+	var modified_inaccuracy_scale = inaccuracy_scale * movement_modifier * jumping_modifier
+	var modified_spray_cummulative = spray_cummulative
+
+	# Make the gun very inaccurate if not zoomed in
+	# Ignore spray modifier if using sniper but still use the knockback effect
+	if weapon_type == Global.WEAPON_TYPE.SNIPER_SEMI_AUTOMATIC:
+		modified_spray_cummulative = [0.0, 0.0]
+
+		if State.get_state("player_zoom_mode") == Global.WEAPON_ZOOM_MODE.DEFAULT:
+			modified_inaccuracy_scale = modified_inaccuracy_scale * 50
+
+	# Reset the zoom here when the inaccuracy is being modified
+	# NOTE: If the zoom reset before the inaccuracy is modified, it will always be modified even when it's scoped in
+	reset_sniper_zoom()
+
+	# Clamp it to the value of 0.5 after modifier is implemented
+	modified_inaccuracy_scale = clamp(modified_inaccuracy_scale, -0.5, 0.5)
+
 	return {
 		"inherent": [
-			rand_range(-inaccuracy_scale, inaccuracy_scale),
-			rand_range(-inaccuracy_scale, inaccuracy_scale)
+			rand_range(-modified_inaccuracy_scale, modified_inaccuracy_scale),
+			rand_range(-modified_inaccuracy_scale, modified_inaccuracy_scale)
 		],
 
-		"spray": spray_cummulative
+		"spray": modified_spray_cummulative
 	}
 
 
@@ -438,3 +460,22 @@ func get_aim_punch_ratio() -> float:
 func _on_spray_timer_timeout() -> void:
 	spray_array_index = 0
 	spray_cummulative = [0.0, 0.0]
+
+
+func handle_sniper_zoom() -> void:
+	if anim_player.current_animation == anim_reload_name:
+		return
+
+	var current_zoom = State.get_state("player_zoom_mode")
+
+	match current_zoom:
+		Global.WEAPON_ZOOM_MODE.SNIPER_ZOOMED_1:
+			State.set_state("player_zoom_mode", Global.WEAPON_ZOOM_MODE.SNIPER_ZOOMED_2)
+		Global.WEAPON_ZOOM_MODE.SNIPER_ZOOMED_2:
+			State.set_state("player_zoom_mode", Global.WEAPON_ZOOM_MODE.DEFAULT)
+		Global.WEAPON_ZOOM_MODE.DEFAULT:
+			State.set_state("player_zoom_mode", Global.WEAPON_ZOOM_MODE.SNIPER_ZOOMED_1)
+
+
+func reset_sniper_zoom() -> void:
+	State.set_state("player_zoom_mode", Global.WEAPON_ZOOM_MODE.DEFAULT)

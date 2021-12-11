@@ -1,0 +1,118 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://world_item/guns/GenericWeapon.gd" type="Script" id=1]
+[ext_resource path="res://assets/gun_model/blasterF.tscn" type="PackedScene" id=2]
+[ext_resource path="res://assets/sounds/gun_shot.wav" type="AudioStream" id=3]
+[ext_resource path="res://assets/sounds/empty_gun_shot.wav" type="AudioStream" id=4]
+[ext_resource path="res://world_item/guns/GenericWeaponPhysicsMaterial.tres" type="PhysicsMaterial" id=5]
+
+[sub_resource type="BoxShape" id=1]
+margin = 0.001
+extents = Vector3( 0.07, 0.23, 0.63 )
+
+[sub_resource type="Animation" id=2]
+resource_name = "reload"
+length = 0.7
+step = 0.01
+tracks/0/type = "value"
+tracks/0/path = NodePath("Spatial:transform")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.19, 0.5, 0.7 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 ), Transform( 1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, -0.2, -0.2 ), Transform( 1, 0, 0, 0, 0.173648, -0.984808, 0, 0.984808, 0.173648, 0, -0.166667, -0.166667 ), Transform( 1, 0, 0, 0, -0.743145, -0.669131, 0, 0.669131, -0.743145, 0, -0.1, -0.1 ), Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 ) ]
+}
+tracks/1/type = "method"
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0.7 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "_reload_routine"
+} ]
+}
+
+[sub_resource type="Animation" id=3]
+resource_name = "shoot"
+length = 0.2
+step = 0.01
+tracks/0/type = "value"
+tracks/0/path = NodePath("Spatial:transform")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.02, 0.2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 ), Transform( 1, 0, 0, 0, 0.965926, -0.258819, 0, 0.258819, 0.965926, 0, -0.1, 0.3 ), Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 ) ]
+}
+
+[sub_resource type="Animation" id=4]
+resource_name = "startup"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("Spatial:transform")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Transform( -0.707107, -0.707107, 0, 0.707107, -0.707107, 0, 0, 0, 1, 0, -0.2, 0.8 ), Transform( 0.99863, -0.052336, 0, 0.052336, 0.99863, 0, 0, 0, 1, 0, -0.16, 0.64 ), Transform( -0.845728, 0.533615, 0, -0.533615, -0.845728, 0, 0, 0, 1, 0, -0.12, 0.48 ), Transform( 0.622515, -0.782608, 0, 0.782608, 0.622515, 0, 0, 0, 1, 0, -0.08, 0.32 ), Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 ) ]
+}
+
+[node name="RailGun" type="RigidBody"]
+collision_layer = 8
+mass = 2.5
+physics_material_override = ExtResource( 5 )
+continuous_cd = true
+script = ExtResource( 1 )
+magazine_ammo = 10
+total_ammo = 30
+base_damage = 10000.0
+max_distance = 500.0
+weapon_type = 2
+gun_animation_player_path = NodePath("AnimationPlayer")
+gun_shoot_audio_player = NodePath("GunShoot")
+gun_shoot_empty_audio_player = NodePath("GunShootEmpty")
+gun_mesh_instance = NodePath("Spatial/blasterF")
+spray_infinite_recoils = [ "[0, 0.01]" ]
+spray_reset_time = 0.5
+inaccuracy_scale = 0.001
+movement_inaccuracy_multiplier = 200.0
+jumping_inaccuracy_multiplier = 20.0
+
+[node name="Spatial" type="Spatial" parent="."]
+
+[node name="blasterF" parent="Spatial" instance=ExtResource( 2 )]
+
+[node name="GunShoot" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 3 )
+volume_db = -15.0
+bus = "Gameplay"
+
+[node name="GunShootEmpty" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 4 )
+volume_db = -15.0
+bus = "Gameplay"
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+shape = SubResource( 1 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/reload = SubResource( 2 )
+anims/shoot = SubResource( 3 )
+anims/startup = SubResource( 4 )
