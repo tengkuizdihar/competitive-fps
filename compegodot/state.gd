@@ -6,13 +6,20 @@ const INITIAL_STATE = {
 	"debug_player_velocity": 0.0,
 	"debug_misc": "NOT USED",
 	"debug_ammo": "NOT USED",
+
+	# Should be "true" whenever the player pause the game
+	# This should happen in situation such as; opening the escape menu
 	"player_paused": false,
 
 	# The physics frame which the player reloaded
 	"player_reloaded": 0,
 
 	# Use Global.WEAPON_ZOOM_MODE.DEFAULT for default value
-	"player_zoom_mode": 0
+	"player_zoom_mode": 0,
+
+	# The current velocity length of the player
+	# Unlike debug_player_velocity, value is real and not stepified
+	"player_velocity_length": 0.0
 }
 
 # To add state, make sure that the key is STRING and the value is anything

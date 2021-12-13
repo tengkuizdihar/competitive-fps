@@ -269,6 +269,7 @@ func handle_movement(input_vector: Vector3, delta: float):
 	desired_movement_velocity = self.move_and_slide_with_snap(desired_movement_velocity, snap_vector, Vector3.UP, false, 4, 0.785398, false)
 
 	State.set_state("debug_player_velocity", stepify(desired_movement_velocity.length(), 0.01))
+	State.set_state("player_velocity_length", desired_movement_velocity.length())
 
 
 func hide_all_weapon() -> void:

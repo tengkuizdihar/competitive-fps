@@ -418,11 +418,14 @@ func get_inaccuracy(movement_modifier: float, jumping_modifier: float) -> Dictio
 
 	# Make the gun very inaccurate if not zoomed in
 	# Ignore spray modifier if using sniper but still use the knockback effect
+	# Also ignore the inherent inaccuracy if the player is not moving
 	if weapon_type == Global.WEAPON_TYPE.SNIPER_SEMI_AUTOMATIC:
 		modified_spray_cummulative = [0.0, 0.0]
 
 		if State.get_state("player_zoom_mode") == Global.WEAPON_ZOOM_MODE.DEFAULT:
 			modified_inaccuracy_scale = modified_inaccuracy_scale * 50
+		elif movement_modifier == 1.0 and jumping_modifier == 1.0:
+			modified_inaccuracy_scale = 0.0
 
 	# Reset the zoom here when the inaccuracy is being modified
 	# NOTE: If the zoom reset before the inaccuracy is modified, it will always be modified even when it's scoped in
