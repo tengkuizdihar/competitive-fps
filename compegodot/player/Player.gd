@@ -307,9 +307,9 @@ func fire_to_direction(delta) -> void:
 
 	# SECOND TRIGGER
 	# TODO: make shooting routine to have many modes
-	if not is_paused and Input.is_action_just_pressed("player_shoot_secondary"):
+	if not is_paused and LLInput.is_action_pressed("player_shoot_secondary"):
 		weapon.second_trigger_on()
-	if not is_paused and Input.is_action_just_released("player_shoot_secondary"):
+	if not is_paused and LLInput.is_action_released("player_shoot_secondary"):
 		weapon.second_trigger_off()
 
 

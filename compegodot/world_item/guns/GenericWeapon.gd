@@ -139,6 +139,9 @@ var current_total_ammo = 0
 # Flag to allow semi automatic or knife to be used
 var semi_could_shoot = true
 
+# Flag to allow the scope
+var allow_scope_to_activate = true
+
 # An array of spray recoils that the gun will go through
 var _spray_recoils = []
 
@@ -284,12 +287,14 @@ func second_trigger_on() -> void:
 		rof_timer.start()
 		anim_player.stop()
 		anim_player.play(anim_shoot_secondary_name)
-	if weapon_type == Global.WEAPON_TYPE.SNIPER_SEMI_AUTOMATIC:
+	if weapon_type == Global.WEAPON_TYPE.SNIPER_SEMI_AUTOMATIC and allow_scope_to_activate and can_shoot():
+		allow_scope_to_activate = false
 		handle_sniper_zoom()
 
 
 func second_trigger_off() -> void:
-	pass
+	if weapon_type == Global.WEAPON_TYPE.SNIPER_SEMI_AUTOMATIC:
+		allow_scope_to_activate = true
 
 
 func reload_trigger() -> void:

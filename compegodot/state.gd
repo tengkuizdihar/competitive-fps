@@ -19,7 +19,13 @@ const INITIAL_STATE = {
 
 	# The current velocity length of the player
 	# Unlike debug_player_velocity, value is real and not stepified
-	"player_velocity_length": 0.0
+	"player_velocity_length": 0.0,
+
+	# Shooting Target Configurations
+	# NOTE: The default movement mode is using Global.SHOOTING_TARGET_MOVEMENT_MODE.STATIC
+	# NOTE: The default size is the same as the default scale (1)
+	"shooting_target_movement_mode": 0,
+	"shooting_target_size": 1.0,
 }
 
 # To add state, make sure that the key is STRING and the value is anything

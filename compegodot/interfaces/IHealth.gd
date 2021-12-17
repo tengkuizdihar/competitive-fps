@@ -10,15 +10,15 @@ onready var current_health = max_health
 
 func change_health(difference) -> float:
 	current_health += difference
-	emit_when_dead()
 	emit_signal("health_changed", current_health)
+	emit_when_dead()
 	return current_health
 
 
 func set_health(new_health) -> void:
 	current_health = new_health
+	emit_signal("health_changed", current_health)
 	emit_when_dead()
-	emit_signal("dead", current_health)
 
 
 func emit_when_dead() -> void:

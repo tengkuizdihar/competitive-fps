@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://materials/LevelTestingMaterial.tres" type="Material" id=1]
 [ext_resource path="res://player/Player.tscn" type="PackedScene" id=2]
@@ -12,6 +12,11 @@
 [ext_resource path="res://world_item/scoreboard/SprayModeButton.tscn" type="PackedScene" id=10]
 [ext_resource path="res://world_item/scoreboard/ShootingModeLabel.gd" type="Script" id=11]
 [ext_resource path="res://world_item/guns/RailGun.tscn" type="PackedScene" id=12]
+[ext_resource path="res://world_item/scoreboard/IncreaseSizeButton.tscn" type="PackedScene" id=13]
+[ext_resource path="res://world_item/scoreboard/DecreaseSizeButton.tscn" type="PackedScene" id=14]
+[ext_resource path="res://world_item/scoreboard/ResetSizeButton.tscn" type="PackedScene" id=15]
+[ext_resource path="res://world_item/scoreboard/TargetMovingButton.tscn" type="PackedScene" id=16]
+[ext_resource path="res://world_item/scoreboard/TargeStaticButton.tscn" type="PackedScene" id=17]
 
 [sub_resource type="GIProbeData" id=1]
 bounds = AABB( -74.5, -18.49, -60.5, 149, 36.98, 121 )
@@ -100,20 +105,69 @@ shape = SubResource( 2 )
 transform = Transform( -2.57045e-07, 0, -1, 0, 1, 0, 1, 0, -2.57045e-07, 30.5, 0.5, 0 )
 
 [node name="SprayModeButton" parent="ShootingGallery" instance=ExtResource( 10 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 30.5, 4, 16 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 30.5, 5.5, 16 )
 
 [node name="RandomModeButton" parent="ShootingGallery" instance=ExtResource( 9 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 30.5, 3, 16 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 30.5, 4.5, 16 )
+
+[node name="IncreaseSizeButton" parent="ShootingGallery" instance=ExtResource( 13 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 30.5, 10, 16 )
+
+[node name="DecreaseSizeButton" parent="ShootingGallery" instance=ExtResource( 14 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 30.5, 9, 16 )
+
+[node name="ResetSizeButton" parent="ShootingGallery" instance=ExtResource( 15 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 30.5, 8, 16 )
+
+[node name="TargetMovingButton" parent="ShootingGallery" instance=ExtResource( 16 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 30.5, 9, 21.5 )
+
+[node name="TargeStaticButton" parent="ShootingGallery" instance=ExtResource( 17 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 30.5, 10, 21.5 )
 
 [node name="ShootingModeLabel" type="Spatial" parent="ShootingGallery"]
 transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 30.4, 6, 16.05 )
 script = ExtResource( 11 )
 
 [node name="Label3D" type="Spatial" parent="ShootingGallery/ShootingModeLabel"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.150001, -0.5, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.150002, 0.5, 0 )
 script = ExtResource( 8 )
 text = "MODE: RANDOM"
-text_size = 1.0
+text_size = 0.5
+font = null
+align = 2
+billboard = false
+color = Color( 1, 1, 1, 1 )
+metallic = 0.0
+roughness = 0.5
+emission_color = Color( 1, 1, 1, 1 )
+emission_strength = 0.0
+extrude = 0.0
+min_steps = 32
+max_steps = 256
+
+[node name="Label3D2" type="Spatial" parent="ShootingGallery/ShootingModeLabel"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.150003, 5, 0 )
+script = ExtResource( 8 )
+text = "TARGET SIZE: 1.0"
+text_size = 0.5
+font = null
+align = 2
+billboard = false
+color = Color( 1, 1, 1, 1 )
+metallic = 0.0
+roughness = 0.5
+emission_color = Color( 1, 1, 1, 1 )
+emission_strength = 0.0
+extrude = 0.0
+min_steps = 32
+max_steps = 256
+
+[node name="Label3D3" type="Spatial" parent="ShootingGallery/ShootingModeLabel"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 5.35, 5, 1.52588e-05 )
+script = ExtResource( 8 )
+text = "TARGET MODE: STATIC"
+text_size = 0.5
 font = null
 align = 2
 billboard = false

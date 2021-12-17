@@ -22,7 +22,7 @@ func _on_state_player_zoom_made(value):
 
 
 func is_player_zoom_visible(zoom_state) -> bool:
-	return zoom_state > 0
+	return zoom_state > Global.WEAPON_ZOOM_MODE.DEFAULT
 
 
 func handle_sniper_dot_visiblity() -> void:

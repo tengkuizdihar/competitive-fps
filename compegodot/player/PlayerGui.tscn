@@ -210,9 +210,9 @@ __meta__ = {
 }
 
 [node name="Crosshair" type="TextureRect" parent="CenterContainer"]
-margin_left = 659.0
+margin_left = 651.0
 margin_top = 372.0
-margin_right = 707.0
+margin_right = 715.0
 margin_bottom = 396.0
 mouse_filter = 2
 texture = ExtResource( 2 )
@@ -222,11 +222,11 @@ __meta__ = {
 
 [node name="SniperDot" type="TextureRect" parent="CenterContainer"]
 material = SubResource( 12 )
-margin_left = 677.0
-margin_top = 378.0
-margin_right = 688.0
-margin_bottom = 389.0
-rect_min_size = Vector2( 11, 11 )
+margin_left = 678.0
+margin_top = 379.0
+margin_right = 687.0
+margin_bottom = 388.0
+rect_min_size = Vector2( 9, 9 )
 mouse_filter = 2
 texture = SubResource( 13 )
 expand = true

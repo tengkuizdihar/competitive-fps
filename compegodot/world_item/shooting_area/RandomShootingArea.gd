@@ -33,7 +33,7 @@ func _on_Target_dead() -> void:
 		Score.Mode.SPRAY_SINGLE:
 			__spawn_target(collision_area.global_transform.origin)
 		_:
-			printerr("Score Mode isn't recognizedy by ShootingArea!")
+			printerr("Score Mode isn't recognized by ShootingArea!")
 
 
 func _on_score_score_changed(score: int) -> void:
@@ -55,7 +55,7 @@ func _on_state_player_reloaded(_reload_frame: int):
 		__spawn_target(collision_area.global_transform.origin)
 
 
-func __spawn_target(target_origin: Vector3 = Vector3.INF) -> void:
+func __spawn_target(target_origin: Vector3 = Vector3.INF, health: float = 1.0) -> void:
 	var new_target = target_scene.instance() as Node
 	add_child(new_target)
 
@@ -65,6 +65,7 @@ func __spawn_target(target_origin: Vector3 = Vector3.INF) -> void:
 		new_target.global_transform.origin = target_origin
 
 	var interface = Util.get_interface(new_target, IHealth) as IHealth
+	interface.set_health(health)
 	interface.connect("dead", self, "_on_Target_dead")
 
 

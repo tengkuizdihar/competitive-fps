@@ -10,6 +10,8 @@
 
 # The Solver Series
 
+*Check the releases on* https://gitlab.com/tengkuizdihar/competitive-fps/-/releases
+
 This is an open source project about the most versatile and fun **first person shooter**. There's already an implementation made in Godot Engine, but every single changes is based on the proposal inside of [`documents/PROPOSAL.md`](documents/PROPOSAL.md). Right now Tengku Izdihar the only one who is developing it on his free time, but you're welcome to contribute to the project.
 
 For any question, you can contact the project owner on matrix which is listed in https://tengkuizdihar.gitlab.io/contact/.
@@ -29,8 +31,8 @@ The first game in Project Solver that's all about aiming and training. It featur
 - [ ] Easy to use UI customization that also includes an export and import function, for portability.
 - [ ] Importing aim settings from other games.
 - [ ] Variety of target to shot at.
-- [ ] Different guns for different needs.
-- [ ] Movement system that's inspired by the Counter Strike series.
+- [x] Different guns for different needs.
+- [x] Movement system that's inspired by the Counter Strike series.
   - [x] Crouch Jumping
   - [x] Bunny Hopping
   - [x] Air Strafing
