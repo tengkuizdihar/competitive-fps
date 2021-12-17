@@ -2,6 +2,8 @@ extends Control
 
 export (String, FILE, "*.tscn") var main_menu_scene_path
 
+onready var option_menu = $HBoxContainer/MarginContainer2/OptionMenu
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	Util.handle_err(State.connect("state_player_paused", self, "_on_state_player_paused"))
@@ -31,3 +33,7 @@ func _on_MainMenuButton_pressed():
 
 func _on_ExitButton_pressed():
 	get_tree().quit()
+
+
+func _on_OptionButton_pressed():
+	option_menu.visible = !option_menu.visible
