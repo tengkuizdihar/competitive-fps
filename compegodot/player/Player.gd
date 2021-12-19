@@ -444,36 +444,56 @@ func handle_aim_punch() -> void:
 static func shooting_routine(player, p: Spatial, w: GenericWeapon) -> void:
 	var from = p.global_transform.origin
 	var direction = get_shooting_direction(player, p, w)
-	var to = from + direction * w.max_distance
+	var remaining_distance = w.max_distance
 
-	var space_state = player.get_world().direct_space_state
-	var shootable_collision_mask = Global.PHYSICS_LAYERS.WORLD | Global.PHYSICS_LAYERS.GUN
-	var ray_result = space_state.intersect_ray(from, to, [player], shootable_collision_mask)
-	var colliding = ray_result.get("collider")
-	var collision_point = ray_result.get("position")
+	var interacted = {}
 
-	if colliding:
-		# change the health based on the weapon's damage
-		if "i_health" in colliding:
-			colliding.i_health.change_health(-w.base_damage)
+	var debug_ray_count = 0
+	while remaining_distance > 0:
+		debug_ray_count += 1
 
-		# interact with the object if interface exist
-		if "i_interact" in colliding:
-			colliding.i_interact.interact()
+		var to = from + direction * remaining_distance
 
-		# push the object if it's hit by the weapon
-		if colliding is RigidBody:
-			var imp_direction = -p.global_transform.basis.z.normalized()
-			colliding.apply_impulse(collision_point - colliding.global_transform.origin, imp_direction * 10)
+		var space_state = player.get_world().direct_space_state
+		var shootable_collision_mask = Global.PHYSICS_LAYERS.WORLD | Global.PHYSICS_LAYERS.GUN
+		var ray_result = space_state.intersect_ray(from, to, [player], shootable_collision_mask)
+		var colliding = ray_result.get("collider")
 
-		# spawn sparks
-		# TODO change the location where you preload sparks. Maybe in the global??
-		var sparks = preload("res://world_item/spark.tscn").instance()
+		if colliding:
+			var collision_point = ray_result.position
 
-		for i in player.get_tree().root.get_children():
-			if i is Spatial:
-				i.add_child(sparks)
-				sparks.global_transform.origin = collision_point
+			if !interacted.has(colliding):
+				# change the health based on the weapon's damage
+				if "i_health" in colliding:
+					colliding.i_health.change_health(-w.base_damage)
+
+				# interact with the object if interface exist
+				if "i_interact" in colliding:
+					colliding.i_interact.interact()
+
+				# push the object if it's hit by the weapon
+				if colliding is RigidBody:
+					var imp_direction = -p.global_transform.basis.z.normalized()
+					colliding.apply_impulse(collision_point - colliding.global_transform.origin, imp_direction * 10)
+
+			# spawn sparks
+			# TODO change the location where you preload sparks. Maybe in the global??
+			var sparks = preload("res://world_item/spark.tscn").instance()
+			Util.add_to_world(sparks)
+			sparks.global_transform.origin = collision_point
+
+			# TODO: spawn bullet decal here
+			# use the local coordinate of an object so it also moves when it moves
+
+			var penetration_coeficient = Global.get_material_penetration_coefficient(colliding)
+			remaining_distance = max(remaining_distance - from.distance_to(collision_point) * penetration_coeficient, 0)
+			from = collision_point + direction * 0.001
+
+			interacted[colliding] = null
+		else:
+			remaining_distance = 0
+
+	State.set_state("debug_misc", str(debug_ray_count))
 
 
 static func get_shooting_direction(player, p: Spatial, w: GenericWeapon) -> Vector3:

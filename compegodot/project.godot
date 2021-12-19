@@ -87,6 +87,10 @@ window/vsync/use_vsync=false
 
 enabled=PoolStringArray( "SIsilicon.3d.text" )
 
+[gui]
+
+theme/use_hidpi=true
+
 [input]
 
 player_forward={
@@ -182,6 +186,7 @@ player_reload={
 [physics]
 
 common/physics_fps=128
+common/physics_jitter_fix=0.0
 3d/physics_engine="Bullet"
 3d/active_soft_world=false
 

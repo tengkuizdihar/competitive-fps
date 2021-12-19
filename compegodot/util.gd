@@ -22,11 +22,9 @@ func get_interface(target: Node, interface_class) -> Node:
 
 
 func add_to_world(node: Node) -> void:
-	var level: Node = get_tree().get_nodes_in_group(Global.GROUP.LEVEL).pop_back()
-	if level:
-		level.add_child(node)
-	else:
-		printerr("add_to_world doesn't work because no nodes is grouped as 'LEVEL'")
+	for i in get_tree().root.get_children():
+		if i is Spatial:
+			i.add_child(node)
 
 
 func array_get(array: Array, index: int, default = null):
@@ -47,3 +45,11 @@ func handle_err(error_code: int) -> void:
 func change_level(scene_path: String) -> void:
 	State.reset_game()
 	handle_err(get_tree().change_scene(scene_path))
+
+
+func get_groups_with_prefix(node: Node, prefix: String) -> Array:
+	var result = []
+	for g in node.get_groups():
+		if g.begins_with(prefix):
+			result.append(g)
+	return result

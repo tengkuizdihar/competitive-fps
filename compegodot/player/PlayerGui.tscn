@@ -210,12 +210,13 @@ __meta__ = {
 }
 
 [node name="Crosshair" type="TextureRect" parent="CenterContainer"]
-margin_left = 651.0
-margin_top = 372.0
-margin_right = 715.0
-margin_bottom = 396.0
+margin_left = 667.0
+margin_top = 368.0
+margin_right = 699.0
+margin_bottom = 400.0
 mouse_filter = 2
 texture = ExtResource( 2 )
+stretch_mode = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
