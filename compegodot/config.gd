@@ -8,6 +8,9 @@ var state
 # Preferably use primitive/dictionary/array instead of custom classes
 const config_file_path = "user://config.ini"
 const default_state = {
+	game = {
+		bullet_decal_max = 200
+	},
 	player = {
 		mouse_speed = 1.0
 	},
@@ -43,6 +46,12 @@ func apply_config():
 			var value = state[section][section_key]
 
 			match section:
+				'game':
+					match section_key:
+						'bullet_decal_max':
+							# NOTHING TO DO
+							# Player directly use this value from config
+							pass
 				'player':
 					match section_key:
 						'mouse_speed':

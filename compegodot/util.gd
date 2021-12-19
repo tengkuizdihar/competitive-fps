@@ -53,3 +53,13 @@ func get_groups_with_prefix(node: Node, prefix: String) -> Array:
 		if g.begins_with(prefix):
 			result.append(g)
 	return result
+
+
+func free_in_group_when_exceeding(group: String, limit: int):
+	var nodes = get_tree().get_nodes_in_group(group)
+	var freed_size = max(nodes.size() - limit, 0)
+
+	for i in range(0, freed_size):
+		var node = nodes[i]
+		if !node.is_queued_for_deletion():
+			node.queue_free()

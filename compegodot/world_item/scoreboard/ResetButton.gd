@@ -10,3 +10,4 @@ func _ready() -> void:
 
 func _on_interacted() -> void:
 	Score.reset_score()
+	Util.free_in_group_when_exceeding(Global.GROUP.DECAL_BULLET, 0)

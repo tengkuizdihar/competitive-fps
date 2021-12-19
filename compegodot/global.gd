@@ -15,6 +15,7 @@ const MATERIAL_GROUP_PREFIX = "MATERIAL__"
 
 class GROUP:
 	const LEVEL = "LEVEL"
+	const DECAL_BULLET = "DECAL_BULLET"
 
 
 # The values inside of MATERIAL should be added to physical bodies
@@ -76,7 +77,13 @@ func get_material_penetration_coefficient(node: Node) -> float:
 
 
 func get_material_groups(node: Node):
-	return Util.get_groups_with_prefix(node, MATERIAL_GROUP_PREFIX).front()
+	var result = Util.get_groups_with_prefix(node, MATERIAL_GROUP_PREFIX)
+
+	# NOTE: I'm using this ugly code because the engine will get mad if I use .front() on an empty array
+	if result.size() > 0:
+		return result.front()
+	else:
+		return null
 
 
 func match_material_penetration_coeficient(surface_id) -> float:

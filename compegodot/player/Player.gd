@@ -461,7 +461,9 @@ static func shooting_routine(player, p: Spatial, w: GenericWeapon) -> void:
 
 		if colliding:
 			var collision_point = ray_result.position
+			var collision_normal = ray_result.normal
 
+			# only interact with objects which we haven't interacted yet in this physics frame
 			if !interacted.has(colliding):
 				# change the health based on the weapon's damage
 				if "i_health" in colliding:
@@ -476,24 +478,47 @@ static func shooting_routine(player, p: Spatial, w: GenericWeapon) -> void:
 					var imp_direction = -p.global_transform.basis.z.normalized()
 					colliding.apply_impulse(collision_point - colliding.global_transform.origin, imp_direction * 10)
 
-			# spawn sparks
-			# TODO change the location where you preload sparks. Maybe in the global??
-			var sparks = preload("res://world_item/spark.tscn").instance()
-			Util.add_to_world(sparks)
-			sparks.global_transform.origin = collision_point
+			spawn_spark(collision_point)
+			spawn_bullet_hole(colliding, collision_point, collision_normal)
 
-			# TODO: spawn bullet decal here
-			# use the local coordinate of an object so it also moves when it moves
-
+			# penetration will reduce the effective range of a bullet
 			var penetration_coeficient = Global.get_material_penetration_coefficient(colliding)
 			remaining_distance = max(remaining_distance - from.distance_to(collision_point) * penetration_coeficient, 0)
 			from = collision_point + direction * 0.001
 
+			# tag this object as interacted
 			interacted[colliding] = null
 		else:
 			remaining_distance = 0
 
 	State.set_state("debug_misc", str(debug_ray_count))
+
+
+static func spawn_spark(collision_point: Vector3) -> void:
+	var sparks = preload("res://world_item/spark.tscn").instance()
+	Util.add_to_world(sparks)
+	sparks.global_transform.origin = collision_point
+
+
+static func spawn_bullet_hole(colliding: Spatial, collision_point: Vector3, collision_normal: Vector3) -> void:
+	# free nodes in group if it exceeds an arbitrary number of nodes
+	Util.free_in_group_when_exceeding(Global.GROUP.DECAL_BULLET, Config.state.game.bullet_decal_max)
+
+	var bullet_hole = preload("res://world_item/environments/BulletHole.tscn").instance()
+
+	# use the local coordinate of an object so it also moves when it moves
+	colliding.add_child(bullet_hole)
+	bullet_hole.global_transform.origin = collision_point
+
+	# NOTE: this code is ugly because look_at is broken when the UP vector is perpendicular with the normal
+	# BUG: What the fuck is this minus 0 kind of bullshit?! https://github.com/godotengine/godot/blob/f28771b7a8e88a134076037a3cca1affc882e58a/scene/3d/spatial.cpp#L672
+	if Vector3.UP.cross(collision_normal).is_equal_approx(Vector3()):
+		bullet_hole.rotation_degrees.x = 90
+	else:
+		bullet_hole.look_at(collision_point + collision_normal, Vector3.UP)
+
+	# Randomly rotate the bullet hole to add some variance
+	bullet_hole.rotation_degrees.z = rand_range(0, 355)
 
 
 static func get_shooting_direction(player, p: Spatial, w: GenericWeapon) -> Vector3:
