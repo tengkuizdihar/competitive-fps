@@ -133,13 +133,13 @@ The objective of the game shall be competed between the two team that participat
 
 **The defender** aims to make the plan of the attacker seems impossible to accomplish. Below are some of the most used strategy:
 
-1. Wasting the time of the attacker. This method can be achieved by smart manipulation of the environment through [utilities](#utility) and mind games. 
-2. Eliminate every single member of the opposing team. This way is rather straight forward and self-explanatory. 
+1. Wasting the time of the attacker. This method can be achieved by smart manipulation of the environment through [utilities](#utility) and mind games.
+2. Eliminate every single member of the opposing team. This way is rather straight forward and self-explanatory.
 3. Defusing the bomb that's planted by the attacking team. The defender would have limited choices between defusing the bomb or not doing it to "save" weapon for the next round.
 
 **The attackers** in the other hand tries to achieve their objective and these are some of the most used strategies.
 
-1. Killing all of the defenders or 
+1. Killing all of the defenders or
 2. Successfully planting and guarding the bomb till the time of explosion.
 
 The other silent enemy of the attackers is the time itself. If an attacking team fails to either kill all the opposing team or plant the bomb until the end of the round, they will be punished economically in the next round.
