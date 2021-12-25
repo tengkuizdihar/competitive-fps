@@ -448,15 +448,19 @@ static func shooting_routine(player, p: Spatial, w: GenericWeapon) -> void:
 
 	var interacted = {}
 
-	var debug_ray_count = 0
+	var ray_count = 0
 	while remaining_distance > 0:
-		debug_ray_count += 1
+		ray_count += 1
 
-		var to = from + direction * remaining_distance
+		var to = null
+		if ray_is_in_object(ray_count):
+			to = from + direction * remaining_distance
+		else:
+			to = from + direction * w.max_distance
 
 		var space_state = player.get_world().direct_space_state
 		var shootable_collision_mask = Global.PHYSICS_LAYERS.WORLD | Global.PHYSICS_LAYERS.GUN
-		var ray_result = space_state.intersect_ray(from, to, [player], shootable_collision_mask)
+		var ray_result = space_state.intersect_ray(from, to, [player] + interacted.keys(), shootable_collision_mask)
 		var colliding = ray_result.get("collider")
 
 		if colliding:
@@ -467,7 +471,10 @@ static func shooting_routine(player, p: Spatial, w: GenericWeapon) -> void:
 			if !interacted.has(colliding):
 				# change the health based on the weapon's damage
 				if "i_health" in colliding:
-					colliding.i_health.change_health(-w.base_damage)
+					# TODO: Make this to be a bit more complicated. Yes, complicated.
+					var damage = ceil(-w.base_damage / float(ray_count))
+
+					colliding.i_health.change_health(damage)
 
 				# interact with the object if interface exist
 				if "i_interact" in colliding:
@@ -481,9 +488,11 @@ static func shooting_routine(player, p: Spatial, w: GenericWeapon) -> void:
 			spawn_spark(collision_point)
 			spawn_bullet_hole(colliding, collision_point, collision_normal)
 
+			# Will only use the penetration if the ray is coming from outside of the thing and then inside
 			# penetration will reduce the effective range of a bullet
 			var penetration_coeficient = Global.get_material_penetration_coefficient(colliding)
-			remaining_distance = max(remaining_distance - from.distance_to(collision_point) * penetration_coeficient, 0)
+			remaining_distance = min(max(remaining_distance / penetration_coeficient, 0), w.max_distance)
+
 			from = collision_point + direction * 0.001
 
 			# tag this object as interacted
@@ -491,7 +500,11 @@ static func shooting_routine(player, p: Spatial, w: GenericWeapon) -> void:
 		else:
 			remaining_distance = 0
 
-	State.set_state("debug_misc", str(debug_ray_count))
+	State.set_state("debug_misc", str(ray_count) + " | " + str(ray_is_in_object(ray_count)))
+
+
+static func ray_is_in_object(ray_count: int) -> bool:
+	return (ray_count % 2) == 0
 
 
 static func spawn_spark(collision_point: Vector3) -> void:

@@ -89,10 +89,10 @@ func get_material_groups(node: Node):
 func match_material_penetration_coeficient(surface_id) -> float:
 	match surface_id:
 		MATERIAL.GENERIC:
-			return 100.0
+			return 300.0
 		MATERIAL.WOOD:
-			return 10.0
-		MATERIAL.GLASS:
-			return 5.0
-		_:
 			return 100.0
+		MATERIAL.GLASS:
+			return 10.0
+		_:
+			return 300.0

@@ -22,6 +22,6 @@ shader_param/use_normal_map = false
 shader_param/albedo = ExtResource( 2 )
 
 [node name="BulletHole" type="MeshInstance" groups=["DECAL_BULLET"]]
-transform = Transform( 0.06375, 0, 0, 0, 0.06375, 0, 0, 0, 0.025, 0, 0, 0 )
+transform = Transform( 0.06375, 0, 0, 0, 0.06375, 0, 0, 0, 0.00138281, 0, 0, 0 )
 mesh = SubResource( 1 )
 material/0 = SubResource( 2 )

@@ -2,24 +2,25 @@
 # License       : MIT
 # Description   : Create an environment to develop and run Godot Game Engine
 
-let
-    # Enable support for OpenGL/Vulkan for your drivers
-    nixgl = import (fetchTarball "https://github.com/guibou/nixGL/archive/7d6bc1b21316bab6cf4a6520c2639a11c25a220e.tar.gz") {};
+{
+  # Enable support for OpenGL/Vulkan for your drivers
+  nixgl ? import (fetchTarball "https://github.com/guibou/nixGL/archive/7d6bc1b21316bab6cf4a6520c2639a11c25a220e.tar.gz") { }
+, # Pin the version of the nix package repository
+  pkgs ? import (fetchTarball "https://github.com/nixos/nixpkgs/archive/8f5073b59e731e8fbb2fa363f674669b714e222f.tar.gz") { }
+}:
+pkgs.stdenv.mkDerivation {
+  name = "competitive-fps";
 
-    # Pin the version of the nix package repository
-    pkgs = import (fetchTarball "https://github.com/nixos/nixpkgs/archive/8f5073b59e731e8fbb2fa363f674669b714e222f.tar.gz") {};
-in
-    pkgs.mkShell {
-        buildInputs = [
-            # Godot Engine Editor
-            pkgs.godot
+  buildInputs = [
+    # Godot Engine Editor
+    pkgs.godot
 
-            # The support for OpenGL/Vulkan
-            nixgl.nixGLDefault
-        ];
+    # The support for OpenGL/Vulkan
+    nixgl.nixGLDefault
+  ];
 
-        # Alias the godot engine to use nixGL
-        shellHook = ''
-            alias godot="nixGL godot -e"
-        '';
-    }
+  # Alias the godot engine to use nixGL
+  shellHook = ''
+    alias godot="nixGL godot -e"
+  '';
+}
