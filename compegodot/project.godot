@@ -193,7 +193,9 @@ common/physics_jitter_fix=0.0
 [rendering]
 
 quality/driver/fallback_to_gles2=true
-quality/shadows/filter_mode=2
 quality/shading/use_physical_light_attenuation=true
+quality/filters/anisotropic_filter_level=1
 quality/spatial_partitioning/render_tree_balance=1.0
+quality/subsurface_scattering/quality=0
+quality/depth/hdr=false
 environment/default_environment="res://default_env.tres"
