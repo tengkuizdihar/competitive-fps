@@ -219,7 +219,7 @@ func handle_movement(input_vector: Vector3, delta: float):
 		# Apply Friction
 		if input_slanted.length() > 0:
 			if desired_movement_velocity.normalized().dot(input_slanted.normalized()) < -0.98:
-				desired_movement_velocity = desired_movement_velocity.move_toward(input_slanted * current_max_movement_velocity, ground_acceleration * 2 * delta)
+				desired_movement_velocity = desired_movement_velocity.move_toward(input_slanted * current_max_movement_velocity, ground_acceleration * 2.5 * delta)
 			elif is_crouching:
 				desired_movement_velocity = desired_movement_velocity.move_toward(input_slanted * current_max_movement_velocity, ground_acceleration * 0.5 * delta)
 			else:
