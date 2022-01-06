@@ -63,3 +63,21 @@ func free_in_group_when_exceeding(group: String, limit: int):
 		var node = nodes[i]
 		if !node.is_queued_for_deletion():
 			node.queue_free()
+
+
+func directory_file_names(directory_path, extension = null) -> Array:
+	var dir = Directory.new()
+	var file_names = []
+
+	if dir.open(directory_path) == OK:
+		dir.list_dir_begin(true, true)
+		var file_name = dir.get_next()
+		while file_name != "":
+			if !dir.current_is_dir():
+				if !extension or (extension and file_name.ends_with("." + extension)):
+					file_names.append(file_name)
+			file_name = dir.get_next()
+	else:
+		print("An error occurred when trying to access the path.")
+
+	return file_names

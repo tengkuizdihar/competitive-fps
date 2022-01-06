@@ -1,5 +1,24 @@
 extends Node
 
+
+###########################################################
+# GLOBALLY USED FUNCTIONS
+# Any function that need to be applied globally
+###########################################################
+
+func _ready():
+	Util.handle_err(get_tree().connect("node_added", self, "_on_tree_node_added"))
+
+
+func _on_tree_node_added(node: Node) -> void:
+	if node is Light:
+		make_light_available_every_layer(node)
+
+
+func make_light_available_every_layer(node: Light) -> void:
+	node.layers = MAX_INT
+
+
 ###########################################################
 # GLOBALLY USED CONSTANTS
 # Anything that's copy by value and could be a constant
@@ -7,6 +26,8 @@ extends Node
 
 const PHI = 1.61803399
 const MATERIAL_GROUP_PREFIX = "MATERIAL__"
+const MAX_INT = 9223372036854775807
+
 
 ###########################################################
 # GLOBALLY USED ENUM + CLASSES

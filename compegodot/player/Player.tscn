@@ -16,6 +16,7 @@ margin = 0.001
 height = 3.0
 
 [sub_resource type="CylinderShape" id=3]
+margin = 0.001
 height = 1.0
 
 [sub_resource type="CapsuleMesh" id=8]

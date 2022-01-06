@@ -51,7 +51,7 @@ onready var crouch_height = 1.75
 export(bool) var auto_bhop = true
 export(float) var crouch_speed = 5.5 # meter per second
 export(float) var jump_impulse_velocity = 12
-export(float) var air_acceleration = 20
+export(float) var air_acceleration = 70
 export(float) var ground_acceleration = 50
 export(float) var ground_friction = 40
 export(float) var gravity_constant = 25
@@ -137,8 +137,6 @@ func _physics_process(delta: float) -> void:
 ### This process is reversible because of how crouching works which is:
 ###     * Crouch
 ###     * Come to normal
-### BUG: if crouching under moving platform, player would stand up and down repeatedly
-### TODO: NEW METHOD WHEN IN GROUND, CURRENT METHOD WHEN AIRBORNE
 func manage_crouching(delta: float):
 	# Handle pausing by zero-ing the input vector
 	var is_paused = State.get_state("player_paused")
@@ -192,9 +190,6 @@ func handle_movement(input_vector: Vector3, delta: float):
 
 	input_vector = input_vector.normalized()
 
-	# slide the input_vector so that it would be on the plane in which it walks
-	var input_slanted = input_vector
-
 	# vector used for snapping the character when on the ground
 	var snap_vector = Vector3.ZERO
 
@@ -203,7 +198,8 @@ func handle_movement(input_vector: Vector3, delta: float):
 
 	# ON THE GROUND
 	elif is_on_floor():
-		input_slanted = input_vector.slide(get_floor_normal()).normalized()
+		# slide the input_vector so that it would be on the plane in which it walks
+		var input_slanted = input_vector.slide(get_floor_normal()).normalized()
 		snap_vector = -self.get_floor_normal()
 
 		# Player walk action that will decrease max_velocity
@@ -237,10 +233,7 @@ func handle_movement(input_vector: Vector3, delta: float):
 		desired_movement_velocity.y = 0
 
 		if input_vector.length() > 0:
-			if input_vector.dot(desired_movement_velocity.normalized()) < 0:
-				desired_movement_velocity = desired_movement_velocity.move_toward(input_vector * max_air_velocity, ground_acceleration * delta)
-			else:
-				desired_movement_velocity = desired_movement_velocity.move_toward(input_vector * max_air_velocity, air_acceleration * delta)
+			desired_movement_velocity = desired_movement_velocity.move_toward(input_vector * max_air_velocity, air_acceleration * delta)
 
 		# Give back the original velocity.y after the air movement is calculated
 		desired_movement_velocity.y = current_gravity_velocity
@@ -292,8 +285,6 @@ func handle_weapon_selection() -> void:
 			_switch_weapon_routine(Global.WEAPON_SLOT.MELEE)
 
 
-# TODO: use weapon inaccuracy + movement inaccuracy
-# TODO: use weapon information for ammo and reloading
 func fire_to_direction(delta) -> void:
 	var is_paused = State.get_state("player_paused")
 
