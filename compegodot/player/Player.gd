@@ -124,7 +124,9 @@ func _physics_process(delta: float) -> void:
 	fire_to_direction(delta)
 	apply_shooting_knockback(self, camera, weapon)
 
-	State.set_state("debug_ammo", "%d - %d" % [weapon.current_ammo, weapon.current_total_ammo])
+	State.set_state("player_weapon_name", weapon.weapon_name)
+	State.set_state("player_weapon_current_ammo", weapon.current_ammo)
+	State.set_state("player_weapon_total_ammo", weapon.current_total_ammo)
 
 
 ###########################################################
@@ -490,8 +492,6 @@ static func shooting_routine(player, p: Spatial, w: GenericWeapon) -> void:
 			interacted[colliding] = null
 		else:
 			remaining_distance = 0
-
-	State.set_state("debug_misc", str(ray_count) + " | " + str(ray_is_in_object(ray_count)))
 
 
 static func ray_is_in_object(ray_count: int) -> bool:

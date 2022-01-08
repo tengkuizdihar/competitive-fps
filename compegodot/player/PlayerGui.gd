@@ -1,13 +1,19 @@
 extends Control
 
-onready var crosshair = $CenterContainer/Crosshair
+onready var crosshair = $CrosshairContainer/Crosshair
 onready var gun_container = $GunContainer
 onready var sniper_scope = $SniperScope
-onready var sniper_dot = $CenterContainer/SniperDot
+onready var sniper_dot = $CrosshairContainer/SniperDot
+onready var weapon_name = $Indicators/AmmoIndicator/HBoxContainer/VBoxContainer2/WeaponName
+onready var current_ammo = $Indicators/AmmoIndicator/HBoxContainer/VBoxContainer2/HBoxContainer/CurrentAmmo
+onready var total_ammo = $Indicators/AmmoIndicator/HBoxContainer/VBoxContainer2/HBoxContainer/TotalAmmo
 
 
 func _ready():
 	Util.handle_err(State.connect("state_player_zoom_mode", self, "_on_state_player_zoom_made"))
+	Util.handle_err(State.connect("state_player_weapon_name", self, "_on_state_player_weapon_name"))
+	Util.handle_err(State.connect("state_player_weapon_current_ammo", self, "_on_state_player_weapon_current_ammo"))
+	Util.handle_err(State.connect("state_player_weapon_total_ammo", self, "_on_state_player_weapon_total_ammo"))
 	_on_state_player_zoom_made(State.get_state("player_zoom_mode"))
 
 
@@ -30,3 +36,15 @@ func handle_sniper_dot_visiblity() -> void:
 	is_visible = is_visible && State.get_state("player_velocity_length") == 0.0
 
 	sniper_dot.visible = is_visible
+
+
+func _on_state_player_weapon_name(value) -> void:
+	weapon_name.text = str(value)
+
+
+func _on_state_player_weapon_current_ammo(value) -> void:
+	current_ammo.text = str(value)
+
+
+func _on_state_player_weapon_total_ammo(value) -> void:
+	total_ammo.text = str(value)

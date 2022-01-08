@@ -4,6 +4,12 @@ class_name GenericWeapon
 
 
 ######################################
+#      WEAPONS RELATED EXPORTS       #
+######################################
+
+export (String) var weapon_name = ""
+
+######################################
 #       BULLET RELATED EXPORTS       #
 ######################################
 

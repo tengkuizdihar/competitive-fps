@@ -46,6 +46,7 @@ collision_layer = 8
 physics_material_override = ExtResource( 4 )
 continuous_cd = true
 script = ExtResource( 1 )
+weapon_name = "Knife"
 magazine_ammo = -1
 total_ammo = -1
 round_per_second = 2.0

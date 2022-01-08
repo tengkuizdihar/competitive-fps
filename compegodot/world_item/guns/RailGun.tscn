@@ -80,6 +80,7 @@ mass = 2.5
 physics_material_override = ExtResource( 5 )
 continuous_cd = true
 script = ExtResource( 1 )
+weapon_name = "RailGun"
 magazine_ammo = 10
 total_ammo = 30
 base_damage = 10000.0

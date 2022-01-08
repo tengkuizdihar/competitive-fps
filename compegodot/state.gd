@@ -21,6 +21,11 @@ const INITIAL_STATE = {
 	# Unlike debug_player_velocity, value is real and not stepified
 	"player_velocity_length": 0.0,
 
+	# The current weapon's status
+	"player_weapon_name": "Current Weapon",
+	"player_weapon_current_ammo": 0,
+	"player_weapon_total_ammo": 0,
+
 	# Shooting Target Configurations
 	# NOTE: The default movement mode is using Global.SHOOTING_TARGET_MOVEMENT_MODE.STATIC
 	# NOTE: The default size is the same as the default scale (1)

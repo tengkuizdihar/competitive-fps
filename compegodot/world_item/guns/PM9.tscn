@@ -130,6 +130,7 @@ mass = 2.5
 physics_material_override = ExtResource( 7 )
 continuous_cd = true
 script = ExtResource( 2 )
+weapon_name = "PM9"
 magazine_ammo = 12
 total_ammo = 36
 round_per_second = 4.45

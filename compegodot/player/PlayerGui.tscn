@@ -8,34 +8,6 @@
 [ext_resource path="res://assets/crosshair_temp/scope-black.png" type="Texture" id=7]
 [ext_resource path="res://assets/crosshair_temp/literally_red_dot.png" type="Texture" id=8]
 
-[sub_resource type="GDScript" id=4]
-script/source = "extends Label
-
-func _process(_delta: float) -> void:
-	text = \"FPS: \" + str(Engine.get_frames_per_second())
-"
-
-[sub_resource type="GDScript" id=5]
-script/source = "extends Label
-
-func _process(_delta: float) -> void:
-	text = \"VELOCITY: \" + str(State.get_state(\"debug_player_velocity\"))
-"
-
-[sub_resource type="GDScript" id=6]
-script/source = "extends Label
-
-func _process(_delta: float) -> void:
-	text = \"Debug Ammo: \" + str(State.get_state(\"debug_ammo\"))
-"
-
-[sub_resource type="GDScript" id=7]
-script/source = "extends Label
-
-func _process(_delta: float) -> void:
-	text = \"Debug Misc: \" + str(State.get_state(\"debug_misc\"))
-"
-
 [sub_resource type="Shader" id=8]
 code = "shader_type canvas_item;
 
@@ -60,6 +32,24 @@ region = Rect2( 157, 162, 1498, 1499 )
 atlas = ExtResource( 8 )
 region = Rect2( 14, 8, 522, 522 )
 
+[sub_resource type="GDScript" id=4]
+script/source = "extends Label
+
+func _process(_delta: float) -> void:
+	text = \"FPS: \" + str(Engine.get_frames_per_second())
+"
+
+[sub_resource type="GDScript" id=7]
+script/source = "extends Label
+
+func _process(_delta: float) -> void:
+	text = \"Debug Misc: \" + str(State.get_state(\"debug_misc\"))
+"
+
+[sub_resource type="StyleBoxFlat" id=14]
+
+[sub_resource type="StyleBoxFlat" id=15]
+
 [node name="PlayerGui" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -69,55 +59,15 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
-margin_right = 153.0
-margin_bottom = 50.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="FPSDebug" type="Label" parent="VBoxContainer"]
-margin_right = 157.0
-margin_bottom = 14.0
-text = "FPS: 0"
-script = SubResource( 4 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="VelocityDebug" type="Label" parent="VBoxContainer"]
-margin_top = 18.0
-margin_right = 157.0
-margin_bottom = 32.0
-text = "VELOCITY: 0"
-script = SubResource( 5 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="AmmoDebug" type="Label" parent="VBoxContainer"]
-margin_top = 36.0
-margin_right = 157.0
-margin_bottom = 50.0
-text = "Debug Ammo: 999 - 999"
-script = SubResource( 6 )
-
-[node name="MiscDebug" type="Label" parent="VBoxContainer"]
-margin_top = 54.0
-margin_right = 157.0
-margin_bottom = 68.0
-text = "Misc Debug: NOT USED"
-script = SubResource( 7 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="GunContainer" parent="." instance=ExtResource( 5 )]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_right = 0.0
+margin_bottom = 0.0
 world_camera_path = NodePath("../..")
 
 [node name="SniperScope" type="VBoxContainer" parent="."]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
@@ -200,7 +150,7 @@ size_flags_vertical = 3
 texture = ExtResource( 3 )
 expand = true
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="CrosshairContainer" type="CenterContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_horizontal = 13
@@ -209,7 +159,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Crosshair" type="TextureRect" parent="CenterContainer"]
+[node name="Crosshair" type="TextureRect" parent="CrosshairContainer"]
 margin_left = 667.0
 margin_top = 368.0
 margin_right = 699.0
@@ -221,7 +171,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="SniperDot" type="TextureRect" parent="CenterContainer"]
+[node name="SniperDot" type="TextureRect" parent="CrosshairContainer"]
 material = SubResource( 12 )
 margin_left = 678.0
 margin_top = 379.0
@@ -234,6 +184,135 @@ expand = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Indicators" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MapIndicator" type="MarginContainer" parent="Indicators"]
+margin_right = 1366.0
+margin_bottom = 78.0
+custom_constants/margin_top = 20
+custom_constants/margin_left = 20
+
+[node name="DebugContainer" type="VBoxContainer" parent="Indicators/MapIndicator"]
+margin_left = 20.0
+margin_top = 20.0
+margin_right = 1366.0
+margin_bottom = 78.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FPSDebug" type="Label" parent="Indicators/MapIndicator/DebugContainer"]
+margin_right = 1346.0
+margin_bottom = 25.0
+text = "FPS: 0"
+script = SubResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MiscDebug" type="Label" parent="Indicators/MapIndicator/DebugContainer"]
+margin_top = 33.0
+margin_right = 1346.0
+margin_bottom = 58.0
+text = "Misc Debug: NOT USED"
+script = SubResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BlankSpace" type="MarginContainer" parent="Indicators"]
+margin_top = 86.0
+margin_right = 1366.0
+margin_bottom = 662.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 20.0
+
+[node name="AmmoIndicator" type="MarginContainer" parent="Indicators"]
+margin_top = 670.0
+margin_right = 1366.0
+margin_bottom = 768.0
+size_flags_vertical = 11
+custom_constants/margin_right = 20
+custom_constants/margin_top = 20
+custom_constants/margin_left = 20
+custom_constants/margin_bottom = 20
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Indicators/AmmoIndicator"]
+margin_left = 20.0
+margin_top = 20.0
+margin_right = 1346.0
+margin_bottom = 78.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Indicators/AmmoIndicator/HBoxContainer"]
+margin_right = 263.0
+margin_bottom = 58.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="HealthBar" type="ProgressBar" parent="Indicators/AmmoIndicator/HBoxContainer/VBoxContainer"]
+margin_right = 263.0
+margin_bottom = 25.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/bg = SubResource( 14 )
+value = 100.0
+percent_visible = false
+
+[node name="ArmorBar" type="ProgressBar" parent="Indicators/AmmoIndicator/HBoxContainer/VBoxContainer"]
+margin_top = 33.0
+margin_right = 263.0
+margin_bottom = 58.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/bg = SubResource( 15 )
+value = 50.0
+percent_visible = false
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Indicators/AmmoIndicator/HBoxContainer"]
+margin_left = 271.0
+margin_right = 1326.0
+margin_bottom = 58.0
+size_flags_horizontal = 3
+
+[node name="WeaponName" type="Label" parent="Indicators/AmmoIndicator/HBoxContainer/VBoxContainer2"]
+margin_left = 878.0
+margin_right = 1055.0
+margin_bottom = 25.0
+size_flags_horizontal = 8
+text = "Weapon's Name"
+valign = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Indicators/AmmoIndicator/HBoxContainer/VBoxContainer2"]
+margin_top = 33.0
+margin_right = 1055.0
+margin_bottom = 58.0
+custom_constants/separation = 20
+alignment = 2
+
+[node name="CurrentAmmo" type="Label" parent="Indicators/AmmoIndicator/HBoxContainer/VBoxContainer2/HBoxContainer"]
+margin_left = 983.0
+margin_right = 1009.0
+margin_bottom = 25.0
+text = "12"
+align = 1
+valign = 1
+
+[node name="TotalAmmo" type="Label" parent="Indicators/AmmoIndicator/HBoxContainer/VBoxContainer2/HBoxContainer"]
+margin_left = 1029.0
+margin_right = 1055.0
+margin_bottom = 25.0
+text = "24"
+align = 1
+valign = 1
 
 [node name="PauseMenu" parent="." instance=ExtResource( 6 )]
 visible = false
