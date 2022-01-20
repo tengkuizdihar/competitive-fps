@@ -1,6 +1,12 @@
 extends KinematicBody
 
 ###########################################################
+# Interfaces
+###########################################################
+
+onready var i_health = $IHealth
+
+###########################################################
 # Variables
 ###########################################################
 
@@ -97,6 +103,8 @@ func _ready() -> void:
 	for i in weapons.keys():
 		if weapons[i]:
 			weapons[i].set_to_equipped()
+
+	_on_IHealth_health_changed(i_health.current_health, i_health.current_armor)
 
 func _input(event):
 	if !State.get_state("player_paused") and event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
@@ -467,7 +475,7 @@ static func shooting_routine(player, p: Spatial, w: GenericWeapon) -> void:
 					# TODO: Make this to be a bit more complicated. Yes, complicated.
 					var damage = ceil(-w.base_damage / float(ray_count))
 
-					colliding.i_health.change_health(damage)
+					colliding.i_health.change_health_and_armor(damage)
 
 				# interact with the object if interface exist
 				if "i_interact" in colliding:
@@ -584,7 +592,22 @@ static func apply_friction(new_velocity: Vector3, friction_constant: float, delt
 		return new_velocity - friction_vector
 
 
+###########################################################
+# Signal Function
+###########################################################
+
+
 func _on_Area_body_entered(w):
 	if w is GenericWeapon:
 		if not weapons.get(w.weapon_slot) and w.is_auto_pickupable():
 			_weapon_pickup_routine(w)
+
+
+func _on_IHealth_health_changed(current_health: float, current_armor: float):
+	State.set_state("player_health",  current_health)
+	State.set_state("player_armor",  current_armor)
+
+
+func _on_IHealth_dead():
+	# TODO: add a routine to make the person dead and then respawn again
+	pass

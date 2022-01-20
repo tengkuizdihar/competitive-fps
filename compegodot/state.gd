@@ -26,6 +26,10 @@ const INITIAL_STATE = {
 	"player_weapon_current_ammo": 0,
 	"player_weapon_total_ammo": 0,
 
+	# The current player's health status
+	"player_health": 0.0,
+	"player_armor": 0.0,
+
 	# Shooting Target Configurations
 	# NOTE: The default movement mode is using Global.SHOOTING_TARGET_MOVEMENT_MODE.STATIC
 	# NOTE: The default size is the same as the default scale (1)

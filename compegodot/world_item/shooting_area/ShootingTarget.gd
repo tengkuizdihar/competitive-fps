@@ -52,5 +52,5 @@ func _on_state_shooting_target_size(state: float):
 	scale = Vector3.ONE * state
 
 
-func _on_IHealth_health_changed(health: float):
+func _on_IHealth_health_changed(health: float, _armor: float):
 	set_health_text(health)

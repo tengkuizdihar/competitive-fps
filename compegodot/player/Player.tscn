@@ -1,8 +1,9 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://player/PlayerGui.tscn" type="PackedScene" id=1]
 [ext_resource path="res://player/CameraSmoothPhysics.gd" type="Script" id=2]
 [ext_resource path="res://player/Player.gd" type="Script" id=3]
+[ext_resource path="res://interfaces/IHealth.gd" type="Script" id=4]
 [ext_resource path="res://world_item/guns/PM9.tscn" type="PackedScene" id=6]
 [ext_resource path="res://world_item/guns/KF1.tscn" type="PackedScene" id=7]
 [ext_resource path="res://world_item/guns/RF7.tscn" type="PackedScene" id=8]
@@ -26,6 +27,10 @@ mid_height = 3.0
 collision_layer = 0
 script = ExtResource( 3 )
 auto_bhop = false
+
+[node name="IHealth" type="Node" parent="."]
+script = ExtResource( 4 )
+max_armor = 100.0
 
 [node name="Area" type="Area" parent="."]
 collision_layer = 0
@@ -76,4 +81,5 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0 )
 enabled = true
 cast_to = Vector3( 0, 0, 0 )
 
+[connection signal="health_changed" from="IHealth" to="." method="_on_IHealth_health_changed"]
 [connection signal="body_entered" from="Area" to="." method="_on_Area_body_entered"]
