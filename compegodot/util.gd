@@ -81,3 +81,12 @@ func directory_file_names(directory_path, extension = null) -> Array:
 		print("An error occurred when trying to access the path.")
 
 	return file_names
+
+
+func is_in_either_group(node: Node, group_name: Array):
+	var check = false
+
+	for g in group_name:
+		check = check or node.is_in_group(g)
+
+	return check

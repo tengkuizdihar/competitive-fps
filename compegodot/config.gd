@@ -25,6 +25,7 @@ const default_state = {
 func _ready():
 	state = default_state.duplicate(true)
 	load_config()
+	apply_config()
 
 
 func change_config(section: String, key: String, value):

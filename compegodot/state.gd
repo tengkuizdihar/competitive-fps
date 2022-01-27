@@ -7,6 +7,9 @@ const INITIAL_STATE = {
 	"debug_misc": "NOT USED",
 	"debug_ammo": "NOT USED",
 
+	# Game States
+	"game_mode": 1, # Global.GAME_MODE.DEFAULT
+
 	# Should be "true" whenever the player pause the game
 	# This should happen in situation such as; opening the escape menu
 	"player_paused": false,

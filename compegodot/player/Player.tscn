@@ -23,7 +23,7 @@ height = 1.0
 [sub_resource type="CapsuleMesh" id=8]
 mid_height = 3.0
 
-[node name="Player" type="KinematicBody"]
+[node name="Player" type="KinematicBody" groups=["SPAWN_TYPE_GROUP__UNIVERSAL"]]
 collision_layer = 0
 script = ExtResource( 3 )
 auto_bhop = false

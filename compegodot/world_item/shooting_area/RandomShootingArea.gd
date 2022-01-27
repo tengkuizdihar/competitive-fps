@@ -27,6 +27,10 @@ func _ready() -> void:
 
 
 func _on_Target_dead() -> void:
+	# NOTE: To avoid being killed again after spawning because now bullets have penetration
+	#       which could kill the newly spawned shooting target if it's close enough
+	yield(get_tree(), "physics_frame")
+
 	match Score.mode:
 		Score.Mode.RANDOM_SINGLE:
 			__spawn_target()

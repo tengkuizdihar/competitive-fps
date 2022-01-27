@@ -6,7 +6,7 @@
   # Enable support for OpenGL/Vulkan for your drivers
   nixgl ? import (fetchTarball "https://github.com/guibou/nixGL/archive/7d6bc1b21316bab6cf4a6520c2639a11c25a220e.tar.gz") { }
 , # Pin the version of the nix package repository
-  pkgs ? import (fetchTarball "https://github.com/nixos/nixpkgs/archive/8f5073b59e731e8fbb2fa363f674669b714e222f.tar.gz") { }
+  pkgs ? import (fetchTarball "https://github.com/nixos/nixpkgs/archive/a2968d985bf46d046f67e33c313e61d310d0885a.tar.gz") { }
 }:
 pkgs.stdenv.mkDerivation {
   name = "competitive-fps";

@@ -39,6 +39,12 @@ class GROUP:
 	const DECAL_BULLET = "DECAL_BULLET"
 
 
+class SPAWN_TYPE_GROUP:
+	const UNIVERSAL = "SPAWN_TYPE_GROUP__UNIVERSAL"
+	const TEAM_1 = "SPAWN_TYPE_GROUP__TEAM_1"
+	const TEAM_2 = "SPAWN_TYPE_GROUP__TEAM_2"
+
+
 # The values inside of MATERIAL should be added to physical bodies
 class MATERIAL:
 	const GENERIC = "MATERIAL__GENERIC"
@@ -49,6 +55,18 @@ class MATERIAL:
 # GLOBALLY USED ENUMS
 # Enums that are used... Globally...
 ###########################################################
+
+enum GAME_MODE {
+	# The player will be spawned in immediately to a universal spawn point
+	# and will be respawned in that spawn point when they die.
+	DEFAULT = 1,
+
+	# A competitive mode that's taking the default amount of rounds to win
+	LONG_COMPETITIVE,
+
+	# A competitive mode that's taking a shorter amount of rounds to win
+	SHORT_COMPETITIVE
+}
 
 enum WEAPON_TYPE {
 	AUTOMATIC,
