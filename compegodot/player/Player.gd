@@ -132,6 +132,10 @@ func _physics_process(delta: float) -> void:
 	fire_to_direction(delta)
 	apply_shooting_knockback(self, camera, weapon)
 
+	# DEBUG: SELF INFLICTED DAMAGE
+	if Input.is_action_just_pressed("ui_end"):
+		i_health.change_health_and_armor(-23)
+
 	State.set_state("player_weapon_name", weapon.weapon_name)
 	State.set_state("player_weapon_current_ammo", weapon.current_ammo)
 	State.set_state("player_weapon_total_ammo", weapon.current_total_ammo)
@@ -272,6 +276,7 @@ func handle_movement(input_vector: Vector3, delta: float):
 	desired_movement_velocity = self.move_and_slide_with_snap(desired_movement_velocity, snap_vector, Vector3.UP, false, 4, 0.785398, false)
 
 	State.set_state("debug_player_velocity", stepify(desired_movement_velocity.length(), 0.01))
+	State.set_state("debug_misc", str(get_floor_normal().normalized()))
 	State.set_state("player_velocity_length", desired_movement_velocity.length())
 
 
