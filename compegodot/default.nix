@@ -22,6 +22,9 @@ pkgs.stdenv.mkDerivation rec {
     # Godot Engine Editor
     pkgs.godot
 
+    # Map Editor
+    pkgs.trenchbroom
+
     # The support for OpenGL/Vulkan
     nixgl.nixGLDefault
 

@@ -58,7 +58,7 @@ export(bool) var auto_bhop = true
 export(float) var crouch_speed = 5.5 # meter per second
 export(float) var jump_impulse_velocity = 12
 export(float) var air_acceleration = 70
-export(float) var ground_acceleration = 50
+export(float) var ground_acceleration = 60
 export(float) var ground_friction = 40
 export(float) var gravity_constant = 25
 export(float) var max_run_velocity = 13.0
@@ -276,7 +276,7 @@ func handle_movement(input_vector: Vector3, delta: float):
 	desired_movement_velocity = self.move_and_slide_with_snap(desired_movement_velocity, snap_vector, Vector3.UP, false, 4, 0.785398, false)
 
 	State.set_state("debug_player_velocity", stepify(desired_movement_velocity.length(), 0.01))
-	State.set_state("debug_misc", str(get_floor_normal().normalized()))
+	State.set_state("debug_misc", str(desired_movement_velocity.length()))
 	State.set_state("player_velocity_length", desired_movement_velocity.length())
 
 
@@ -472,7 +472,6 @@ static func shooting_routine(player, p: Spatial, w: GenericWeapon) -> void:
 		if colliding:
 			var collision_point = ray_result.position
 			var collision_normal = ray_result.normal
-
 			# only interact with objects which we haven't interacted yet in this physics frame
 			if !interacted.has(colliding):
 				# change the health based on the weapon's damage
@@ -482,14 +481,23 @@ static func shooting_routine(player, p: Spatial, w: GenericWeapon) -> void:
 
 					colliding.i_health.change_health_and_armor(damage)
 
+					# tag this object as interacted
+					interacted[colliding] = null
+
 				# interact with the object if interface exist
 				if "i_interact" in colliding:
 					colliding.i_interact.interact()
+
+					# tag this object as interacted
+					interacted[colliding] = null
 
 				# push the object if it's hit by the weapon
 				if colliding is RigidBody:
 					var imp_direction = -p.global_transform.basis.z.normalized()
 					colliding.apply_impulse(collision_point - colliding.global_transform.origin, imp_direction * 10)
+
+					# tag this object as interacted
+					interacted[colliding] = null
 
 			spawn_spark(collision_point)
 			spawn_bullet_hole(colliding, collision_point, collision_normal)
@@ -498,11 +506,7 @@ static func shooting_routine(player, p: Spatial, w: GenericWeapon) -> void:
 			# penetration will reduce the effective range of a bullet
 			var penetration_coeficient = Global.get_material_penetration_coefficient(colliding)
 			remaining_distance = min(max(remaining_distance / penetration_coeficient, 0), w.max_distance)
-
 			from = collision_point + direction * 0.001
-
-			# tag this object as interacted
-			interacted[colliding] = null
 		else:
 			remaining_distance = 0
 
