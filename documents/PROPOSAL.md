@@ -27,6 +27,10 @@ A living document of an unnamed 5 versus 5 competitive FPS, similar to Counter-S
     - [Antiques](#antiques)
   - [Movement](#movement)
   - [Utility](#utility)
+    - [Hand Grenade](#hand-grenade)
+    - [Smoke Grenade](#smoke-grenade)
+    - [Incendiary Grenade](#incendiary-grenade)
+    - [Flash Grenade](#flash-grenade)
   - [Health Management](#health-management)
   - [Interaction](#interaction)
   - [Communication](#communication)
@@ -176,7 +180,7 @@ When designing a weapon (at least a "regular" one where it only shoot one bullet
 
 3. Spray Patterns
 
-    To add some certainty and skill towards controlling a fully automatic weapon, we chose to utilize a concept, most notably used in Counter-Strike: Global Offensive. When the player is firing an automatic rifle on a wall, the will realize that there's a pattern that would emerge. The pattern itself is predetermined and predictable by the player. This pattern should be an indication that spraying the gun is a viable way to kill an opponent even if at first it seems unpredictable.
+    To add some certainty and skill towards controlling a fully automatic weapon, we chose to utilize a concept, most notably used in Counter-Strike: Global Offensive. When the player is firing an automatic rifle on a wall, they will realize that there's a pattern that would emerge. The pattern itself should be predetermined and predictable. This pattern should be an indication that spraying the gun is a viable way to kill an opponent even if at first it seems unpredictable.
 
 4. Recoil Punch with Recoil Decay
 
@@ -219,6 +223,26 @@ TODO: describe the desired feeling and purpose of movement and their relation to
 ## Utility
 
 TODO: explain the purpose and need of each and every single utility and their manipulation to the senses and elements in the game.
+
+### Hand Grenade
+
+TODO: determine in game name.
+TODO: thing go swirl and boom.
+
+### Smoke Grenade
+
+TODO: determine in game name.
+TODO: basically smoke for obscuring vision. It could be thrown in various ways. Including by using "Omen Like" smokes that leaves trails when its going towards its target.
+
+### Incendiary Grenade
+
+TODO: determine in game name.
+TODO: basically molotov, for denying position. It could be thrown only.
+
+### Flash Grenade
+
+TODO: determine in game name.
+TODO: to obscure vision and hearing. Could only be thrown.
 
 ## Health Management
 

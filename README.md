@@ -2,10 +2,22 @@
 
 This is an open source project about the most versatile and fun **first person shooter**. There's already an implementation made in Godot Engine, but every single changes is based on the proposal inside of [`documents/PROPOSAL.md`](documents/PROPOSAL.md). Right now Tengku Izdihar the only one who is developing it on his free time, but you're welcome to contribute to the project.
 
+NOTE FOR DEVELOPERS AND ENTHUSIAST: This project uses GIT-LFS, make sure your environment has it.
+
 For any question, you can contact the project owner on matrix which is listed in https://tengkuizdihar.gitlab.io/contact/.
+
+# Screenshot
+
+This screenshot is last updated Sunday, March 20, 2022 8:46:54 PM GMT+07:00.
+
+![Main Menu](documents/assets/gameplay_main_menu_select_level.png)
+![Pause Menu - Option](documents/assets/gameplay_pause_menu_option.png)
+![Pause Menu - No Menu Selected](documents/assets/gameplay_pause_menu.png)
+![Gameplay](documents/assets/gameplay.png)
 
 # Table Of Contents
 - [The Solver Series](#the-solver-series)
+- [Screenshot](#screenshot)
 - [Table Of Contents](#table-of-contents)
   - [How to Contribute](#how-to-contribute)
   - [Roadmap](#roadmap)
