@@ -1,5 +1,6 @@
 # Godot-specific ignores
-.import/
+# I'm trying things out, so I'm going to not include this here
+# .import/
 
 # Imported translations (automatically generated from CSV files)
 *.translation
