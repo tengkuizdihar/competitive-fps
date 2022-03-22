@@ -8,6 +8,6 @@ func _ready() -> void:
 		printerr(name + "doesn't have interacted")
 
 
-func _on_interacted() -> void:
+func _on_interacted(_interactor) -> void:
 	State.set_state("shooting_target_size", max(State.get_state("shooting_target_size") - 0.1, 0.1))
 	Score.reset_score()

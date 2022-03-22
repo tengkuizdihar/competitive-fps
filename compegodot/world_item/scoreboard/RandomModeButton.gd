@@ -8,5 +8,5 @@ func _ready() -> void:
 		printerr(name + "doesn't have interacted")
 
 
-func _on_interacted() -> void:
+func _on_interacted(_interactor) -> void:
 	Score.change_mode(Score.Mode.RANDOM_SINGLE)

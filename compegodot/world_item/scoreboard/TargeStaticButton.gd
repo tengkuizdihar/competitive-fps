@@ -8,6 +8,6 @@ func _ready() -> void:
 		printerr(name + "doesn't have interacted")
 
 
-func _on_interacted() -> void:
+func _on_interacted(_interactor) -> void:
 	Score.reset_score()
 	State.set_state("shooting_target_movement_mode", Global.SHOOTING_TARGET_MOVEMENT_MODE.STATIC)

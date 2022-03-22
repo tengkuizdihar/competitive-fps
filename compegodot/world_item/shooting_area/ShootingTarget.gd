@@ -18,12 +18,6 @@ func _ready() -> void:
 	direction = (global_transform.basis.z * rand_range(-1,1) + global_transform.basis.y * rand_range(-1,1)).normalized()
 	speed = rand_range(5, 20)
 
-
-func _physics_process(delta):
-	if Score.mode == Score.Mode.RANDOM_SINGLE and State.get_state("shooting_target_movement_mode") == Global.SHOOTING_TARGET_MOVEMENT_MODE.MOVING:
-		move_target(delta)
-
-
 func move_target(delta):
 	var collision_info = move_and_collide(direction * speed * delta)
 	if collision_info:

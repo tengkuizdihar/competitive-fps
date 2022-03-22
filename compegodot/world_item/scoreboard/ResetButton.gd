@@ -8,6 +8,6 @@ func _ready() -> void:
 		printerr(name + "doesn't have interacted")
 
 
-func _on_interacted() -> void:
+func _on_interacted(_interactor) -> void:
 	Score.reset_score()
 	Util.free_in_group_when_exceeding(Global.GROUP.DECAL_BULLET, 0)

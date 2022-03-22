@@ -4,6 +4,7 @@ extends Area
 # Target that's going to be randomly spawned in the level
 export (PackedScene) var target_scene
 var collision_area: CollisionShape
+var alive_targets = []
 
 func _get_configuration_warning() -> String:
 	for i in get_children():
@@ -25,11 +26,18 @@ func _ready() -> void:
 		Util.handle_err(Score.connect("mode_changed", self, "_on_score_mode_changed"))
 		Util.handle_err(State.connect("state_player_reloaded", self, "_on_state_player_reloaded"))
 
+func _physics_process(delta):
+	if Score.mode == Score.Mode.RANDOM_SINGLE and State.get_state("shooting_target_movement_mode") == Global.SHOOTING_TARGET_MOVEMENT_MODE.MOVING:
+		for t in alive_targets:
+			if is_instance_valid(t):
+				t.move_target(delta)
 
-func _on_Target_dead() -> void:
+
+func _on_Target_dead(target) -> void:
 	# NOTE: To avoid being killed again after spawning because now bullets have penetration
 	#       which could kill the newly spawned shooting target if it's close enough
 	yield(get_tree(), "physics_frame")
+	alive_targets.erase(target)
 
 	match Score.mode:
 		Score.Mode.RANDOM_SINGLE:
@@ -62,6 +70,7 @@ func _on_state_player_reloaded(_reload_frame: int):
 func __spawn_target(target_origin: Vector3 = Vector3.INF, health: float = 1.0) -> void:
 	var new_target = target_scene.instance() as Node
 	add_child(new_target)
+	alive_targets.push_back(new_target)
 
 	if target_origin == Vector3.INF:
 		new_target.global_transform.origin = __get_random_points_inside_area()
@@ -70,7 +79,7 @@ func __spawn_target(target_origin: Vector3 = Vector3.INF, health: float = 1.0) -
 
 	var interface = Util.get_interface(new_target, IHealth) as IHealth
 	interface.set_health(health)
-	interface.connect("dead", self, "_on_Target_dead")
+	interface.connect("dead", self, "_on_Target_dead", [new_target])
 
 
 func __get_random_points_inside_area() -> Vector3:
