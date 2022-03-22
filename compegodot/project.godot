@@ -83,11 +83,8 @@ GameMode="*res://game_mode.gd"
 [debug]
 
 settings/fps/force_fps=512
+gdscript/warnings/treat_warnings_as_errors=true
 gdscript/completion/autocomplete_setters_and_getters=true
-gdscript/warnings/unsafe_property_access=true
-gdscript/warnings/unsafe_method_access=true
-gdscript/warnings/unsafe_cast=true
-gdscript/warnings/unsafe_call_argument=true
 
 [display]
 

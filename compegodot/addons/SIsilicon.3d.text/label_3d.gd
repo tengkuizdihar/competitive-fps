@@ -82,7 +82,8 @@ func _ready() -> void:
 	set_max_steps(max_steps)
 	set_min_steps(min_steps)
 
-
+# TODO-BUG: resumed function after yield but class instance is gone.
+#           confirmed when it's spawned then killed as soon as it's spawned.
 func set_text(value: String) -> void:
 	text = value
 	if label:
