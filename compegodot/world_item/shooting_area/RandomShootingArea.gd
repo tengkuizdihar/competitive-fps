@@ -27,10 +27,11 @@ func _ready() -> void:
 		Util.handle_err(State.connect("state_player_reloaded", self, "_on_state_player_reloaded"))
 
 func _physics_process(delta):
-	if Score.mode == Score.Mode.RANDOM_SINGLE and State.get_state("shooting_target_movement_mode") == Global.SHOOTING_TARGET_MOVEMENT_MODE.MOVING:
-		for t in alive_targets:
-			if is_instance_valid(t):
-				t.move_target(delta)
+	if not Engine.editor_hint:
+		if Score.mode == Score.Mode.RANDOM_SINGLE and State.get_state("shooting_target_movement_mode") == Global.SHOOTING_TARGET_MOVEMENT_MODE.MOVING:
+			for t in alive_targets:
+				if is_instance_valid(t):
+					t.move_target(delta)
 
 
 func _on_Target_dead(target) -> void:
