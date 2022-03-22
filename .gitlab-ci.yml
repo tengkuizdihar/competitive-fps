@@ -1,19 +1,24 @@
-image: barichello/godot-ci:3.4.2
-
 # NOTE: the `cd` command in each build stage is not necessary if your
 # project.godot is at the repo root
-
-# Cache imported assets between runs
-cache:
-  key: import-assets
-  paths:
-    - compegodot/.import/
 
 stages:
   - export
 
 variables:
   EXPORT_NAME: compegodot
+
+linux-docker:
+  image: barichello/godot-ci:3.4.2
+  stage: export
+  script:
+    - mkdir -v -p build/linux
+    - cd $EXPORT_NAME
+    - godot -v --export "Linux/X11" ../build/linux/$EXPORT_NAME.x86_64
+  artifacts:
+    name: $EXPORT_NAME-$CI_JOB_NAME
+    paths:
+      - build/linux
+
 
 # Usage of cachix to speed up the build time
 # For those who have the keys, use `nix-store -qR --include-outputs $(nix-store -qd $(nix-build)) | grep -v '\.drv$' | cachix push publicagainmisterbin` to push all of the dependencies upstream.
@@ -36,6 +41,7 @@ linux-nix:
       - compegodot/competitive-fps
 
 windows:
+  image: barichello/godot-ci:3.4.2
   stage: export
   script:
     - mkdir -v -p build/windows
@@ -59,6 +65,7 @@ windows:
 #       - build/mac
 
 web:
+  image: barichello/godot-ci:3.4.2
   stage: export
   script:
     - mkdir -v -p build/web
