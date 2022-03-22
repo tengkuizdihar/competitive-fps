@@ -83,6 +83,11 @@ GameMode="*res://game_mode.gd"
 [debug]
 
 settings/fps/force_fps=512
+gdscript/completion/autocomplete_setters_and_getters=true
+gdscript/warnings/unsafe_property_access=true
+gdscript/warnings/unsafe_method_access=true
+gdscript/warnings/unsafe_cast=true
+gdscript/warnings/unsafe_call_argument=true
 
 [display]
 
@@ -199,7 +204,6 @@ common/physics_jitter_fix=0.0
 
 [rendering]
 
-quality/driver/fallback_to_gles2=true
 quality/shading/use_physical_light_attenuation=true
 quality/filters/anisotropic_filter_level=1
 quality/depth/hdr=false
