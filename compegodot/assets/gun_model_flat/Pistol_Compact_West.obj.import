@@ -1,0 +1,20 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/Pistol_Compact_West.obj-f41eb3d71a17fa4a43153441f21e42ba.mesh"
+
+[deps]
+
+files=[ "res://.import/Pistol_Compact_West.obj-f41eb3d71a17fa4a43153441f21e42ba.mesh" ]
+
+source_file="res://assets/gun_model_flat/Pistol_Compact_West.obj"
+dest_files=[ "res://.import/Pistol_Compact_West.obj-f41eb3d71a17fa4a43153441f21e42ba.mesh", "res://.import/Pistol_Compact_West.obj-f41eb3d71a17fa4a43153441f21e42ba.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )
+offset_mesh=Vector3( 0, 0, 0 )
+octahedral_compression=true
+optimize_mesh_flags=4286
