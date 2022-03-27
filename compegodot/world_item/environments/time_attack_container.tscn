@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://world_item/environments/time_attack_container.gd" type="Script" id=1]
+
+[node name="TimeAttackContainer" type="Spatial"]
+script = ExtResource( 1 )
+target_positions_container_path = null
+time_attack_label_3d_path = null

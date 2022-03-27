@@ -1,0 +1,318 @@
+[gd_scene load_steps=17 format=2]
+
+[ext_resource path="res://world_item/gun_container.tscn" type="PackedScene" id=1]
+[ext_resource path="res://assets/crosshair_temp/default_crosshair.tres" type="Texture" id=2]
+[ext_resource path="res://player/player_gui.gd" type="Script" id=3]
+[ext_resource path="res://icon.png" type="Texture" id=4]
+[ext_resource path="res://assets/crosshair_temp/literally_red_dot.png" type="Texture" id=5]
+[ext_resource path="res://ui/pause_menu.tscn" type="PackedScene" id=6]
+[ext_resource path="res://assets/crosshair_temp/scope-black.png" type="Texture" id=7]
+
+[sub_resource type="Shader" id=8]
+code = "shader_type canvas_item;
+
+uniform vec4 color : hint_color;
+
+void fragment(){
+  COLOR = color;
+}"
+
+[sub_resource type="ShaderMaterial" id=9]
+shader = SubResource( 8 )
+shader_param/color = null
+
+[sub_resource type="AtlasTexture" id=10]
+flags = 4
+atlas = ExtResource( 7 )
+region = Rect2( 157, 162, 1498, 1499 )
+
+[sub_resource type="ShaderMaterial" id=12]
+
+[sub_resource type="AtlasTexture" id=13]
+atlas = ExtResource( 5 )
+region = Rect2( 14, 8, 522, 522 )
+
+[sub_resource type="GDScript" id=4]
+script/source = "extends Label
+
+func _process(_delta: float) -> void:
+	text = \"FPS: \" + str(Engine.get_frames_per_second())
+"
+
+[sub_resource type="GDScript" id=7]
+script/source = "extends Label
+
+func _process(_delta: float) -> void:
+	text = \"Debug Misc: \" + str(State.get_state(\"debug_misc\"))
+"
+
+[sub_resource type="StyleBoxFlat" id=15]
+
+[sub_resource type="StyleBoxFlat" id=14]
+
+[node name="PlayerGui" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GunContainer" parent="." instance=ExtResource( 1 )]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = 0.0
+margin_bottom = 0.0
+world_camera_path = NodePath("../..")
+
+[node name="SniperScope" type="VBoxContainer" parent="."]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+custom_constants/separation = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="SniperScope"]
+margin_right = 1366.0
+margin_bottom = 34.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 0
+
+[node name="TextureRect" type="TextureRect" parent="SniperScope/HBoxContainer2"]
+material = SubResource( 9 )
+margin_right = 1366.0
+margin_bottom = 34.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource( 4 )
+expand = true
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="SniperScope"]
+margin_top = 34.0
+margin_right = 1366.0
+margin_bottom = 733.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 20.0
+custom_constants/separation = 0
+
+[node name="TextureRect" type="TextureRect" parent="SniperScope/HBoxContainer3"]
+material = SubResource( 9 )
+margin_right = 341.0
+margin_bottom = 699.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource( 4 )
+expand = true
+
+[node name="TextureRect2" type="TextureRect" parent="SniperScope/HBoxContainer3"]
+margin_left = 341.0
+margin_right = 1024.0
+margin_bottom = 699.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+texture = SubResource( 10 )
+expand = true
+
+[node name="TextureRect3" type="TextureRect" parent="SniperScope/HBoxContainer3"]
+material = SubResource( 9 )
+margin_left = 1024.0
+margin_right = 1366.0
+margin_bottom = 699.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource( 4 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="SniperScope"]
+margin_top = 733.0
+margin_right = 1366.0
+margin_bottom = 768.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 0
+
+[node name="TextureRect" type="TextureRect" parent="SniperScope/HBoxContainer4"]
+material = SubResource( 9 )
+margin_right = 1366.0
+margin_bottom = 35.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource( 4 )
+expand = true
+
+[node name="CrosshairContainer" type="CenterContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 13
+size_flags_vertical = 13
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Crosshair" type="TextureRect" parent="CrosshairContainer"]
+margin_left = 667.0
+margin_top = 368.0
+margin_right = 699.0
+margin_bottom = 400.0
+mouse_filter = 2
+texture = ExtResource( 2 )
+stretch_mode = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SniperDot" type="TextureRect" parent="CrosshairContainer"]
+material = SubResource( 12 )
+margin_left = 678.0
+margin_top = 379.0
+margin_right = 687.0
+margin_bottom = 388.0
+rect_min_size = Vector2( 9, 9 )
+mouse_filter = 2
+texture = SubResource( 13 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Indicators" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MapIndicator" type="MarginContainer" parent="Indicators"]
+margin_right = 1366.0
+margin_bottom = 78.0
+custom_constants/margin_top = 20
+custom_constants/margin_left = 20
+
+[node name="DebugContainer" type="VBoxContainer" parent="Indicators/MapIndicator"]
+margin_left = 20.0
+margin_top = 20.0
+margin_right = 1366.0
+margin_bottom = 78.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FPSDebug" type="Label" parent="Indicators/MapIndicator/DebugContainer"]
+margin_right = 1346.0
+margin_bottom = 25.0
+text = "FPS: 0"
+script = SubResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MiscDebug" type="Label" parent="Indicators/MapIndicator/DebugContainer"]
+margin_top = 33.0
+margin_right = 1346.0
+margin_bottom = 58.0
+text = "Misc Debug: NOT USED"
+script = SubResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BlankSpace" type="MarginContainer" parent="Indicators"]
+margin_top = 86.0
+margin_right = 1366.0
+margin_bottom = 662.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 20.0
+
+[node name="AmmoIndicator" type="MarginContainer" parent="Indicators"]
+margin_top = 670.0
+margin_right = 1366.0
+margin_bottom = 768.0
+size_flags_vertical = 11
+custom_constants/margin_right = 20
+custom_constants/margin_top = 20
+custom_constants/margin_left = 20
+custom_constants/margin_bottom = 20
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Indicators/AmmoIndicator"]
+margin_left = 20.0
+margin_top = 20.0
+margin_right = 1346.0
+margin_bottom = 78.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Indicators/AmmoIndicator/HBoxContainer"]
+margin_right = 263.0
+margin_bottom = 58.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="ArmorBar" type="ProgressBar" parent="Indicators/AmmoIndicator/HBoxContainer/VBoxContainer"]
+margin_right = 263.0
+margin_bottom = 25.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/bg = SubResource( 15 )
+value = 50.0
+percent_visible = false
+
+[node name="HealthBar" type="ProgressBar" parent="Indicators/AmmoIndicator/HBoxContainer/VBoxContainer"]
+margin_top = 33.0
+margin_right = 263.0
+margin_bottom = 58.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/bg = SubResource( 14 )
+value = 100.0
+percent_visible = false
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Indicators/AmmoIndicator/HBoxContainer"]
+margin_left = 271.0
+margin_right = 1326.0
+margin_bottom = 58.0
+size_flags_horizontal = 3
+
+[node name="WeaponName" type="Label" parent="Indicators/AmmoIndicator/HBoxContainer/VBoxContainer2"]
+margin_left = 878.0
+margin_right = 1055.0
+margin_bottom = 25.0
+size_flags_horizontal = 8
+text = "Weapon's Name"
+valign = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Indicators/AmmoIndicator/HBoxContainer/VBoxContainer2"]
+margin_top = 33.0
+margin_right = 1055.0
+margin_bottom = 58.0
+custom_constants/separation = 20
+alignment = 2
+
+[node name="CurrentAmmo" type="Label" parent="Indicators/AmmoIndicator/HBoxContainer/VBoxContainer2/HBoxContainer"]
+margin_left = 983.0
+margin_right = 1009.0
+margin_bottom = 25.0
+text = "12"
+align = 1
+valign = 1
+
+[node name="TotalAmmo" type="Label" parent="Indicators/AmmoIndicator/HBoxContainer/VBoxContainer2/HBoxContainer"]
+margin_left = 1029.0
+margin_right = 1055.0
+margin_bottom = 25.0
+text = "24"
+align = 1
+valign = 1
+
+[node name="PauseMenu" parent="." instance=ExtResource( 6 )]
+visible = false

@@ -1,6 +1,6 @@
 extends Node
 
-const player_scene = preload("res://player/Player.tscn")
+const player_scene = preload("res://player/player.tscn")
 const player_group_names = [Global.SPAWN_TYPE_GROUP.UNIVERSAL, Global.SPAWN_TYPE_GROUP.TEAM_1, Global.SPAWN_TYPE_GROUP.TEAM_2]
 
 var registered_player = {}

@@ -22,37 +22,37 @@ _global_script_classes=[ {
 "base": "Camera",
 "class": "CameraSmoothPhysics",
 "language": "GDScript",
-"path": "res://player/CameraSmoothPhysics.gd"
+"path": "res://player/camera_smooth_physics.gd"
 }, {
 "base": "RigidBody",
 "class": "GenericWeapon",
 "language": "GDScript",
-"path": "res://world_item/guns/GenericWeapon.gd"
+"path": "res://world_item/guns/generic_weapon.gd"
 }, {
 "base": "GenericWeapon",
 "class": "Grenade",
 "language": "GDScript",
-"path": "res://world_item/utility/Grenade.gd"
+"path": "res://world_item/utility/grenade.gd"
 }, {
 "base": "Node",
 "class": "IHealth",
 "language": "GDScript",
-"path": "res://interfaces/IHealth.gd"
+"path": "res://interfaces/i_health.gd"
 }, {
 "base": "Node",
 "class": "IInteract",
 "language": "GDScript",
-"path": "res://interfaces/IInteract.gd"
+"path": "res://interfaces/i_interact.gd"
 }, {
 "base": "Spatial",
 "class": "TimeAttackContainer",
 "language": "GDScript",
-"path": "res://world_item/environments/TimeAttackContainer.gd"
+"path": "res://world_item/environments/time_attack_container.gd"
 }, {
 "base": "Spatial",
 "class": "VolumetricSky",
 "language": "GDScript",
-"path": "res://VolumetricSky.gd"
+"path": "res://materials/volumetric_sky.gd"
 } ]
 _global_script_class_icons={
 "ArrayUtils": "",
@@ -69,7 +69,7 @@ _global_script_class_icons={
 [application]
 
 config/name="compegodot"
-run/main_scene="res://ui/MainMenu.tscn"
+run/main_scene="res://ui/main_menu.tscn"
 config/icon="res://icon.png"
 
 [audio]
@@ -82,7 +82,7 @@ Util="*res://util.gd"
 State="*res://state.gd"
 Global="*res://global.gd"
 Score="*res://score.gd"
-LLInput="*res://LLInput.gd"
+LLInput="*res://llinput.gd"
 Config="*res://config.gd"
 GameMode="*res://game_mode.gd"
 
