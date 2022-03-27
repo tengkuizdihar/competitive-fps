@@ -4,6 +4,12 @@ class_name GenericWeapon
 
 
 ######################################
+#               PLAYER               #
+######################################
+
+var player = null
+
+######################################
 #      WEAPONS RELATED EXPORTS       #
 ######################################
 
@@ -221,8 +227,8 @@ func _ready() -> void:
 		add_child(auto_pickupable_timer)
 
 		# Init recoil arrays
-		_spray_recoils = transform_to_recoil_array(spray_recoils)
-		_spray_infinite_recoils =  transform_to_recoil_array(spray_infinite_recoils)
+		_spray_recoils = _transform_to_recoil_array(spray_recoils)
+		_spray_infinite_recoils =  _transform_to_recoil_array(spray_infinite_recoils)
 
 		# Init ammo count
 		current_ammo = magazine_ammo
@@ -279,6 +285,14 @@ func trigger_on(delta) -> bool:
 			semi_could_shoot = false
 			shoot_empty_audio_player.play()
 			return false
+	elif weapon_type == Global.WEAPON_TYPE.GRENADE:
+		var is_ammo_usable = _ammo_depletion_routine()
+		if is_ammo_usable:
+			shoot_audio_player.play()
+			rof_timer.start()
+			anim_player.stop()
+			anim_player.play(anim_shoot_name)
+			return true
 
 	return false
 
@@ -288,14 +302,26 @@ func trigger_off() -> void:
 
 
 # TODO add second audio
-func second_trigger_on() -> void:
+func second_trigger_on() -> bool:
 	if weapon_type == Global.WEAPON_TYPE.KNIFE:
 		rof_timer.start()
 		anim_player.stop()
 		anim_player.play(anim_shoot_secondary_name)
+		return true
 	if weapon_type == Global.WEAPON_TYPE.SNIPER_SEMI_AUTOMATIC and allow_scope_to_activate and can_shoot():
 		allow_scope_to_activate = false
-		handle_sniper_zoom()
+		_handle_sniper_zoom()
+		return true
+	if weapon_type == Global.WEAPON_TYPE.GRENADE:
+		var is_ammo_usable = _ammo_depletion_routine()
+		if is_ammo_usable:
+			shoot_audio_player.play()
+			rof_timer.start()
+			anim_player.stop()
+			anim_player.play(anim_shoot_secondary_name)
+			return true
+
+	return false
 
 
 func second_trigger_off() -> void:
@@ -304,7 +330,7 @@ func second_trigger_off() -> void:
 
 
 func reload_trigger() -> void:
-	reset_sniper_zoom()
+	_reset_sniper_zoom()
 	anim_player.stop()
 	anim_player.play(anim_reload_name)
 
@@ -326,7 +352,138 @@ func _reload_routine() -> void:
 		current_ammo = magazine_ammo
 
 
-func set_to_equipped() -> void:
+func first_activate(pivot: Spatial) -> void:
+	match weapon_type:
+		Global.WEAPON_TYPE.AUTOMATIC, Global.WEAPON_TYPE.SEMI_AUTOMATIC, Global.WEAPON_TYPE.SNIPER_SEMI_AUTOMATIC, Global.WEAPON_TYPE.KNIFE:
+			_first_gun_activate(pivot)
+		Global.WEAPON_TYPE.GRENADE:
+			# NOTE: REGISTER BUT NO LOGIC BECAUSE IT'S DONE AFTER THE THROWING ANIMATION IS OVER
+			pass
+		_:
+			printerr("ERROR, WEAPON TYPE:", weapon_type," NOT REGISTERED\n", get_stack())
+
+
+func _first_gun_activate(pivot: Spatial) -> void:
+	var from = pivot.global_transform.origin
+	var direction = self.get_shooting_direction(pivot)
+	var remaining_distance = self.max_distance
+
+	var interacted = {}
+
+	var ray_count = 0
+	while remaining_distance > 0:
+		ray_count += 1
+
+		var to = null
+		if ray_is_in_object(ray_count):
+			to = from + direction * remaining_distance
+		else:
+			to = from + direction * self.max_distance
+
+		var space_state = player.get_world().direct_space_state
+		var shootable_collision_mask = Global.PHYSICS_LAYERS.WORLD | Global.PHYSICS_LAYERS.GUN
+		var ray_result = space_state.intersect_ray(from, to, [player] + interacted.keys(), shootable_collision_mask)
+		var colliding = ray_result.get("collider")
+
+		if colliding:
+			var collision_point = ray_result.position
+			var collision_normal = ray_result.normal
+			# only interact with objects which we haven't interacted yet in this physics frame
+			if !interacted.has(colliding):
+				# change the health based on the weapon's damage
+				if "i_health" in colliding:
+					# TODO: Make this to be a bit more complicated. Yes, complicated.
+					var damage = ceil(-self.base_damage / float(ray_count))
+
+					colliding.i_health.change_health_and_armor(damage)
+
+					# tag this object as interacted
+					interacted[colliding] = null
+
+				# interact with the object if interface exist
+				if "i_interact" in colliding:
+					colliding.i_interact.interact(player)
+
+					# tag this object as interacted
+					interacted[colliding] = null
+
+				# push the object if it's hit by the weapon
+				if colliding is RigidBody:
+					var imp_direction = -pivot.global_transform.basis.z.normalized()
+					colliding.apply_impulse(collision_point - colliding.global_transform.origin, imp_direction * 10)
+
+					# tag this object as interacted
+					interacted[colliding] = null
+
+			spawn_spark(collision_point)
+			spawn_bullet_hole(colliding, collision_point, collision_normal)
+
+			# Will only use the penetration if the ray is coming from outside of the thing and then inside
+			# penetration will reduce the effective range of a bullet
+			var penetration_coeficient = Global.get_material_penetration_coefficient(colliding)
+			remaining_distance = min(max(remaining_distance / penetration_coeficient, 0), self.max_distance)
+			from = collision_point + direction * 0.001
+		else:
+			remaining_distance = 0
+
+
+static func ray_is_in_object(ray_count: int) -> bool:
+	return (ray_count % 2) == 0
+
+
+static func spawn_spark(collision_point: Vector3) -> void:
+	var sparks = preload("res://world_item/spark.tscn").instance()
+	Util.add_to_world(sparks)
+	sparks.global_transform.origin = collision_point
+
+
+static func spawn_bullet_hole(colliding: Spatial, collision_point: Vector3, collision_normal: Vector3) -> void:
+	# free nodes in group if it exceeds an arbitrary number of nodes
+	Util.free_in_group_when_exceeding(Global.GROUP.DECAL_BULLET, Config.state.game.bullet_decal_max)
+
+	var bullet_hole = preload("res://world_item/environments/BulletHole.tscn").instance()
+
+	# use the local coordinate of an object so it also moves when it moves
+	colliding.add_child(bullet_hole)
+	bullet_hole.global_transform.origin = collision_point
+
+	# NOTE: this code is ugly because look_at is broken when the UP vector is perpendicular with the normal
+	# BUG: What the fuck is this minus 0 kind of bullshit?! https://github.com/godotengine/godot/blob/f28771b7a8e88a134076037a3cca1affc882e58a/scene/3d/spatial.cpp#L672
+	if Vector3.UP.cross(collision_normal).is_equal_approx(Vector3()):
+		bullet_hole.rotation_degrees.x = 90
+	else:
+		bullet_hole.look_at(collision_point + collision_normal, Vector3.UP)
+
+	# Randomly rotate the bullet hole to add some variance
+	bullet_hole.rotation_degrees.z = rand_range(0, 355)
+
+
+func get_shooting_direction(pivot: Spatial) -> Vector3:
+	var forward = -pivot.global_transform.basis.z
+
+	var movement_ratio_to_still = player.desired_movement_velocity.length() / player.max_run_velocity
+	var movement_modifier = 1 + (movement_ratio_to_still * self.movement_inaccuracy_multiplier)
+	var jumping_modifier = 1 + (int(!player.is_on_floor())  * self.jumping_inaccuracy_multiplier)
+
+	var inaccuracy = self.get_inaccuracy(movement_modifier, jumping_modifier)
+
+	var inh_inacc = inaccuracy.inherent
+	var spr_inacc = inaccuracy.spray
+
+	var total_horizontal_inaccuracy = inh_inacc[0] + spr_inacc[0]
+	var total_vertical_inaccuracy = inh_inacc[1] + spr_inacc[1]
+
+	# If rotated by a positive number, it goes to the right, vice versa
+	var horizontalized = forward.rotated(-pivot.global_transform.basis.y, total_horizontal_inaccuracy)
+
+	# If rotated by a positive number, it goes to the top, vice versa
+	var verticalized = horizontalized.rotated(pivot.global_transform.basis.x, total_vertical_inaccuracy)
+	return verticalized
+
+
+func set_to_player_object() -> void:
+	anim_player.play("RESET")
+
 	var gun_mesh: MeshInstance = get_node(gun_mesh_instance)
 	gun_mesh.layers = Global.RENDER_LAYERS.PLAYER
 	gun_mesh.cast_shadow = GeometryInstance.SHADOW_CASTING_SETTING_OFF
@@ -337,6 +494,8 @@ func set_to_equipped() -> void:
 
 
 func set_to_world_object() -> void:
+	anim_player.play("RESET")
+
 	var gun_mesh: MeshInstance = get_node(gun_mesh_instance)
 	gun_mesh.layers = Global.RENDER_LAYERS.WORLD
 	gun_mesh.cast_shadow = GeometryInstance.SHADOW_CASTING_SETTING_OFF
@@ -354,7 +513,7 @@ func is_auto_pickupable() -> bool:
 
 
 func _spray_routine(delta):
-	var spray = get_spray_inaccuracy(spray_array_index)
+	var spray = _get_spray_inaccuracy(spray_array_index)
 
 	var ratio = (spray_timer.time_left + (1.0 / round_per_second) + delta) / spray_timer.wait_time
 	ratio = min(1, ratio)
@@ -373,7 +532,7 @@ func _ammo_depletion_routine() -> bool:
 	return next_ammo >= 0 or magazine_ammo < 0
 
 
-func transform_to_recoil_array(recoil_array: Array) -> Array:
+func _transform_to_recoil_array(recoil_array: Array) -> Array:
 	var result = []
 	result.resize(recoil_array.size())
 
@@ -384,7 +543,7 @@ func transform_to_recoil_array(recoil_array: Array) -> Array:
 	return result
 
 
-func get_spray_inaccuracy(spray_index: int):
+func _get_spray_inaccuracy(spray_index: int):
 	var default_recoil = [0.0, 0.0]
 
 	if spray_index > _spray_recoils.size() - 1:
@@ -399,15 +558,15 @@ func get_spray_inaccuracy(spray_index: int):
 
 # Will do a routine where the gun is switched on to
 # For example, playing an unskippable startup animation like cocking the gun
-func activate():
+func equip():
 	anim_player.play("startup")
 
 
 # Will do a routine where everything that's running will be reseted
 # For example, reseting a reload animation in the middle.
-func deactivate():
+func unequip():
 	anim_player.stop()
-	reset_sniper_zoom()
+	_reset_sniper_zoom()
 
 
 # Will give a dictionary of inherent and spray inaccuracy filled with the
@@ -440,7 +599,7 @@ func get_inaccuracy(movement_modifier: float, jumping_modifier: float) -> Dictio
 
 	# Reset the zoom here when the inaccuracy is being modified
 	# NOTE: If the zoom reset before the inaccuracy is modified, it will always be modified even when it's scoped in
-	reset_sniper_zoom()
+	_reset_sniper_zoom()
 
 	# Clamp it to the value of 0.5 after modifier is implemented
 	modified_inaccuracy_scale = clamp(modified_inaccuracy_scale, -0.5, 0.5)
@@ -457,7 +616,7 @@ func get_inaccuracy(movement_modifier: float, jumping_modifier: float) -> Dictio
 
 # BUG: first shot will always have get_aim_punch_ratio of 0
 func get_knockback_inaccuracy():
-	var spray = get_spray_inaccuracy(spray_array_index + 1)
+	var spray = _get_spray_inaccuracy(spray_array_index + 1)
 
 	var aim_punch_ratio = spray_timer.time_left / spray_timer.wait_time
 
@@ -467,16 +626,12 @@ func get_knockback_inaccuracy():
 	return spray
 
 
-func get_aim_punch_ratio() -> float:
-	return spray_timer.time_left / spray_timer.wait_time
-
-
 func _on_spray_timer_timeout() -> void:
 	spray_array_index = 0
 	spray_cummulative = [0.0, 0.0]
 
 
-func handle_sniper_zoom() -> void:
+func _handle_sniper_zoom() -> void:
 	if anim_player.current_animation == anim_reload_name:
 		return
 
@@ -491,5 +646,5 @@ func handle_sniper_zoom() -> void:
 			State.set_state("player_zoom_mode", Global.WEAPON_ZOOM_MODE.SNIPER_ZOOMED_1)
 
 
-func reset_sniper_zoom() -> void:
+func _reset_sniper_zoom() -> void:
 	State.set_state("player_zoom_mode", Global.WEAPON_ZOOM_MODE.DEFAULT)

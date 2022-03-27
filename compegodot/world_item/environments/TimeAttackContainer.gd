@@ -105,6 +105,13 @@ func respawn_targets(init_only: bool):
 	var targets = target_container.get_children()
 	for t in targets:
 		if init_only:
+			# NOTE: VERY SPECIFIC TO SILICONE 3D TEXT
+			# This addon is relying on the fact that it updates every so often frames.
+			# To remove it safely without triggering error from async stuff, we need to wait for some frames.__data__
+			# Set wait time for frames to 5 just to be safe.
+			for _i in range(5):
+				yield(get_tree(), "idle_frame")
+
 			list_of_target_transforms.append(t.get_global_transform())
 		t.queue_free()
 
@@ -119,7 +126,6 @@ func respawn_targets(init_only: bool):
 
 
 func respawn_player(player: Spatial):
-	print(player_respawn_location.global_transform)
 	player.global_transform = player_respawn_location.global_transform
 
 

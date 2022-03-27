@@ -30,7 +30,8 @@ onready var last_weapon_used = Global.WEAPON_SLOT.PRIMARY
 onready var weapons = {
 	Global.WEAPON_SLOT.PRIMARY: $Pivot/Camera/GunContainer/RF7,
 	Global.WEAPON_SLOT.SECONDARY: $Pivot/Camera/GunContainer/PM9,
-	Global.WEAPON_SLOT.MELEE: $Pivot/Camera/GunContainer/KF1
+	Global.WEAPON_SLOT.MELEE: $Pivot/Camera/GunContainer/KF1,
+	Global.WEAPON_SLOT.FRAG_GRENADE: null
 }
 
 ### The currently used max velocity for movement input
@@ -102,7 +103,8 @@ func _ready() -> void:
 	# set all weapon to equipped
 	for i in weapons.keys():
 		if weapons[i]:
-			weapons[i].set_to_equipped()
+			weapons[i].set_to_player_object()
+			weapons[i].player = self
 
 	_on_IHealth_health_changed(i_health.current_health, i_health.current_armor)
 
@@ -299,6 +301,8 @@ func handle_weapon_selection() -> void:
 			_switch_weapon_routine(Global.WEAPON_SLOT.SECONDARY)
 		if Input.is_action_just_pressed("player_weapon_gun_knife"):
 			_switch_weapon_routine(Global.WEAPON_SLOT.MELEE)
+		if Input.is_action_just_pressed("player_cycle_grenade"):
+			_switch_weapon_routine(Global.WEAPON_SLOT.FRAG_GRENADE)
 
 
 func fire_to_direction(delta) -> void:
@@ -306,7 +310,7 @@ func fire_to_direction(delta) -> void:
 
 	# FIRST TRIGGER
 	if not is_paused and LLInput.is_action_pressed("player_shoot_primary") and weapon.can_shoot() and weapon.trigger_on(delta):
-		shooting_routine(self, pivot, weapon)
+		weapon.first_activate(pivot)
 
 	if not is_paused and LLInput.is_action_released("player_shoot_primary"):
 		weapon.trigger_off()
@@ -314,8 +318,9 @@ func fire_to_direction(delta) -> void:
 
 	# SECOND TRIGGER
 	# TODO: make shooting routine to have many modes
-	if not is_paused and LLInput.is_action_pressed("player_shoot_secondary"):
-		weapon.second_trigger_on()
+	if not is_paused and LLInput.is_action_pressed("player_shoot_secondary") and weapon.second_trigger_on():
+		pass
+
 	if not is_paused and LLInput.is_action_released("player_shoot_secondary"):
 		weapon.second_trigger_off()
 
@@ -323,6 +328,31 @@ func fire_to_direction(delta) -> void:
 func handle_weapon_drop() -> void:
 	if Input.is_action_just_pressed("player_weapon_drop") and weapon.weapon_slot != Global.WEAPON_SLOT.MELEE:
 		_drop_weapon(weapon)
+
+# Unlike drop_weapon, this one will only remove it from the inventory and not add it to the world
+func remove_weapon(weapon_slot):
+	var w = weapons.get(weapon_slot)
+	if w:
+		# remove from child
+		$Pivot/Camera/GunContainer.remove_child(w)
+
+		# throw it into the world (for now just place it on the ground from where the camera origin is)
+		for i in get_tree().root.get_children():
+			if i is Spatial:
+				i.add_child(w)
+
+		# make set_to_world_object
+		w.set_to_world_object()
+
+		# make the weapons (dict) currenly equipped to null
+		if weapons[w.weapon_slot] == w:
+			weapons[w.weapon_slot] = null
+
+		if weapon == w:
+			weapon = null
+
+		# switch to the currently used weapon
+		_switch_weapon_routine(current_weapon)
 
 
 # TODO: add weapon pickup when near
@@ -359,7 +389,8 @@ func handle_weapon_reload() -> void:
 # Drop the given weapon and then return whether the weapon is dropped or not.
 # Return true only when the weapon is dropped and false if the weapon can't be dropped.
 func _drop_weapon(w: GenericWeapon) -> void:
-	w.deactivate()
+	w.player = null
+	w.unequip()
 	w.show()
 
 	# remove from child
@@ -375,6 +406,7 @@ func _drop_weapon(w: GenericWeapon) -> void:
 
 	randomize()
 	w.global_transform.origin = camera.global_transform.origin - camera.global_transform.basis.z.normalized() * 2
+	w.global_rotate(Vector3(rand_range(-1, 1), rand_range(-1, 1), rand_range(-1, 1)).normalized(), PI * rand_range(0, 2))
 
 	# add force to the gun
 	w.apply_central_impulse(-camera.global_transform.basis.z * (10 + desired_movement_velocity.length() / 2))
@@ -394,7 +426,8 @@ func _drop_weapon(w: GenericWeapon) -> void:
 # Set the given weapon to the inventory then return an already existing weapon.
 # If player doesn't have weapon already, then return null.
 func _set_weapon(w: GenericWeapon) -> GenericWeapon:
-	w.activate()
+	w.player = self
+	w.equip()
 
 	var existing_weapon = weapons[w.weapon_slot]
 
@@ -408,7 +441,7 @@ func _set_weapon(w: GenericWeapon) -> GenericWeapon:
 	w.global_transform = gun_container.get_global_transform()
 
 	# Set the weapon to be equipped
-	w.set_to_equipped()
+	w.set_to_player_object()
 
 	# TODO make an option for auto switch on pickup
 	# Hide it at pickup
@@ -420,7 +453,7 @@ func _set_weapon(w: GenericWeapon) -> GenericWeapon:
 func _switch_weapon_routine(weapon_slot) -> void:
 	hide_all_weapon()
 	if weapon:
-		weapon.deactivate()
+		weapon.unequip()
 
 	if weapons[weapon_slot]:
 		if current_weapon != weapon_slot:
@@ -436,7 +469,7 @@ func _switch_weapon_routine(weapon_slot) -> void:
 				last_weapon_used = weapon.weapon_slot
 
 	weapon.show()
-	weapon.activate()
+	weapon.equip()
 
 
 # TODO: an effect where the player's sight is "nudged" when hit on the head
@@ -447,124 +480,6 @@ func handle_aim_punch() -> void:
 ###########################################################
 # Static Function
 ###########################################################
-
-static func shooting_routine(player, p: Spatial, w: GenericWeapon) -> void:
-	var from = p.global_transform.origin
-	var direction = get_shooting_direction(player, p, w)
-	var remaining_distance = w.max_distance
-
-	var interacted = {}
-
-	var ray_count = 0
-	while remaining_distance > 0:
-		ray_count += 1
-
-		var to = null
-		if ray_is_in_object(ray_count):
-			to = from + direction * remaining_distance
-		else:
-			to = from + direction * w.max_distance
-
-		var space_state = player.get_world().direct_space_state
-		var shootable_collision_mask = Global.PHYSICS_LAYERS.WORLD | Global.PHYSICS_LAYERS.GUN
-		var ray_result = space_state.intersect_ray(from, to, [player] + interacted.keys(), shootable_collision_mask)
-		var colliding = ray_result.get("collider")
-
-		if colliding:
-			var collision_point = ray_result.position
-			var collision_normal = ray_result.normal
-			# only interact with objects which we haven't interacted yet in this physics frame
-			if !interacted.has(colliding):
-				# change the health based on the weapon's damage
-				if "i_health" in colliding:
-					# TODO: Make this to be a bit more complicated. Yes, complicated.
-					var damage = ceil(-w.base_damage / float(ray_count))
-
-					colliding.i_health.change_health_and_armor(damage)
-
-					# tag this object as interacted
-					interacted[colliding] = null
-
-				# interact with the object if interface exist
-				if "i_interact" in colliding:
-					colliding.i_interact.interact(player)
-
-					# tag this object as interacted
-					interacted[colliding] = null
-
-				# push the object if it's hit by the weapon
-				if colliding is RigidBody:
-					var imp_direction = -p.global_transform.basis.z.normalized()
-					colliding.apply_impulse(collision_point - colliding.global_transform.origin, imp_direction * 10)
-
-					# tag this object as interacted
-					interacted[colliding] = null
-
-			spawn_spark(collision_point)
-			spawn_bullet_hole(colliding, collision_point, collision_normal)
-
-			# Will only use the penetration if the ray is coming from outside of the thing and then inside
-			# penetration will reduce the effective range of a bullet
-			var penetration_coeficient = Global.get_material_penetration_coefficient(colliding)
-			remaining_distance = min(max(remaining_distance / penetration_coeficient, 0), w.max_distance)
-			from = collision_point + direction * 0.001
-		else:
-			remaining_distance = 0
-
-
-static func ray_is_in_object(ray_count: int) -> bool:
-	return (ray_count % 2) == 0
-
-
-static func spawn_spark(collision_point: Vector3) -> void:
-	var sparks = preload("res://world_item/spark.tscn").instance()
-	Util.add_to_world(sparks)
-	sparks.global_transform.origin = collision_point
-
-
-static func spawn_bullet_hole(colliding: Spatial, collision_point: Vector3, collision_normal: Vector3) -> void:
-	# free nodes in group if it exceeds an arbitrary number of nodes
-	Util.free_in_group_when_exceeding(Global.GROUP.DECAL_BULLET, Config.state.game.bullet_decal_max)
-
-	var bullet_hole = preload("res://world_item/environments/BulletHole.tscn").instance()
-
-	# use the local coordinate of an object so it also moves when it moves
-	colliding.add_child(bullet_hole)
-	bullet_hole.global_transform.origin = collision_point
-
-	# NOTE: this code is ugly because look_at is broken when the UP vector is perpendicular with the normal
-	# BUG: What the fuck is this minus 0 kind of bullshit?! https://github.com/godotengine/godot/blob/f28771b7a8e88a134076037a3cca1affc882e58a/scene/3d/spatial.cpp#L672
-	if Vector3.UP.cross(collision_normal).is_equal_approx(Vector3()):
-		bullet_hole.rotation_degrees.x = 90
-	else:
-		bullet_hole.look_at(collision_point + collision_normal, Vector3.UP)
-
-	# Randomly rotate the bullet hole to add some variance
-	bullet_hole.rotation_degrees.z = rand_range(0, 355)
-
-
-static func get_shooting_direction(player, p: Spatial, w: GenericWeapon) -> Vector3:
-	var forward = -p.global_transform.basis.z
-
-	var movement_ratio_to_still = player.desired_movement_velocity.length() / player.max_run_velocity
-	var movement_modifier = 1 + (movement_ratio_to_still * w.movement_inaccuracy_multiplier)
-	var jumping_modifier = 1 + (int(!player.is_on_floor())  * w.jumping_inaccuracy_multiplier)
-
-	var inaccuracy = w.get_inaccuracy(movement_modifier, jumping_modifier)
-
-	var inh_inacc = inaccuracy.inherent
-	var spr_inacc = inaccuracy.spray
-
-	var total_horizontal_inaccuracy = inh_inacc[0] + spr_inacc[0]
-	var total_vertical_inaccuracy = inh_inacc[1] + spr_inacc[1]
-
-	# If rotated by a positive number, it goes to the right, vice versa
-	var horizontalized = forward.rotated(-p.global_transform.basis.y, total_horizontal_inaccuracy)
-
-	# If rotated by a positive number, it goes to the top, vice versa
-	var verticalized = horizontalized.rotated(p.global_transform.basis.x, total_vertical_inaccuracy)
-	return verticalized
-
 
 # TODO: use the player variable and knock the head upwards when getting headshot
 static func apply_shooting_knockback(_player, c: CameraSmoothPhysics, w: GenericWeapon):

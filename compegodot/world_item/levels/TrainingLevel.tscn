@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=2]
+[gd_scene load_steps=26 format=2]
 
 [ext_resource path="res://materials/LevelTestingMaterial.tres" type="Material" id=1]
 [ext_resource path="res://world_item/environments/SpawnPointUniversal.tscn" type="PackedScene" id=2]
@@ -21,12 +21,13 @@
 [ext_resource path="res://world_item/environments/TimeAttackContainer.gd" type="Script" id=19]
 [ext_resource path="res://world_item/shooting_area/ShootingTarget.tscn" type="PackedScene" id=20]
 [ext_resource path="res://world_item/button/TimeAttackResetButton.tscn" type="PackedScene" id=21]
+[ext_resource path="res://world_item/utility/FragGrenade.tscn" type="PackedScene" id=22]
 
 [sub_resource type="GIProbeData" id=4]
 bounds = AABB( -39, -16, -53, 78, 32, 106 )
 cell_size = 0.828125
 to_cell_xform = Transform( 1.20755, 0, 0, 0, 1.20755, 0, 0, 0, 1.20755, 47.0943, 19.3208, 64 )
-dynamic_data = PoolIntArray( 0, 8, 128, 64, 128, 1, 0, 32539, 1086324736, 1086324736, 0, 0, 1101004800, 1086324736, 1065353216, 0, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 8355711, 0 )
+dynamic_data = PoolIntArray( 0, 8, 128, 64, 128, 1, 0, 0, 1101004800, 1086324736, 1065353216, 0, 1101004800, 1101004800, 1065353216, 1065353216, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 8355711, 0 )
 dynamic_range = 4
 energy = 0.6
 bias = 1.5
@@ -49,6 +50,11 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 70, 0, 15 )
 
 [node name="OmniLight2" type="OmniLight" parent="Light"]
 transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -69.7854, 5.75, -30.7145 )
+shadow_enabled = true
+omni_range = 6.0
+
+[node name="OmniLight3" type="OmniLight" parent="Light"]
+transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -85.7854, 5.75, -30.7145 )
 shadow_enabled = true
 omni_range = 6.0
 
@@ -174,6 +180,23 @@ extrude = 0.0
 min_steps = 32
 max_steps = 256
 
+[node name="GrenadeLabel" type="Spatial" parent="Guns"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -78.15, 5.5, -32.3 )
+script = ExtResource( 8 )
+text = "GRENADE"
+text_size = 1.0
+font = null
+align = 2
+billboard = false
+color = Color( 1, 1, 1, 1 )
+metallic = 0.0
+roughness = 0.5
+emission_color = Color( 1, 1, 1, 1 )
+emission_strength = 0.0
+extrude = 0.0
+min_steps = 32
+max_steps = 256
+
 [node name="RF7" parent="Guns" instance=ExtResource( 6 )]
 transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -65.7854, 3.5, -30.2145 )
 
@@ -218,6 +241,91 @@ transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -58.214
 
 [node name="RailGun" parent="Guns" instance=ExtResource( 12 )]
 transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -62.2854, 3.5, -29.7145 )
+
+[node name="FragGrenade" parent="Guns" instance=ExtResource( 22 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 4, -40 )
+mass = 0.5
+angular_damp = 1.0
+
+[node name="FragGrenade2" parent="Guns" instance=ExtResource( 22 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -74.5, 3.5, -29.6 )
+mass = 0.5
+angular_damp = 1.0
+
+[node name="FragGrenade3" parent="Guns" instance=ExtResource( 22 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -74.5, 3.5, -30.6 )
+mass = 0.5
+angular_damp = 1.0
+
+[node name="FragGrenade4" parent="Guns" instance=ExtResource( 22 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -75.5, 3.5, -29.6 )
+mass = 0.5
+angular_damp = 1.0
+
+[node name="FragGrenade5" parent="Guns" instance=ExtResource( 22 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -75.5, 3.5, -30.6 )
+mass = 0.5
+angular_damp = 1.0
+
+[node name="FragGrenade6" parent="Guns" instance=ExtResource( 22 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -76.5, 3.5, -29.6 )
+mass = 0.5
+angular_damp = 1.0
+
+[node name="FragGrenade7" parent="Guns" instance=ExtResource( 22 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -76.5, 3.5, -30.6 )
+mass = 0.5
+angular_damp = 1.0
+
+[node name="FragGrenade8" parent="Guns" instance=ExtResource( 22 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -77.5, 3.5, -29.6 )
+mass = 0.5
+angular_damp = 1.0
+
+[node name="FragGrenade9" parent="Guns" instance=ExtResource( 22 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -77.5, 3.5, -30.6 )
+mass = 0.5
+angular_damp = 1.0
+
+[node name="FragGrenade10" parent="Guns" instance=ExtResource( 22 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -78.5, 3.5, -29.6 )
+mass = 0.5
+angular_damp = 1.0
+
+[node name="FragGrenade11" parent="Guns" instance=ExtResource( 22 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -78.5, 3.5, -30.6 )
+mass = 0.5
+angular_damp = 1.0
+
+[node name="FragGrenade12" parent="Guns" instance=ExtResource( 22 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -79.5, 3.5, -29.6 )
+mass = 0.5
+angular_damp = 1.0
+
+[node name="FragGrenade13" parent="Guns" instance=ExtResource( 22 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -79.5, 3.5, -30.6 )
+mass = 0.5
+angular_damp = 1.0
+
+[node name="FragGrenade14" parent="Guns" instance=ExtResource( 22 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -80.5, 3.5, -29.6 )
+mass = 0.5
+angular_damp = 1.0
+
+[node name="FragGrenade15" parent="Guns" instance=ExtResource( 22 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -80.5, 3.5, -30.6 )
+mass = 0.5
+angular_damp = 1.0
+
+[node name="FragGrenade16" parent="Guns" instance=ExtResource( 22 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -81.5, 3.5, -29.6 )
+mass = 0.5
+angular_damp = 1.0
+
+[node name="FragGrenade17" parent="Guns" instance=ExtResource( 22 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -81.5, 3.5, -30.6 )
+mass = 0.5
+angular_damp = 1.0
 
 [node name="TimeAttackContainer" type="Spatial" parent="."]
 script = ExtResource( 19 )

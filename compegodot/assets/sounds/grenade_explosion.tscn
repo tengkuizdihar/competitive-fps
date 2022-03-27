@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://assets/sounds/grenade_explosion.wav" type="AudioStream" id=1]
+[ext_resource path="res://world_item/auto_free_stream_player.gd" type="Script" id=2]
+
+[node name="GrenadeExplosion" type="AudioStreamPlayer3D"]
+stream = ExtResource( 1 )
+unit_size = 50.0
+autoplay = true
+bus = "Gameplay"
+script = ExtResource( 2 )
