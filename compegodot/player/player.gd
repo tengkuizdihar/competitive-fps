@@ -48,7 +48,13 @@ var is_crouching = false
 var debug_position_one_frame_ago = Vector3.ZERO
 var held_weapon = null
 
+### Weapon sway variables
+onready var gun_container_original_rotation = Vector2(gun_container.rotation_degrees.x, gun_container.rotation_degrees.y)
+var mouse_movement = Vector2()
+var is_mouse_moving_time = false
+var mouse_turn_max_sensitivity = 1
 
+onready var gun_container_original_transform = gun_container.transform
 onready var pivot_original_local_translation = $Pivot.transform.origin
 onready var body_original_local_translation = $Body.transform.origin
 onready var body_original_height = $Body.shape.height
@@ -115,6 +121,9 @@ func _input(event):
 		rotate_y(-event.relative.x * speed)
 		pivot.rotation.x = clamp(pivot.rotation.x, -PI/2 + 0.01, PI/2 - 0.01)
 
+		mouse_movement = Vector2(clamp(event.relative.y, -mouse_turn_max_sensitivity, mouse_turn_max_sensitivity), clamp(event.relative.x, -mouse_turn_max_sensitivity, mouse_turn_max_sensitivity))
+		is_mouse_moving_time = true
+
 
 func _physics_process(delta: float) -> void:
 	# TODO-BIG: refactor input so that it would be outside of this script
@@ -130,6 +139,7 @@ func _physics_process(delta: float) -> void:
 	handle_weapon_drop()
 	handle_weapon_reload()
 	handle_weapon_selection()
+	handle_gun_sway(delta)
 
 	fire_to_direction(delta)
 	apply_shooting_knockback(self, camera, weapon)
@@ -274,12 +284,11 @@ func handle_movement(input_vector: Vector3, delta: float):
 	# clamp the velocity and gravity to max speed
 	desired_movement_velocity = Util.clamp_vector3_y_axis(desired_movement_velocity, max_velocity)
 
-	# apply to move and slide
+	# apply to is_mouse_moving_time and slide
 	# TODO: fix snapping to sides of walls when stepping fast away from it
 	desired_movement_velocity = self.move_and_slide_with_snap(desired_movement_velocity, snap_vector, Vector3.UP, false, 4, 0.785398, false)
 
 	State.set_state("debug_player_velocity", stepify(desired_movement_velocity.length(), 0.01))
-	State.set_state("debug_misc", str(desired_movement_velocity.length()))
 	State.set_state("player_velocity_length", desired_movement_velocity.length())
 
 
@@ -475,6 +484,43 @@ func _switch_weapon_routine(weapon_slot) -> void:
 # TODO: an effect where the player's sight is "nudged" when hit on the head
 func handle_aim_punch() -> void:
 	pass
+
+
+func handle_gun_sway(delta) -> void:
+	_handle_turning_sway(delta)
+	_handle_movement_sway(delta)
+
+
+# Will turn the gun left and right based on the head turn
+# Modified version of this code https://godotengine.org/qa/68649/how-to-make-the-sway-effect-on-weapons-of-fps-3d-games
+func _handle_turning_sway(delta) -> void:
+	if is_mouse_moving_time:
+		is_mouse_moving_time = false
+
+		# Turning Up-Down
+		var max_turn_up_down = 1
+		var raw_next_x_rotation = move_toward(gun_container.rotation_degrees.x, gun_container.rotation_degrees.x - (mouse_movement.x), delta * 5)
+		gun_container.rotation_degrees.x = clamp(raw_next_x_rotation, -max_turn_up_down, max_turn_up_down)
+
+		# Turning Right-Left
+		var max_turn_right_degree = 2.5
+		var raw_next_y_rotation = move_toward(gun_container.rotation_degrees.y, gun_container.rotation_degrees.y - (mouse_movement.y), delta * 12)
+		gun_container.rotation_degrees.y = clamp(raw_next_y_rotation, -max_turn_right_degree, max_turn_right_degree)
+	else:
+		# Recovery from moving to original rotation
+		gun_container.rotation_degrees.x = move_toward(gun_container.rotation_degrees.x, gun_container_original_rotation.x, delta * 5)
+		gun_container.rotation_degrees.y = move_toward(gun_container.rotation_degrees.y, gun_container_original_rotation.y, delta * 12)
+
+func _handle_movement_sway(delta) -> void:
+	var movement_ratio = min(desired_movement_velocity.length() / max_run_velocity, 1.0)
+
+	var farthest_backward_sway = 0.08 * movement_ratio
+	var backward_sway_destination = move_toward(gun_container.transform.origin.z, gun_container_original_transform.origin.z + farthest_backward_sway, delta)
+	gun_container.transform.origin.z = backward_sway_destination
+
+	var farthest_down_sway = -0.01 * movement_ratio
+	var down_sway_destination = move_toward(gun_container.transform.origin.y, gun_container_original_transform.origin.y + farthest_down_sway, delta)
+	gun_container.transform.origin.y = down_sway_destination
 
 
 ###########################################################

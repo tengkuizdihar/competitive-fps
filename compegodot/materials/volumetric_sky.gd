@@ -7,7 +7,7 @@ var sky_sprite: Sprite
 
 func _ready():
 	# Readying the sky viewport
-	sky_viewport = preload('res://world_item/VolumetricSkyViewport.tscn').instance()
+	sky_viewport = preload('res://world_item/volumetric_sky_viewport.tscn').instance()
 	add_child(sky_viewport)
 
 	sky_sprite = sky_viewport.get_child(0)
