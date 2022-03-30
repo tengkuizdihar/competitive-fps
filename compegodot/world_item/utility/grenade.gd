@@ -2,7 +2,7 @@ tool
 extends GenericWeapon
 class_name Grenade
 
-export (float) var nade_fuse_time = 3.0
+export (float) var nade_fuse_time = 2.0
 export (PackedScene) var explosion_scene = null # TODO: probably create another child class for FragGrenade?
 export (PackedScene) var explosion_sound_scene = null # TODO: probably create another child class for FragGrenade?
 export (NodePath) var influence_area_path = null
@@ -130,12 +130,13 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 		global_rotate(Vector3(rand_range(-1, 1), rand_range(-1, 1), rand_range(-1, 1)).normalized(), PI * rand_range(0, 2))
 
 		# Throwing power based on animation name (because it determine between first and secondary shot)
-		var throwing_power = 15
+		var throwing_power = 20
 		if anim_name == anim_shoot_secondary_name:
 			throwing_power = 7
 
 		# Add force to the gun
 		apply_central_impulse(-camera.global_transform.basis.z * throwing_power + (p.desired_movement_velocity))
+		apply_torque_impulse(Vector3(rand_range(-1, 1), rand_range(-1, 1), rand_range(-1, 1)).normalized() * 0.25)
 
 		# Depends on the types of grenade
 		_active_grenade_routine()
