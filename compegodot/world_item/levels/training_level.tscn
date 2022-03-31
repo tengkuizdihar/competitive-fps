@@ -43,7 +43,7 @@ data = PoolVector3Array( 24.7969, -1.5996, 17.5938, 24.7969, -1.5996, -17.5938, 
 [node name="TrainingLevel" type="Spatial" groups=["LEVEL"]]
 
 [node name="SpawnPointUniversal" parent="." instance=ExtResource( 2 )]
-transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 22, 3, -43 )
+transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -20.5878, 3, 11.9042 )
 
 [node name="Light" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 70, 0, 15 )

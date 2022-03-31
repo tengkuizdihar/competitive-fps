@@ -14,6 +14,8 @@ This screenshot is last updated Sunday, March 20, 2022 8:46:54 PM GMT+07:00.
 ![Pause Menu - Option](documents/assets/gameplay_pause_menu_option.png)
 ![Pause Menu - No Menu Selected](documents/assets/gameplay_pause_menu.png)
 ![Gameplay](documents/assets/gameplay.png)
+![Gameplay](documents/assets/gameplay_weapon_show_off.png)
+![Gameplay](documents/assets/gameplay_sniper_show_off.png)
 
 # Table Of Contents
 - [The Solver Series](#the-solver-series)
@@ -21,7 +23,7 @@ This screenshot is last updated Sunday, March 20, 2022 8:46:54 PM GMT+07:00.
 - [Table Of Contents](#table-of-contents)
   - [How to Contribute](#how-to-contribute)
   - [Roadmap](#roadmap)
-    - [**Project Solver: Training**](#project-solver-training)
+    - [**Project Solver: Training** (CURRENT PHASE)](#project-solver-training-current-phase)
     - [**Project Solver: 1v1**](#project-solver-1v1)
     - [**Project Solver: 5v5**](#project-solver-5v5)
   - [Technical FAQ](#technical-faq)
@@ -34,20 +36,47 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for further assistance.
 
 Right now, the project does have milestones and an end game for the lifetime of the project. The endgame itself is not the end of the project, but rather the start of a new era where every single feature is implemented at least for a prototype. The project is called "Project Solver". "Project Solver" is a game that would evolve using the effort of the developer and or community, until the "perfect" or at least "usable" game could exist. Below is the list of games and their features.
 
-### **Project Solver: Training**
+### **Project Solver: Training** (CURRENT PHASE)
 
 The first game in Project Solver that's all about aiming and training. It features customizations and offline capabilities for those who wants it. The game itself would focus on self improvement in the aiming department and will feature source-like movement as its main locomotion system. The features intended to be in the game is listed below.
 
-- [ ] Easy to use UI customization that also includes an export and import function, for portability.
-- [ ] Importing aim settings from other games.
-- [x] Variety of target to shot at.
-- [x] Different guns for different needs.
-- [x] Movement system that's inspired by the Counter Strike series.
+- [x] Variety of target to shot at
+- [x] Different weapons for different needs
+  - [ ] Guns
+    - [x] General Concepts
+      - [x] Spray Pattern
+      - [x] Recoil
+      - [x] Inaccuracy (e.g. based on movement)
+      - [x] Bullet Penetration
+    - [x] Automatic Weapon (e.g. AK-47)
+    - [x] Semi-Automatic Weapon (e.g. M9 Pistol)
+    - [x] Scoped Semi-Automatic Weapon (e.g. Sniper Rifle)
+    - [ ] Shotgun
+  - [ ] Utilities
+    - [x] General Concepts
+      - [x] Right Click vs Left Click Throw
+      - [x] Timed Detonation
+    - [ ] Frag Grenade
+    - [ ] Smoke Grenade
+    - [ ] Flash Grenade
+    - [ ] Incendiary Grenade
+- [x] Training Methods
+  - [x] Spray Practice
+  - [x] Moving Target Practice
+  - [x] Time Attack Practice (shoot target through corridor as fast as possible)
+- [x] Movement system that's inspired by the Counter Strike series
   - [x] Crouch Jumping
   - [x] Bunny Hopping
   - [x] Air Strafing
   - [x] Counter Strafing
-- [x] Light weight experience that's not only targeting the toaster, but also your beefed up $500,000, NASA made, super computer.
+- [ ] Sound Design
+- [ ] Animation
+- [x] Light weight experience that's not only targeting the toaster, but also your beefed up $500,000, NASA made, super computer
+- [ ] Easy to use UI customization that also includes an export and import function, for portability.
+- [ ] Importing mouse sensitivity from other games
+  - [ ] CSGO
+  - [ ] Valorant
+  - [ ] Call Of Duty
 
 ### **Project Solver: 1v1**
 
