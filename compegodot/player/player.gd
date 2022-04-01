@@ -58,8 +58,7 @@ onready var gun_container_original_transform = gun_container.transform
 onready var pivot_original_local_translation = $Pivot.transform.origin
 onready var body_original_local_translation = $Body.transform.origin
 onready var body_original_height = $Body.shape.height
-onready var feet_original_local_translation = $Feet.transform.origin
-onready var crouch_height = 1.75
+onready var crouch_height = 3.75
 
 export(bool) var auto_bhop = true
 export(float) var crouch_speed = 5.5 # meter per second
@@ -133,7 +132,7 @@ func _physics_process(delta: float) -> void:
 		State.set_state("player_paused", !State.get_state("player_paused"))
 
 	handle_movement(get_movement_input(self.global_transform.basis), delta)
-	manage_crouching(delta)
+	handle_crouching(delta)
 
 	handle_weapon_pickup()
 	handle_weapon_drop()
@@ -163,7 +162,7 @@ func _physics_process(delta: float) -> void:
 ### This process is reversible because of how crouching works which is:
 ###     * Crouch
 ###     * Come to normal
-func manage_crouching(delta: float):
+func handle_crouching(delta: float):
 	# Handle pausing by zero-ing the input vector
 	var is_paused = State.get_state("player_paused")
 
@@ -181,30 +180,25 @@ func manage_crouching(delta: float):
 
 			$Body.shape.height = move_toward($Body.shape.height, crouch_height, crouch_delta)
 			$Body.transform.origin = $Body.transform.origin.move_toward(body_trans_target, crouch_delta / 2)
-			$Feet.transform.origin = $Body.transform.origin + Vector3.DOWN * ($Body.shape.height / 2 + $Body.shape.radius) + Vector3.UP * $Feet.shape.height / 2
 		else:
 			var crouch_delta = crouch_speed * 1.5 * delta
 			$Body.shape.height = move_toward($Body.shape.height, body_original_height, crouch_delta)
 			$Body.transform.origin = $Body.transform.origin.move_toward(body_original_local_translation, crouch_delta / 2)
-			$Feet.transform.origin = $Body.transform.origin + Vector3.DOWN * ($Body.shape.height / 2 + $Body.shape.radius) + Vector3.UP * $Feet.shape.height / 2
 
 	else:
 		if is_crouching:
 			var height_change = abs(crouch_height - body_original_height)
 			var body_trans_target = body_original_local_translation + Vector3.UP * height_change / 2
-			var feet_trans_target = feet_original_local_translation + Vector3.UP * height_change
 
 			$Body.shape.height = move_toward($Body.shape.height, crouch_height, crouch_speed * delta)
 			$Body.transform.origin = $Body.transform.origin.move_toward(body_trans_target, crouch_speed * delta)
-			$Feet.transform.origin = $Feet.transform.origin.move_toward(feet_trans_target, crouch_speed * delta)
 		else:
 			var crouch_delta = crouch_speed * 1.5 * delta
 			$Body.shape.height = move_toward($Body.shape.height, body_original_height, crouch_delta)
 			$Body.transform.origin = $Body.transform.origin.move_toward(body_original_local_translation, crouch_delta)
-			$Feet.transform.origin = $Feet.transform.origin.move_toward(feet_original_local_translation, crouch_delta)
 
-	$Pivot.transform.origin = $Body.transform.origin + Vector3.UP * $Body.shape.height / 2
-	$HeadLimitRayCast.transform.origin = $Body.transform.origin + Vector3.UP * ($Body.shape.height / 2 + $Body.shape.radius)
+	$Pivot.transform.origin = $Body.transform.origin + Vector3.UP * ($Body.shape.height / 2 - 1.0)
+	$HeadLimitRayCast.transform.origin = $Body.transform.origin + Vector3.UP * ($Body.shape.height / 2)
 
 
 # TODO: decouple these codes into other smaller more concise function

@@ -5,6 +5,7 @@
 
 [node name="GrenadeExplosion" type="AudioStreamPlayer3D"]
 stream = ExtResource( 1 )
+unit_db = -15.0
 unit_size = 50.0
 autoplay = true
 bus = "Gameplay"
