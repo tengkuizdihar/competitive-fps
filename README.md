@@ -56,7 +56,7 @@ The first game in Project Solver that's all about aiming and training. It featur
     - [x] General Concepts
       - [x] Right Click vs Left Click Throw
       - [x] Timed Detonation
-    - [ ] Frag Grenade
+    - [x] Frag Grenade
     - [ ] Smoke Grenade
     - [ ] Flash Grenade
     - [ ] Incendiary Grenade
