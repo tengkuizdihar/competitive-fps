@@ -78,13 +78,13 @@ default_bus_layout="res://default_audio_bus_layout.tres"
 
 [autoload]
 
-Util="*res://util.gd"
-State="*res://state.gd"
-Global="*res://global.gd"
-Score="*res://score.gd"
-LLInput="*res://llinput.gd"
+Util="*res://autoload/util.gd"
+State="*res://autoload/state.gd"
+Global="*res://autoload/global.gd"
+Score="*res://autoload/score.gd"
+LLInput="*res://autoload/llinput.gd"
 Config="*res://config.gd"
-GameMode="*res://game_mode.gd"
+GameMode="*res://autoload/game_mode.gd"
 
 [debug]
 
@@ -202,6 +202,7 @@ player_cycle_grenade={
 3d_physics/layer_2="TEAM_1"
 3d_physics/layer_3="TEAM_2"
 3d_physics/layer_4="GUN"
+3d_physics/layer_5="MISC_CLIP"
 
 [physics]
 

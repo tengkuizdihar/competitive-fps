@@ -85,9 +85,10 @@ radius = 16.5
 
 [node name="FragGrenade" type="RigidBody"]
 collision_layer = 8
-mass = 0.05
+mass = 0.5
 physics_material_override = ExtResource( 2 )
 continuous_cd = true
+angular_damp = 1.0
 script = ExtResource( 3 )
 weapon_name = "Frag Grenade"
 weapon_type = 4

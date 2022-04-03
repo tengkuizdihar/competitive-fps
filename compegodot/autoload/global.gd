@@ -92,7 +92,8 @@ enum PHYSICS_LAYERS {
 	WORLD = 1,
 	TEAM_1 = 2,
 	TEAM_2 = 4,
-	GUN = 8
+	GUN = 8,
+	MISC_CLIP = 16 # For physics object that's supposed to influence others but are not player related.
 }
 
 enum WEAPON_ZOOM_MODE {

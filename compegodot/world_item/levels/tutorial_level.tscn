@@ -1,6 +1,7 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://materials/level_testing_material_2.tres" type="Material" id=1]
+[ext_resource path="res://world_item/utility/frag_grenade.tscn" type="PackedScene" id=2]
 [ext_resource path="res://materials/level_testing_material_green.tres" type="Material" id=3]
 [ext_resource path="res://world_item/guns/rf7.tscn" type="PackedScene" id=4]
 [ext_resource path="res://world_item/guns/pm9.tscn" type="PackedScene" id=5]
@@ -97,10 +98,10 @@ height = 8.6
 depth = 8.0
 
 [node name="InitialSmallHallway" type="CSGBox" parent="Room"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 37.9, -7.7, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 37.9, -7.6, 0 )
 invert_faces = true
 width = 13.6
-height = 4.0
+height = 4.2
 depth = 8.0
 
 [node name="RampRoom" type="CSGBox" parent="Room"]
@@ -362,76 +363,31 @@ spot_angle_attenuation = 3.4822
 [node name="Weapons" type="Spatial" parent="."]
 
 [node name="RF7" parent="Weapons" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 126, 3, 54 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 129.1, 3.3, 54 )
 
 [node name="RF8" parent="Weapons" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 127, 3, 54 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 129.1, 3.3, 54.5 )
 
 [node name="RF9" parent="Weapons" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 128, 3, 54 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 129.1, 3.3, 53.5 )
 
 [node name="RF10" parent="Weapons" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 129, 3, 54 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 126.7, 3.3, 54 )
 
 [node name="RF11" parent="Weapons" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 126, 3, 53.4 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 126.7, 3.3, 54.5 )
 
 [node name="RF12" parent="Weapons" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 127, 3, 53.4 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 126.7, 3.3, 53.5 )
 
 [node name="RF13" parent="Weapons" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 128, 3, 53.4 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 131.5, 3.3, 54 )
 
 [node name="RF14" parent="Weapons" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 129, 3, 53.4 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 131.5, 3.3, 54.5 )
 
 [node name="RF15" parent="Weapons" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 126, 3, 54.5 )
-
-[node name="RF16" parent="Weapons" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 127, 3, 54.5 )
-
-[node name="RF17" parent="Weapons" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 128, 3, 54.5 )
-
-[node name="RF18" parent="Weapons" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 129, 3, 54.5 )
-
-[node name="RF19" parent="Weapons" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 130, 3, 54 )
-
-[node name="RF20" parent="Weapons" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 131, 3, 54 )
-
-[node name="RF21" parent="Weapons" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 132, 3, 54 )
-
-[node name="RF22" parent="Weapons" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 133, 3, 54 )
-
-[node name="RF23" parent="Weapons" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 130, 3, 53.4 )
-
-[node name="RF24" parent="Weapons" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 131, 3, 53.4 )
-
-[node name="RF25" parent="Weapons" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 132, 3, 53.4 )
-
-[node name="RF26" parent="Weapons" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 133, 3, 53.4 )
-
-[node name="RF27" parent="Weapons" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 130, 3, 54.5 )
-
-[node name="RF28" parent="Weapons" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 131, 3, 54.5 )
-
-[node name="RF29" parent="Weapons" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 132, 3, 54.5 )
-
-[node name="RF30" parent="Weapons" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 133, 3, 54.5 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 131.5, 3.3, 53.5 )
 
 [node name="PM9" parent="Weapons" instance=ExtResource( 5 )]
 transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 144, 3, 54 )
@@ -488,58 +444,76 @@ transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 149, 3,
 transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 149, 3, 54.6 )
 
 [node name="RailGun" parent="Weapons" instance=ExtResource( 6 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 107, 3, 54 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 107, 3.2, 54 )
 
 [node name="RailGun2" parent="Weapons" instance=ExtResource( 6 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 107, 3, 54.6 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 107, 3.2, 54.5 )
 
 [node name="RailGun3" parent="Weapons" instance=ExtResource( 6 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 107, 3, 53.3 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 107, 3.2, 53.5 )
 
 [node name="RailGun4" parent="Weapons" instance=ExtResource( 6 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 109, 3, 54 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 110.1, 3.2, 54 )
 
 [node name="RailGun5" parent="Weapons" instance=ExtResource( 6 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 109, 3, 54.6 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 110.1, 3.2, 54.5 )
 
 [node name="RailGun6" parent="Weapons" instance=ExtResource( 6 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 109, 3, 53.3 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 110.1, 3.2, 53.5 )
 
 [node name="RailGun7" parent="Weapons" instance=ExtResource( 6 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 111, 3, 54 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 113.2, 3.2, 54 )
 
 [node name="RailGun8" parent="Weapons" instance=ExtResource( 6 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 111, 3, 54.6 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 113.2, 3.2, 54.5 )
 
 [node name="RailGun9" parent="Weapons" instance=ExtResource( 6 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 111, 3, 53.3 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 113.2, 3.2, 53.5 )
 
-[node name="RailGun10" parent="Weapons" instance=ExtResource( 6 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 113, 3, 54 )
+[node name="FragGrenade" parent="Weapons" instance=ExtResource( 2 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 134.528, 3.2, 54.4253 )
 
-[node name="RailGun11" parent="Weapons" instance=ExtResource( 6 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 113, 3, 54.6 )
+[node name="FragGrenade2" parent="Weapons" instance=ExtResource( 2 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 134.528, 3.2, 53.9253 )
 
-[node name="RailGun12" parent="Weapons" instance=ExtResource( 6 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 113, 3, 53.3 )
+[node name="FragGrenade3" parent="Weapons" instance=ExtResource( 2 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 134.528, 3.2, 53.4253 )
 
-[node name="RailGun13" parent="Weapons" instance=ExtResource( 6 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 115, 3, 54 )
+[node name="FragGrenade4" parent="Weapons" instance=ExtResource( 2 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 135.228, 3.2, 54.4253 )
 
-[node name="RailGun14" parent="Weapons" instance=ExtResource( 6 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 115, 3, 54.6 )
+[node name="FragGrenade5" parent="Weapons" instance=ExtResource( 2 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 135.228, 3.2, 53.9253 )
 
-[node name="RailGun15" parent="Weapons" instance=ExtResource( 6 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 115, 3, 53.3 )
+[node name="FragGrenade6" parent="Weapons" instance=ExtResource( 2 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 135.228, 3.2, 53.4253 )
 
-[node name="RailGun16" parent="Weapons" instance=ExtResource( 6 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 117, 3, 54 )
+[node name="FragGrenade7" parent="Weapons" instance=ExtResource( 2 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 135.828, 3.2, 54.4253 )
 
-[node name="RailGun17" parent="Weapons" instance=ExtResource( 6 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 117, 3, 54.6 )
+[node name="FragGrenade8" parent="Weapons" instance=ExtResource( 2 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 135.828, 3.2, 53.9253 )
 
-[node name="RailGun18" parent="Weapons" instance=ExtResource( 6 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 117, 3, 53.3 )
+[node name="FragGrenade9" parent="Weapons" instance=ExtResource( 2 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 135.828, 3.2, 53.4253 )
+
+[node name="FragGrenade10" parent="Weapons" instance=ExtResource( 2 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 136.482, 3.2, 54.4253 )
+
+[node name="FragGrenade11" parent="Weapons" instance=ExtResource( 2 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 136.482, 3.2, 53.9253 )
+
+[node name="FragGrenade12" parent="Weapons" instance=ExtResource( 2 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 136.482, 3.2, 53.4253 )
+
+[node name="FragGrenade13" parent="Weapons" instance=ExtResource( 2 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 137.082, 3.2, 54.4253 )
+
+[node name="FragGrenade14" parent="Weapons" instance=ExtResource( 2 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 137.082, 3.2, 53.9253 )
+
+[node name="FragGrenade15" parent="Weapons" instance=ExtResource( 2 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 137.082, 3.2, 53.4253 )
 
 [node name="ShootingGallery" type="Spatial" parent="."]
 
@@ -558,4 +532,4 @@ transform = Transform( -0.7, 0, -6.11959e-08, 0, 0.7, 0, 8.74228e-08, 0, -1, 129
 [node name="SpawnPoints" type="Spatial" parent="."]
 
 [node name="SpawnPointUniversal" parent="SpawnPoints" instance=ExtResource( 10 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -36, 3, 0 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 129.226, 3.24573, 48.044 )

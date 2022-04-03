@@ -2,7 +2,7 @@
 
 [ext_resource path="res://player/camera_smooth_physics.gd" type="Script" id=1]
 [ext_resource path="res://player/player.gd" type="Script" id=2]
-[ext_resource path="res://player/player_gui].tscn" type="PackedScene" id=3]
+[ext_resource path="res://player/player_gui.tscn" type="PackedScene" id=3]
 [ext_resource path="res://world_item/guns/pm9.tscn" type="PackedScene" id=4]
 [ext_resource path="res://world_item/guns/rf7.tscn" type="PackedScene" id=5]
 [ext_resource path="res://world_item/guns/kf1.tscn" type="PackedScene" id=6]

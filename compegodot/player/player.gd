@@ -340,9 +340,7 @@ func remove_weapon(weapon_slot):
 		$Pivot/Camera/GunContainer.remove_child(w)
 
 		# throw it into the world (for now just place it on the ground from where the camera origin is)
-		for i in get_tree().root.get_children():
-			if i is Spatial:
-				i.add_child(w)
+		Util.add_to_world(w)
 
 		# make set_to_world_object
 		w.set_to_world_object()
