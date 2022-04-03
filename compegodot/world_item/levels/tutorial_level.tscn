@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=26 format=2]
 
 [ext_resource path="res://materials/level_testing_material_2.tres" type="Material" id=1]
 [ext_resource path="res://world_item/utility/frag_grenade.tscn" type="PackedScene" id=2]
@@ -10,9 +10,45 @@
 [ext_resource path="res://world_item/scoreboard/scoreboard.tscn" type="PackedScene" id=8]
 [ext_resource path="res://world_item/scoreboard/reset_button.tscn" type="PackedScene" id=9]
 [ext_resource path="res://world_item/environments/spawn_point_universal.tscn" type="PackedScene" id=10]
+[ext_resource path="res://world_item/environments/proximity_label.tscn" type="PackedScene" id=11]
+[ext_resource path="res://world_item/environments/proximity_label.gd" type="Script" id=12]
+[ext_resource path="res://world_item/levels/fall_to_main_menu_area.gd" type="Script" id=13]
 
 [sub_resource type="BoxShape" id=1]
 extents = Vector3( 0.001, 0.001, 0.001 )
+
+[sub_resource type="BoxShape" id=2]
+extents = Vector3( 7.4, 9.33624, 9.07302 )
+
+[sub_resource type="BoxShape" id=3]
+extents = Vector3( 6.40922, 4.3, 4.1 )
+
+[sub_resource type="BoxShape" id=4]
+extents = Vector3( 7.91072, 8, 15.5 )
+
+[sub_resource type="BoxShape" id=5]
+extents = Vector3( 7.6, 9.5, 9.1 )
+
+[sub_resource type="BoxShape" id=9]
+extents = Vector3( 7.28755, 4.9, 3.17443 )
+
+[sub_resource type="BoxShape" id=6]
+extents = Vector3( 4.43031, 4.9, 12.5 )
+
+[sub_resource type="BoxShape" id=10]
+extents = Vector3( 10.093, 4.9, 3.8 )
+
+[sub_resource type="BoxShape" id=8]
+extents = Vector3( 2.62293, 4.9, 3.8 )
+
+[sub_resource type="BoxShape" id=11]
+extents = Vector3( 25, 4.9, 9 )
+
+[sub_resource type="BoxShape" id=12]
+extents = Vector3( 10.6814, 4.9, 3.9 )
+
+[sub_resource type="BoxShape" id=13]
+extents = Vector3( 5.1, 3.4, 4.3 )
 
 [node name="TutorialLevel" type="Spatial" groups=["LEVEL"]]
 
@@ -131,6 +167,20 @@ invert_faces = true
 width = 30.0
 height = 8.6
 depth = 6.0
+
+[node name="ExitRoom" type="CSGBox" parent="Room"]
+transform = Transform( 1, 0, 1.06581e-14, 0, 1, 0, -1.06581e-14, 0, 1, 100.507, -5.4, 48.0399 )
+invert_faces = true
+width = 12.8
+height = 8.6
+depth = 7.8
+
+[node name="ExitRoom2" type="CSGBox" parent="Room"]
+transform = Transform( 1, 0, 1.06581e-14, 0, 1, 0, -1.06581e-14, 0, 1, 99.0067, -29.3745, 48.0399 )
+invert_faces = true
+width = 9.8
+height = 41.8039
+depth = 7.8
 
 [node name="ShootingRoom" type="CSGBox" parent="Room"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 128.9, -2.7, 63 )
@@ -471,49 +521,49 @@ transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 113.2, 
 transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 113.2, 3.2, 53.5 )
 
 [node name="FragGrenade" parent="Weapons" instance=ExtResource( 2 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 134.528, 3.2, 54.4253 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 137.028, 3.2, 54.4253 )
 
 [node name="FragGrenade2" parent="Weapons" instance=ExtResource( 2 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 134.528, 3.2, 53.9253 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 137.028, 3.2, 53.9253 )
 
 [node name="FragGrenade3" parent="Weapons" instance=ExtResource( 2 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 134.528, 3.2, 53.4253 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 137.028, 3.2, 53.4253 )
 
 [node name="FragGrenade4" parent="Weapons" instance=ExtResource( 2 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 135.228, 3.2, 54.4253 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 137.728, 3.2, 54.4253 )
 
 [node name="FragGrenade5" parent="Weapons" instance=ExtResource( 2 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 135.228, 3.2, 53.9253 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 137.728, 3.2, 53.9253 )
 
 [node name="FragGrenade6" parent="Weapons" instance=ExtResource( 2 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 135.228, 3.2, 53.4253 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 137.728, 3.2, 53.4253 )
 
 [node name="FragGrenade7" parent="Weapons" instance=ExtResource( 2 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 135.828, 3.2, 54.4253 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 138.328, 3.2, 54.4253 )
 
 [node name="FragGrenade8" parent="Weapons" instance=ExtResource( 2 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 135.828, 3.2, 53.9253 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 138.328, 3.2, 53.9253 )
 
 [node name="FragGrenade9" parent="Weapons" instance=ExtResource( 2 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 135.828, 3.2, 53.4253 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 138.328, 3.2, 53.4253 )
 
 [node name="FragGrenade10" parent="Weapons" instance=ExtResource( 2 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 136.482, 3.2, 54.4253 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 138.982, 3.2, 54.4253 )
 
 [node name="FragGrenade11" parent="Weapons" instance=ExtResource( 2 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 136.482, 3.2, 53.9253 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 138.982, 3.2, 53.9253 )
 
 [node name="FragGrenade12" parent="Weapons" instance=ExtResource( 2 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 136.482, 3.2, 53.4253 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 138.982, 3.2, 53.4253 )
 
 [node name="FragGrenade13" parent="Weapons" instance=ExtResource( 2 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 137.082, 3.2, 54.4253 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 139.582, 3.2, 54.4253 )
 
 [node name="FragGrenade14" parent="Weapons" instance=ExtResource( 2 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 137.082, 3.2, 53.9253 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 139.582, 3.2, 53.9253 )
 
 [node name="FragGrenade15" parent="Weapons" instance=ExtResource( 2 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 137.082, 3.2, 53.4253 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 139.582, 3.2, 53.4253 )
 
 [node name="ShootingGallery" type="Spatial" parent="."]
 
@@ -532,4 +582,153 @@ transform = Transform( -0.7, 0, -6.11959e-08, 0, 0.7, 0, 8.74228e-08, 0, -1, 129
 [node name="SpawnPoints" type="Spatial" parent="."]
 
 [node name="SpawnPointUniversal" parent="SpawnPoints" instance=ExtResource( 10 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 129.226, 3.24573, 48.044 )
+transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -36.2773, 3.24573, -0.00123347 )
+
+[node name="TutorialLabel" type="Spatial" parent="."]
+
+[node name="ProximityLabel" parent="TutorialLabel" instance=ExtResource( 11 )]
+text = "HOLD W"
+
+[node name="CollisionShape" type="CollisionShape" parent="TutorialLabel/ProximityLabel"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -5.70194, 0, 0 )
+shape = SubResource( 2 )
+
+[node name="ProximityLabel2" parent="TutorialLabel" instance=ExtResource( 11 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 32.1122, 2.47177, -0.0425377 )
+script = ExtResource( 12 )
+text = "HOLD CTRL + W"
+
+[node name="CollisionShape" type="CollisionShape" parent="TutorialLabel/ProximityLabel2"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 1.8, 0 )
+shape = SubResource( 3 )
+
+[node name="ProximityLabel3" parent="TutorialLabel" instance=ExtResource( 11 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 69.1027, 7.97177, -0.0425377 )
+script = ExtResource( 12 )
+text = "HOLD W + PRESS SPACE"
+
+[node name="CollisionShape" type="CollisionShape" parent="TutorialLabel/ProximityLabel3"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -7.01308, 0, 0 )
+shape = SubResource( 4 )
+
+[node name="ProximityLabel4" parent="TutorialLabel" instance=ExtResource( 11 )]
+transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -42.3399, 4.11342, -0.0425377 )
+text = "MOVE YOUR MOUSE
+PROGRESS BY LOOKING BEHIND YOU"
+
+[node name="CollisionShape" type="CollisionShape" parent="TutorialLabel/ProximityLabel4"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -7.1, 0, -6.22123e-07 )
+shape = SubResource( 5 )
+
+[node name="ProximityLabel5" parent="TutorialLabel" instance=ExtResource( 11 )]
+transform = Transform( 1, 0, 1.74846e-07, 0, 1, 0, -1.74846e-07, 0, 1, 103.141, 4.11342, 0.162126 )
+text = "SPECIAL MOVEMENT:
+CROUCH JUMPING
+
+W + SPACE THEN CTRL"
+
+[node name="CollisionShape" type="CollisionShape" parent="TutorialLabel/ProximityLabel5"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -7.02208, -0.0999999, -5.96046e-07 )
+shape = SubResource( 9 )
+
+[node name="ProximityLabel6" parent="TutorialLabel" instance=ExtResource( 11 )]
+transform = Transform( 1, 0, 1.74846e-07, 0, 1, 0, -1.74846e-07, 0, 1, 112.177, 4.9193, 0.162126 )
+text = "CROUCH JUMP!"
+
+[node name="CollisionShape" type="CollisionShape" parent="TutorialLabel/ProximityLabel6"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, -6.10948e-07 )
+shape = SubResource( 6 )
+
+[node name="ProximityLabel7" parent="TutorialLabel" instance=ExtResource( 11 )]
+transform = Transform( 1, 0, 1.74846e-07, 0, 1, 0, -1.74846e-07, 0, 1, 123.177, 4.9193, 0.162126 )
+text = "CROUCH JUMP, AGAIN!"
+
+[node name="CollisionShape" type="CollisionShape" parent="TutorialLabel/ProximityLabel7"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, -6.10948e-07 )
+shape = SubResource( 6 )
+
+[node name="ProximityLabel8" parent="TutorialLabel" instance=ExtResource( 11 )]
+transform = Transform( 1, 0, 1.74846e-07, 0, 1, 0, -1.74846e-07, 0, 1, 134.177, 4.9193, 0.162126 )
+text = "LAST ONE. THEN TURN RIGHT!"
+
+[node name="CollisionShape" type="CollisionShape" parent="TutorialLabel/ProximityLabel8"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, -6.10948e-07 )
+shape = SubResource( 6 )
+
+[node name="ProximityLabel9" parent="TutorialLabel" instance=ExtResource( 11 )]
+transform = Transform( 1.31134e-07, 0, -1, 0, 1, 0, 1, 0, 1.31134e-07, 144.124, 4.11927, 36.7647 )
+text = "PRESS E
+GRAB A WEAPON!
+LEFT CLICK TO SHOOT!"
+
+[node name="CollisionShape" type="CollisionShape" parent="TutorialLabel/ProximityLabel9"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -9.37326, 0, 0 )
+shape = SubResource( 10 )
+
+[node name="ProximityLabel10" parent="TutorialLabel" instance=ExtResource( 11 )]
+transform = Transform( 1.31134e-07, 0, -1, 0, 1, 0, 1, 0, 1.31134e-07, 146.324, 4.91927, 54.9657 )
+text = "PISTOLS
+SEMI-AUTOMATIC + HIGH AGILITY
+PRESS 2 TO SWITCH TO PISTOLS"
+
+[node name="CollisionShape" type="CollisionShape" parent="TutorialLabel/ProximityLabel10"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2.67326, 0, 0 )
+shape = SubResource( 8 )
+
+[node name="ProximityLabel11" parent="TutorialLabel" instance=ExtResource( 11 )]
+transform = Transform( 1.31134e-07, 0, -1, 0, 1, 0, 1, 0, 1.31134e-07, 138.024, 4.91927, 54.9657 )
+text = "FRAG GRENADE
+FOR AREA DAMAGE
+PRESS T TO SWITCH TO GRENADE"
+
+[node name="CollisionShape" type="CollisionShape" parent="TutorialLabel/ProximityLabel11"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2.67326, 0, 0 )
+shape = SubResource( 8 )
+
+[node name="ProximityLabel12" parent="TutorialLabel" instance=ExtResource( 11 )]
+transform = Transform( 1.31134e-07, 0, -1, 0, 1, 0, 1, 0, 1.31134e-07, 129.024, 4.91927, 54.9657 )
+text = "AUTOMATIC RIFLE
+DeFACTO BEST GUN IN THE GAME
+PRESS 1 TO SWITCH TO AUTOMATIC RIFLE"
+
+[node name="CollisionShape" type="CollisionShape" parent="TutorialLabel/ProximityLabel12"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2.67326, 0, 0 )
+shape = SubResource( 8 )
+
+[node name="ProximityLabel13" parent="TutorialLabel" instance=ExtResource( 11 )]
+transform = Transform( 1.31134e-07, 0, -1, 0, 1, 0, 1, 0, 1.31134e-07, 110.39, 4.91927, 54.9657 )
+text = "SNIPER RIFLE
+ONE SHOT DEAD SHOT
+PRESS 1 TO SWITCH TO SNIPER
+PRESS RIGHT CLICK TO SCOPE"
+
+[node name="CollisionShape" type="CollisionShape" parent="TutorialLabel/ProximityLabel13"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2.67326, 0, 0 )
+shape = SubResource( 8 )
+
+[node name="ProximityLabel14" parent="TutorialLabel" instance=ExtResource( 11 )]
+transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 103.492, 4.91927, 48.0205 )
+text = "EXIT"
+
+[node name="CollisionShape" type="CollisionShape" parent="TutorialLabel/ProximityLabel14"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -25.4084, 0, -1.14441e-05 )
+shape = SubResource( 11 )
+
+[node name="ProximityLabel15" parent="TutorialLabel" instance=ExtResource( 11 )]
+transform = Transform( 2.98023e-08, -1, 2.66454e-15, -1, -2.98023e-08, -8.74228e-08, 8.74228e-08, 0, -1, 99.0374, -2.92782, 48.043 )
+text = "TRUST ME. JUST FALL HERE."
+
+[node name="CollisionShape" type="CollisionShape" parent="TutorialLabel/ProximityLabel15"]
+transform = Transform( 1, 0, 0, -5.16963e-24, 1, 0, 0, 0, 1, -0.947768, 7.62939e-06, -3.8147e-06 )
+shape = SubResource( 12 )
+
+[node name="FallToMenuArea" type="Area" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 98.9183, -37.0763, 48.0239 )
+collision_layer = 0
+collision_mask = 6
+monitorable = false
+script = ExtResource( 13 )
+main_menu_scene_path = "res://ui/main_menu.tscn"
+
+[node name="CollisionShape" type="CollisionShape" parent="FallToMenuArea"]
+shape = SubResource( 13 )

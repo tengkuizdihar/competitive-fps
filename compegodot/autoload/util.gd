@@ -90,3 +90,7 @@ func is_in_either_group(node: Node, group_name: Array):
 		check = check or node.is_in_group(g)
 
 	return check
+
+
+func is_player(node: Node) -> bool:
+	return "is_player" in node

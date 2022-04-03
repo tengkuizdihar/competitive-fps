@@ -12,6 +12,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 level_scene_path = "res://world_item/levels/test_level.tscn"
+tutorial_scene_path = "res://world_item/levels/tutorial_level.tscn"
 training_scene_path = "res://world_item/levels/training_level.tscn"
 
 [node name="ColumnContainer" type="HBoxContainer" parent="."]
@@ -40,34 +41,43 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="StartTraining" type="Button" parent="ColumnContainer/MarginContainer/VBoxContainer"]
-margin_top = 293.0
+[node name="StartTutorial" type="Button" parent="ColumnContainer/MarginContainer/VBoxContainer"]
+margin_top = 269.0
 margin_right = 242.0
-margin_bottom = 330.0
+margin_bottom = 306.0
+text = "Start Tutorial"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StartTraining" type="Button" parent="ColumnContainer/MarginContainer/VBoxContainer"]
+margin_top = 317.0
+margin_right = 242.0
+margin_bottom = 354.0
 text = "Start Training"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="SelectLevel" type="Button" parent="ColumnContainer/MarginContainer/VBoxContainer"]
-margin_top = 341.0
+margin_top = 365.0
 margin_right = 242.0
-margin_bottom = 378.0
+margin_bottom = 402.0
 text = "Select Level"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Option" type="Button" parent="ColumnContainer/MarginContainer/VBoxContainer"]
-margin_top = 389.0
+margin_top = 413.0
 margin_right = 242.0
-margin_bottom = 426.0
+margin_bottom = 450.0
 text = "Option"
 
 [node name="Exit" type="Button" parent="ColumnContainer/MarginContainer/VBoxContainer"]
-margin_top = 437.0
+margin_top = 461.0
 margin_right = 242.0
-margin_bottom = 474.0
+margin_bottom = 498.0
 text = "Exit"
 
 [node name="MarginContainer2" type="MarginContainer" parent="ColumnContainer"]
@@ -99,6 +109,7 @@ margin_top = 20.0
 margin_right = 1076.0
 margin_bottom = 748.0
 
+[connection signal="pressed" from="ColumnContainer/MarginContainer/VBoxContainer/StartTutorial" to="." method="_on_StartTutorial_pressed"]
 [connection signal="pressed" from="ColumnContainer/MarginContainer/VBoxContainer/StartTraining" to="." method="_on_StartTraining_pressed"]
 [connection signal="pressed" from="ColumnContainer/MarginContainer/VBoxContainer/SelectLevel" to="." method="_on_SelectLevel_pressed"]
 [connection signal="pressed" from="ColumnContainer/MarginContainer/VBoxContainer/Option" to="." method="_on_Option_pressed"]

@@ -83,7 +83,7 @@ State="*res://autoload/state.gd"
 Global="*res://autoload/global.gd"
 Score="*res://autoload/score.gd"
 LLInput="*res://autoload/llinput.gd"
-Config="*res://config.gd"
+Config="*res://autoload/config.gd"
 GameMode="*res://autoload/game_mode.gd"
 
 [debug]

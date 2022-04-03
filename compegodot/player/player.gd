@@ -16,6 +16,12 @@ onready var i_health = $IHealth
 ###              ramps.
 const MAGIC_ON_GROUND_GRAVITY = 2.5 # m/s
 
+### is_player is used for marking whether an object is a player or not.
+###
+### The reason it needs a marker instead of checking the class itself is
+### because Godot 3.x has a big cyclic dependency problems and it could ruin other scripts.
+onready var is_player = true
+
 onready var headlimit_raycast = $HeadLimitRayCast
 onready var normal_input_direction = Vector3.ZERO # will be changed by outside actors
 onready var camera = $Pivot/Camera
@@ -24,12 +30,12 @@ onready var mouse_sensitivity = 0.0008  # radians/pixel, TODO: refactor to game 
 
 ### Gun Variables
 onready var gun_container = $Pivot/Camera/GunContainer
-onready var weapon: GenericWeapon = $Pivot/Camera/GunContainer/RF7
-onready var current_weapon = Global.WEAPON_SLOT.PRIMARY
-onready var last_weapon_used = Global.WEAPON_SLOT.PRIMARY
+onready var weapon: GenericWeapon = $Pivot/Camera/GunContainer/KF1
+onready var current_weapon = Global.WEAPON_SLOT.MELEE
+onready var last_weapon_used = Global.WEAPON_SLOT.MELEE
 onready var weapons = {
-	Global.WEAPON_SLOT.PRIMARY: $Pivot/Camera/GunContainer/RF7,
-	Global.WEAPON_SLOT.SECONDARY: $Pivot/Camera/GunContainer/PM9,
+	Global.WEAPON_SLOT.PRIMARY: null,
+	Global.WEAPON_SLOT.SECONDARY: null,
 	Global.WEAPON_SLOT.MELEE: $Pivot/Camera/GunContainer/KF1,
 	Global.WEAPON_SLOT.FRAG_GRENADE: null
 }

@@ -1,10 +1,8 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://player/camera_smooth_physics.gd" type="Script" id=1]
 [ext_resource path="res://player/player.gd" type="Script" id=2]
 [ext_resource path="res://player/player_gui.tscn" type="PackedScene" id=3]
-[ext_resource path="res://world_item/guns/pm9.tscn" type="PackedScene" id=4]
-[ext_resource path="res://world_item/guns/rf7.tscn" type="PackedScene" id=5]
 [ext_resource path="res://world_item/guns/kf1.tscn" type="PackedScene" id=6]
 [ext_resource path="res://interfaces/i_health.gd" type="Script" id=7]
 
@@ -54,17 +52,10 @@ script = ExtResource( 1 )
 [node name="GunContainer" type="Spatial" parent="Pivot/Camera"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.619, -0.281, -0.844 )
 
-[node name="PM9" parent="Pivot/Camera/GunContainer" instance=ExtResource( 4 )]
-visible = false
-
 [node name="KF1" parent="Pivot/Camera/GunContainer" instance=ExtResource( 6 )]
-visible = false
-
-[node name="RF7" parent="Pivot/Camera/GunContainer" instance=ExtResource( 5 )]
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, 0 )
-visible = false
 cast_shadow = 0
 mesh = SubResource( 8 )
 material/0 = null

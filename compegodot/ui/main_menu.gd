@@ -1,9 +1,11 @@
 extends Control
 
 export (String, FILE, "*.tscn") var level_scene_path
+export (String, FILE, "*.tscn") var tutorial_scene_path
 export (String, FILE, "*.tscn") var training_scene_path
 
 onready var start_button = $ColumnContainer/MarginContainer/VBoxContainer/StartTraining
+onready var start_tutorial_button = $ColumnContainer/MarginContainer/VBoxContainer/StartTutorial
 onready var menu_container = $ColumnContainer/MarginContainer2
 
 onready var option_menu = $ColumnContainer/MarginContainer2/OptionMenu
@@ -11,7 +13,7 @@ onready var select_level_menu = $ColumnContainer/MarginContainer2/SelectLevelMen
 
 func _ready():
 	# Focus the player's cursor to the start button
-	start_button.grab_focus()
+	start_tutorial_button.grab_focus()
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 	# Hide every single menu
@@ -39,3 +41,7 @@ func _on_Option_pressed():
 
 func _on_Exit_pressed():
 	get_tree().quit()
+
+
+func _on_StartTutorial_pressed():
+	Util.change_level(tutorial_scene_path)
