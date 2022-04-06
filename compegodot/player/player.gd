@@ -69,8 +69,8 @@ onready var crouch_height = 3.75
 export(bool) var auto_bhop = true
 export(float) var crouch_speed = 5.5 # meter per second
 export(float) var jump_impulse_velocity = 12
-export(float) var air_acceleration = 70
-export(float) var ground_acceleration = 60
+export(float) var air_acceleration = 60
+export(float) var ground_acceleration = 55
 export(float) var ground_friction = 40
 export(float) var gravity_constant = 25
 export(float) var max_run_velocity = 13.0
@@ -288,7 +288,7 @@ func handle_movement(input_vector: Vector3, delta: float):
 	# TODO: fix snapping to sides of walls when stepping fast away from it
 	desired_movement_velocity = self.move_and_slide_with_snap(desired_movement_velocity, snap_vector, Vector3.UP, false, 4, 0.785398, false)
 
-	State.set_state("debug_player_velocity", stepify(desired_movement_velocity.length(), 0.01))
+	State.set_state("debug_misc", str(stepify(desired_movement_velocity.length(), 0.01)))
 	State.set_state("player_velocity_length", desired_movement_velocity.length())
 
 
