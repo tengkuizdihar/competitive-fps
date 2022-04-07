@@ -1,8 +1,8 @@
-[gd_scene load_steps=25 format=2]
+[gd_scene load_steps=31 format=2]
 
 [ext_resource path="res://world_item/environments/spawn_point_universal.tscn" type="PackedScene" id=1]
 [ext_resource path="res://materials/level_testing_material_2.tres" type="Material" id=2]
-[ext_resource path="res://materials/level_testing_material_outline.tres" type="Material" id=3]
+[ext_resource path="res://materials/xray_outline_material.tres" type="Material" id=3]
 [ext_resource path="res://materials/object_test_material.tres" type="CubeMesh" id=4]
 [ext_resource path="res://materials/level_testing_material.tres" type="Material" id=5]
 [ext_resource path="res://world_item/scoreboard/scoreboard_menu.tscn" type="PackedScene" id=6]
@@ -13,6 +13,9 @@
 [ext_resource path="res://world_item/levels/test_level_platform.gd" type="Script" id=11]
 [ext_resource path="res://world_item/free_after_time.gd" type="Script" id=12]
 [ext_resource path="res://materials/smoke_material.tres" type="Material" id=13]
+[ext_resource path="res://assets/gridtextures/png/Green/texture_01.png" type="Texture" id=14]
+[ext_resource path="res://materials/fresnel_material.tres" type="Material" id=15]
+[ext_resource path="res://assets/gridtextures/png/Green/texture_05.png" type="Texture" id=16]
 
 [sub_resource type="PhysicsMaterial" id=1]
 rough = true
@@ -26,10 +29,23 @@ size = Vector3( 10, 2, 2 )
 
 [sub_resource type="BoxShape" id=4]
 
+[sub_resource type="SpatialMaterial" id=13]
+next_pass = ExtResource( 3 )
+flags_world_triplanar = true
+albedo_texture = ExtResource( 14 )
+uv1_scale = Vector3( 0.5, 0.5, 0.5 )
+
 [sub_resource type="SphereMesh" id=5]
-material = ExtResource( 3 )
+material = SubResource( 13 )
 
 [sub_resource type="SphereShape" id=6]
+
+[sub_resource type="SpatialMaterial" id=15]
+next_pass = ExtResource( 15 )
+albedo_texture = ExtResource( 16 )
+
+[sub_resource type="SphereMesh" id=14]
+material = SubResource( 15 )
 
 [sub_resource type="BoxShape" id=8]
 extents = Vector3( 5, 1, 6 )
@@ -312,6 +328,21 @@ mesh = SubResource( 5 )
 material/0 = null
 
 [node name="CollisionShape" type="CollisionShape" parent="OutlineBall"]
+shape = SubResource( 6 )
+
+[node name="OutlineBallFresnel" type="RigidBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 32.9389, 2, -4.05661 )
+linear_damp = 1.0
+angular_damp = 1.0
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="MeshInstance" type="MeshInstance" parent="OutlineBallFresnel"]
+mesh = SubResource( 14 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="OutlineBallFresnel"]
 shape = SubResource( 6 )
 
 [node name="Platform2" type="KinematicBody" parent="."]
