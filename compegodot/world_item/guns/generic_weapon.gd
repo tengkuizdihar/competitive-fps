@@ -257,10 +257,23 @@ func can_reload() -> bool:
 # Returns the state of the gun, whether it's firing or not
 # It might not be able to fire because it's out of bullets for example
 func trigger_on(delta) -> bool:
-	if weapon_type == Global.WEAPON_TYPE.SEMI_AUTOMATIC or weapon_type == Global.WEAPON_TYPE.KNIFE or weapon_type == Global.WEAPON_TYPE.SNIPER_SEMI_AUTOMATIC:
-		if semi_could_shoot:
+	match weapon_type:
+		Global.WEAPON_TYPE.SEMI_AUTOMATIC, Global.WEAPON_TYPE.KNIFE, Global.WEAPON_TYPE.SNIPER_SEMI_AUTOMATIC:
+			if semi_could_shoot:
+				var is_ammo_usable = _ammo_depletion_routine()
+				semi_could_shoot = false
+				if is_ammo_usable:
+					shoot_audio_player.play()
+					rof_timer.start()
+					anim_player.stop()
+					anim_player.play(anim_shoot_name)
+					_spray_routine(delta)
+					return true
+				else:
+					shoot_empty_audio_player.play()
+					return false
+		Global.WEAPON_TYPE.AUTOMATIC:
 			var is_ammo_usable = _ammo_depletion_routine()
-			semi_could_shoot = false
 			if is_ammo_usable:
 				shoot_audio_player.play()
 				rof_timer.start()
@@ -268,31 +281,19 @@ func trigger_on(delta) -> bool:
 				anim_player.play(anim_shoot_name)
 				_spray_routine(delta)
 				return true
-			else:
+
+			if semi_could_shoot:
+				semi_could_shoot = false
 				shoot_empty_audio_player.play()
 				return false
-	elif weapon_type == Global.WEAPON_TYPE.AUTOMATIC:
-		var is_ammo_usable = _ammo_depletion_routine()
-		if is_ammo_usable:
-			shoot_audio_player.play()
-			rof_timer.start()
-			anim_player.stop()
-			anim_player.play(anim_shoot_name)
-			_spray_routine(delta)
-			return true
-
-		if semi_could_shoot:
-			semi_could_shoot = false
-			shoot_empty_audio_player.play()
-			return false
-	elif weapon_type == Global.WEAPON_TYPE.GRENADE:
-		var is_ammo_usable = _ammo_depletion_routine()
-		if is_ammo_usable:
-			shoot_audio_player.play()
-			rof_timer.start()
-			anim_player.stop()
-			anim_player.play(anim_shoot_name)
-			return true
+		Global.WEAPON_TYPE.FRAG_GRENADE, Global.WEAPON_TYPE.FLASH_GRENADE:
+			var is_ammo_usable = _ammo_depletion_routine()
+			if is_ammo_usable:
+				shoot_audio_player.play()
+				rof_timer.start()
+				anim_player.stop()
+				anim_player.play(anim_shoot_name)
+				return true
 
 	return false
 
@@ -303,30 +304,33 @@ func trigger_off() -> void:
 
 # TODO add second audio
 func second_trigger_on() -> bool:
-	if weapon_type == Global.WEAPON_TYPE.KNIFE:
-		rof_timer.start()
-		anim_player.stop()
-		anim_player.play(anim_shoot_secondary_name)
-		return true
-	if weapon_type == Global.WEAPON_TYPE.SNIPER_SEMI_AUTOMATIC and allow_scope_to_activate and can_shoot():
-		allow_scope_to_activate = false
-		_handle_sniper_zoom()
-		return true
-	if weapon_type == Global.WEAPON_TYPE.GRENADE:
-		var is_ammo_usable = _ammo_depletion_routine()
-		if is_ammo_usable:
-			shoot_audio_player.play()
+	match weapon_type:
+		Global.WEAPON_TYPE.KNIFE:
 			rof_timer.start()
 			anim_player.stop()
 			anim_player.play(anim_shoot_secondary_name)
 			return true
+		Global.WEAPON_TYPE.SNIPER_SEMI_AUTOMATIC:
+			if allow_scope_to_activate and can_shoot():
+				allow_scope_to_activate = false
+				_handle_sniper_zoom()
+				return true
+		Global.WEAPON_TYPE.FRAG_GRENADE, Global.WEAPON_TYPE.FLASH_GRENADE:
+			var is_ammo_usable = _ammo_depletion_routine()
+			if is_ammo_usable:
+				shoot_audio_player.play()
+				rof_timer.start()
+				anim_player.stop()
+				anim_player.play(anim_shoot_secondary_name)
+				return true
 
 	return false
 
 
 func second_trigger_off() -> void:
-	if weapon_type == Global.WEAPON_TYPE.SNIPER_SEMI_AUTOMATIC:
-		allow_scope_to_activate = true
+	match weapon_type:
+		Global.WEAPON_TYPE.SNIPER_SEMI_AUTOMATIC:
+			allow_scope_to_activate = true
 
 
 func reload_trigger() -> void:
@@ -356,7 +360,7 @@ func first_activate(pivot: Spatial) -> void:
 	match weapon_type:
 		Global.WEAPON_TYPE.AUTOMATIC, Global.WEAPON_TYPE.SEMI_AUTOMATIC, Global.WEAPON_TYPE.SNIPER_SEMI_AUTOMATIC, Global.WEAPON_TYPE.KNIFE:
 			_first_gun_activate(pivot)
-		Global.WEAPON_TYPE.GRENADE:
+		Global.WEAPON_TYPE.FRAG_GRENADE, Global.WEAPON_TYPE.FLASH_GRENADE:
 			# NOTE: REGISTER BUT NO LOGIC BECAUSE IT'S DONE AFTER THE THROWING ANIMATION IS OVER
 			pass
 		_:

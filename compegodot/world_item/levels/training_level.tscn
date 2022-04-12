@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=2]
+[gd_scene load_steps=30 format=2]
 
 [ext_resource path="res://materials/level_testing_material_2.tres" type="Material" id=1]
 [ext_resource path="res://world_item/environments/spawn_point_universal.tscn" type="PackedScene" id=2]
@@ -22,6 +22,7 @@
 [ext_resource path="res://world_item/shooting_area/shooting_target.tscn" type="PackedScene" id=20]
 [ext_resource path="res://world_item/button/time_attack_reset_button.tscn" type="PackedScene" id=21]
 [ext_resource path="res://world_item/utility/frag_grenade.tscn" type="PackedScene" id=22]
+[ext_resource path="res://world_item/utility/flash_grenade.tscn" type="PackedScene" id=23]
 
 [sub_resource type="GIProbeData" id=4]
 bounds = AABB( -39, -16, -53, 78, 32, 106 )
@@ -360,6 +361,78 @@ transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -58.214
 
 [node name="RailGun" parent="Guns" instance=ExtResource( 12 )]
 transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -62.2854, 3.5, -29.7145 )
+
+[node name="FlashGrenade" parent="Guns" instance=ExtResource( 23 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -81.8121, 3.5396, -29.6371 )
+
+[node name="FlashGrenade2" parent="Guns" instance=ExtResource( 23 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -81.8121, 3.5396, -30.3371 )
+
+[node name="FlashGrenade3" parent="Guns" instance=ExtResource( 23 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -81.8121, 3.5396, -31.0371 )
+
+[node name="FlashGrenade4" parent="Guns" instance=ExtResource( 23 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -82.6121, 3.5396, -29.6371 )
+
+[node name="FlashGrenade5" parent="Guns" instance=ExtResource( 23 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -82.6121, 3.5396, -30.3371 )
+
+[node name="FlashGrenade6" parent="Guns" instance=ExtResource( 23 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -82.6121, 3.5396, -31.0371 )
+
+[node name="FlashGrenade7" parent="Guns" instance=ExtResource( 23 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -83.3121, 3.5396, -29.6371 )
+
+[node name="FlashGrenade8" parent="Guns" instance=ExtResource( 23 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -83.3121, 3.5396, -30.3371 )
+
+[node name="FlashGrenade9" parent="Guns" instance=ExtResource( 23 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -83.3121, 3.5396, -31.0371 )
+
+[node name="FlashGrenade10" parent="Guns" instance=ExtResource( 23 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -84.1121, 3.5396, -29.6371 )
+
+[node name="FlashGrenade11" parent="Guns" instance=ExtResource( 23 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -84.1121, 3.5396, -30.3371 )
+
+[node name="FlashGrenade12" parent="Guns" instance=ExtResource( 23 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -84.1121, 3.5396, -31.0371 )
+
+[node name="FlashGrenade13" parent="Guns" instance=ExtResource( 23 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -84.8121, 3.5396, -29.6371 )
+
+[node name="FlashGrenade14" parent="Guns" instance=ExtResource( 23 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -84.8121, 3.5396, -30.3371 )
+
+[node name="FlashGrenade15" parent="Guns" instance=ExtResource( 23 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -84.8121, 3.5396, -31.0371 )
+
+[node name="FlashGrenade16" parent="Guns" instance=ExtResource( 23 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -85.6121, 3.5396, -29.6371 )
+
+[node name="FlashGrenade17" parent="Guns" instance=ExtResource( 23 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -85.6121, 3.5396, -30.3371 )
+
+[node name="FlashGrenade18" parent="Guns" instance=ExtResource( 23 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -85.6121, 3.5396, -31.0371 )
+
+[node name="FlashGrenade19" parent="Guns" instance=ExtResource( 23 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -86.3121, 3.5396, -29.6371 )
+
+[node name="FlashGrenade20" parent="Guns" instance=ExtResource( 23 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -86.3121, 3.5396, -30.3371 )
+
+[node name="FlashGrenade21" parent="Guns" instance=ExtResource( 23 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -86.3121, 3.5396, -31.0371 )
+
+[node name="FlashGrenade22" parent="Guns" instance=ExtResource( 23 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -87.1121, 3.5396, -29.6371 )
+
+[node name="FlashGrenade23" parent="Guns" instance=ExtResource( 23 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -87.1121, 3.5396, -30.3371 )
+
+[node name="FlashGrenade24" parent="Guns" instance=ExtResource( 23 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -87.1121, 3.5396, -31.0371 )
 
 [node name="TimeAttackContainer" type="Spatial" parent="."]
 script = ExtResource( 19 )
@@ -886,3 +959,10 @@ material/444 = null
 
 [node name="CollisionShape" type="CollisionShape" parent="time-trial-training/StaticBody"]
 shape = SubResource( 5 )
+
+[node name="CSGCombiner" type="CSGCombiner" parent="."]
+use_collision = true
+
+[node name="CSGBox" type="CSGBox" parent="CSGCombiner"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.98881, 0 )
+height = 10.6

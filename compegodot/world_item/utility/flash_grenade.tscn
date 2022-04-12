@@ -1,6 +1,6 @@
 [gd_scene load_steps=15 format=2]
 
-[ext_resource path="res://assets/utility_model/grenade.obj" type="ArrayMesh" id=1]
+[ext_resource path="res://assets/utility_model/grenadeFlash.obj" type="ArrayMesh" id=1]
 [ext_resource path="res://world_item/utility/utility_bounce_material.tres" type="PhysicsMaterial" id=2]
 [ext_resource path="res://world_item/utility/grenade.gd" type="Script" id=3]
 [ext_resource path="res://assets/sounds/grenade_pin.wav" type="AudioStream" id=4]
@@ -10,7 +10,7 @@
 
 [sub_resource type="SphereShape" id=1]
 margin = 0.001
-radius = 0.227422
+radius = 0.23
 
 [sub_resource type="Animation" id=5]
 length = 0.001
@@ -84,15 +84,16 @@ tracks/0/keys = {
 [sub_resource type="SphereShape" id=6]
 radius = 16.5
 
-[node name="FragGrenade" type="RigidBody"]
+[node name="FlashGrenade" type="RigidBody"]
 collision_layer = 8
 mass = 0.5
 physics_material_override = ExtResource( 2 )
+gravity_scale = 1.5
 continuous_cd = true
 angular_damp = 1.0
 script = ExtResource( 3 )
-weapon_name = "Frag Grenade"
-weapon_type = 4
+weapon_name = "Flash Grenade"
+weapon_type = 5
 weapon_slot = 3
 gun_animation_player_path = NodePath("AnimationPlayer")
 gun_shoot_audio_player = NodePath("GunShoot")
@@ -121,24 +122,6 @@ material/4 = null
 material/5 = null
 material/6 = null
 material/7 = null
-material/8 = null
-material/9 = null
-material/10 = null
-material/11 = null
-material/12 = null
-material/13 = null
-material/14 = null
-material/15 = null
-material/16 = null
-material/17 = null
-material/18 = null
-material/19 = null
-material/20 = null
-material/21 = null
-material/22 = null
-material/23 = null
-material/24 = null
-material/25 = null
 
 [node name="GunShoot" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 4 )

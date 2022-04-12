@@ -30,7 +30,7 @@ func _ready():
 
 
 func _active_grenade_routine():
-	if weapon_slot == Global.WEAPON_SLOT.FRAG_GRENADE:
+	if weapon_type == Global.WEAPON_TYPE.FRAG_GRENADE:
 		yield(get_tree().create_timer(nade_fuse_time), "timeout")
 
 		var explosion_sound = explosion_sound_scene.instance()
@@ -38,7 +38,7 @@ func _active_grenade_routine():
 		explosion_sound.global_transform.origin = global_transform.origin
 		explosion_sound.play()
 
-		var ray_results = _get_ray_results_of_influenced_objects()
+		var ray_results = _get_ray_results_of_frag_influenced_objects()
 		for r in ray_results:
 			_apply_damage(r)
 			_apply_impulse(r)
@@ -53,9 +53,22 @@ func _active_grenade_routine():
 		Util.add_to_world(explosion_effect_node)
 
 		queue_free()
+	if weapon_type == Global.WEAPON_TYPE.FLASH_GRENADE:
+		yield(get_tree().create_timer(nade_fuse_time), "timeout")
+
+		var explosion_sound = explosion_sound_scene.instance()
+		Util.add_to_world(explosion_sound)
+		explosion_sound.global_transform.origin = global_transform.origin
+		explosion_sound.play()
+
+		var ray_results = _get_ray_results_of_flash_influenced_players()
+		for r in ray_results:
+			_apply_flashbang(r)
+
+		queue_free()
 
 # Will give an array of ray_result back
-func _get_ray_results_of_influenced_objects() -> Array:
+func _get_ray_results_of_frag_influenced_objects() -> Array:
 	var overlapping_bodies = influence_area.get_overlapping_bodies()
 	var result = []
 
@@ -74,6 +87,34 @@ func _get_ray_results_of_influenced_objects() -> Array:
 
 		# 2. Add to result if it does pass the check
 		if colliding and colliding == i and (colliding is RigidBody or "i_health" in i or "i_interact" in i):
+			result.append(ray_result)
+
+	return result
+
+
+# Will give an array of ray_result back
+func _get_ray_results_of_flash_influenced_players() -> Array:
+	var overlapping_bodies = get_tree().get_nodes_in_group(Global.SPAWN_TYPE_GROUP.TEAM_1)
+	overlapping_bodies.append_array(get_tree().get_nodes_in_group(Global.SPAWN_TYPE_GROUP.TEAM_2))
+	overlapping_bodies.append_array(get_tree().get_nodes_in_group(Global.SPAWN_TYPE_GROUP.UNIVERSAL))
+
+	var result = []
+
+	# For rays
+	var space_state = get_world().direct_space_state
+	var from = global_transform.origin
+	var flashable_collision_mask = Global.PHYSICS_LAYERS.TEAM_1 | Global.PHYSICS_LAYERS.TEAM_2 | Global.PHYSICS_LAYERS.WORLD
+
+	# Filtering overlapping bodies
+	# TODO-BUG #77: Grenade can't flash player if it's inside the player
+	for i in overlapping_bodies:
+		# 1. Check whether grenade has line of sight to object
+		var to = i.global_transform.origin
+		var ray_result = space_state.intersect_ray(from, to, [self], flashable_collision_mask)
+		var colliding = ray_result.get("collider")
+
+		# 2. Add to result if it does pass the check
+		if colliding and colliding == i and ("i_flash" in i):
 			result.append(ray_result)
 
 	return result
@@ -109,6 +150,13 @@ func _apply_impulse(ray_result: Dictionary):
 		collider.apply_impulse(position - collider.global_transform.origin, modified_impulse_power)
 
 
+func _apply_flashbang(ray_result: Dictionary):
+	var collider = ray_result.get("collider")
+
+	if "i_flash" in collider: # TODO: create i_flash and apply to player
+		collider.i_flash.flash(self.global_transform.origin)
+
+
 func _is_influence_area() -> bool:
 	var test = get_node(influence_area_path)
 	return test and (test is Area)
@@ -118,19 +166,21 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 	if anim_name == anim_shoot_name or anim_name == anim_shoot_secondary_name:
 		# Cache it for a second
 		var p = player
-		var camera = player.camera
+		var camera = p.camera
 
 		# Set to world
-		player.remove_weapon(weapon_slot)
+		p.remove_weapon(weapon_slot)
 		self.collision_layer = 0
 		self.collision_mask = Global.PHYSICS_LAYERS.WORLD
+		self.global_transform.origin = p.pivot.global_transform.origin
+		self.add_collision_exception_with(p)
 
 		# Throw it from the front of the player
 		global_transform.origin = camera.global_transform.origin - camera.global_transform.basis.z.normalized() * 2
 		global_rotate(Vector3(rand_range(-1, 1), rand_range(-1, 1), rand_range(-1, 1)).normalized(), PI * rand_range(0, 2))
 
 		# Throwing power based on animation name (because it determine between first and secondary shot)
-		var throwing_power = 20
+		var throwing_power = 18
 		if anim_name == anim_shoot_secondary_name:
 			throwing_power = 7
 

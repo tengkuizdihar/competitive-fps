@@ -35,6 +35,11 @@ _global_script_classes=[ {
 "path": "res://world_item/utility/grenade.gd"
 }, {
 "base": "Node",
+"class": "IFlash",
+"language": "GDScript",
+"path": "res://interfaces/i_flash.gd"
+}, {
+"base": "Node",
 "class": "IHealth",
 "language": "GDScript",
 "path": "res://interfaces/i_health.gd"
@@ -60,6 +65,7 @@ _global_script_class_icons={
 "CameraSmoothPhysics": "",
 "GenericWeapon": "",
 "Grenade": "",
+"IFlash": "",
 "IHealth": "",
 "IInteract": "",
 "TimeAttackContainer": "",
@@ -206,13 +212,16 @@ player_cycle_grenade={
 
 [physics]
 
-common/physics_fps=128
+common/physics_fps=74
 common/physics_jitter_fix=0.0
 3d/physics_engine="Bullet"
 3d/active_soft_world=false
+3d/smooth_trimesh_collision=true
 
 [rendering]
 
+quality/reflections/texture_array_reflections=false
+quality/reflections/high_quality_ggx=false
 quality/shading/use_physical_light_attenuation=true
 quality/filters/anisotropic_filter_level=1
 quality/depth/hdr=false

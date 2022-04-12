@@ -5,21 +5,37 @@ extends KinematicBody
 ###########################################################
 
 onready var i_health = $IHealth
+onready var i_flash = $IFlash
 
 ###########################################################
 # Variables
 ###########################################################
 
-### INFO - MAGIC_ON_GROUND_GRAVITY
-### Is a constant used by the kinematic for making the player stay on the ground.
-### For example: It's used so that the player wouldn't fly off when going up and down
-###              ramps.
+# Is a constant used by the kinematic for making the player stay on the ground.
+# For example: It's used so that the player wouldn't fly off when going up and down
+#              ramps.
 const MAGIC_ON_GROUND_GRAVITY = 2.5 # m/s
 
-### is_player is used for marking whether an object is a player or not.
-###
-### The reason it needs a marker instead of checking the class itself is
-### because Godot 3.x has a big cyclic dependency problems and it could ruin other scripts.
+# A constant used to mark how much time is the maximum for a person to be flashed.
+# For example: A man is flashed for 10 seconds then flashed again when there's
+#              5 seconds left for the flash to be active. The flash will not be active for
+#              15 seconds, but for 10.
+const FLASH_MAXIMUM_DURATION = 5.0
+
+# Used to mark the maximum distance of flash from the player to affect them
+const FLASH_MAXIMUM_DISTANCE = 100.0
+
+# Used to determine how close the angle of flash must be to the camera to work.
+# For example, a flash that's happening behind the player will not blind them.
+const FLASH_MAXIMUM_ANGLE = deg2rad(110)
+
+# A constant used to determine the flash overlay color
+const DEFAULT_FLASH_COLOR = Color(1,1,1,1)
+
+# is_player is used for marking whether an object is a player or not.
+#
+# The reason it needs a marker instead of checking the class itself is
+# because Godot 3.x has a big cyclic dependency problems and it could ruin other scripts.
 onready var is_player = true
 
 onready var headlimit_raycast = $HeadLimitRayCast
@@ -28,7 +44,7 @@ onready var camera = $Pivot/Camera
 onready var pivot = $Pivot
 onready var mouse_sensitivity = 0.0008  # radians/pixel, TODO: refactor to game settings
 
-### Gun Variables
+#-- Gun Variables --#
 onready var gun_container = $Pivot/Camera/GunContainer
 onready var weapon: GenericWeapon = $Pivot/Camera/GunContainer/KF1
 onready var current_weapon = Global.WEAPON_SLOT.MELEE
@@ -37,28 +53,32 @@ onready var weapons = {
 	Global.WEAPON_SLOT.PRIMARY: null,
 	Global.WEAPON_SLOT.SECONDARY: null,
 	Global.WEAPON_SLOT.MELEE: $Pivot/Camera/GunContainer/KF1,
-	Global.WEAPON_SLOT.FRAG_GRENADE: null
+	Global.WEAPON_SLOT.UTILITY: null
 }
 
-### The currently used max velocity for movement input
+#-- The currently used max velocity for movement input --#
 var current_max_movement_velocity = max_run_velocity
 
-### The desired movement_velocity stored for acceleration purposes.
+#-- The desired movement_velocity stored for acceleration purposes. --#
 var desired_movement_velocity = Vector3()
 
-### The the max XZ velocity when in the air
+#-- The the max XZ velocity when in the air --#
 var max_air_velocity = 0
 
-### Flag for crouching
+#-- Flag for crouching --#
 var is_crouching = false
 var debug_position_one_frame_ago = Vector3.ZERO
 var held_weapon = null
 
-### Weapon sway variables
+#-- Weapon sway variables --#
 onready var gun_container_original_rotation = Vector2(gun_container.rotation_degrees.x, gun_container.rotation_degrees.y)
 var mouse_movement = Vector2()
 var is_mouse_moving_time = false
 var mouse_turn_max_sensitivity = 1
+
+#-- Flashed variables --#
+onready var flash_overlay = $Pivot/Camera/FlashOverlay
+var flash_remaining_second = 0.0
 
 onready var gun_container_original_transform = gun_container.transform
 onready var pivot_original_local_translation = $Pivot.transform.origin
@@ -119,6 +139,7 @@ func _ready() -> void:
 
 	_on_IHealth_health_changed(i_health.current_health, i_health.current_armor)
 
+
 func _input(event):
 	if !State.get_state("player_paused") and event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		var speed = Config.state.player.mouse_speed * mouse_sensitivity
@@ -145,6 +166,7 @@ func _physics_process(delta: float) -> void:
 	handle_weapon_reload()
 	handle_weapon_selection()
 	handle_gun_sway(delta)
+	handle_flash_dissipation(delta)
 
 	fire_to_direction(delta)
 	apply_shooting_knockback(self, camera, weapon)
@@ -311,7 +333,7 @@ func handle_weapon_selection() -> void:
 		if Input.is_action_just_pressed("player_weapon_gun_knife"):
 			_switch_weapon_routine(Global.WEAPON_SLOT.MELEE)
 		if Input.is_action_just_pressed("player_cycle_grenade"):
-			_switch_weapon_routine(Global.WEAPON_SLOT.FRAG_GRENADE)
+			_switch_weapon_routine(Global.WEAPON_SLOT.UTILITY)
 
 
 func fire_to_direction(delta) -> void:
@@ -521,6 +543,14 @@ func _handle_movement_sway(delta) -> void:
 	gun_container.transform.origin.y = down_sway_destination
 
 
+
+func handle_flash_dissipation(delta) -> void:
+	var flash_color = Color(DEFAULT_FLASH_COLOR)
+	flash_color.a = clamp(flash_remaining_second, 0, 1)
+	flash_overlay.color = flash_color
+	flash_remaining_second = clamp(flash_remaining_second - delta, 0, FLASH_MAXIMUM_DURATION)
+
+
 ###########################################################
 # Static Function
 ###########################################################
@@ -580,3 +610,16 @@ func _on_IHealth_health_changed(current_health: float, current_armor: float):
 func _on_IHealth_dead():
 	# TODO: add a routine to make the person dead and then respawn again
 	pass
+
+
+func _on_IFlash_flashed(flash_position: Vector3):
+	var distance = clamp(camera.global_transform.origin.distance_to(flash_position), 0, FLASH_MAXIMUM_DISTANCE)
+	var distance_ratio = range_lerp(distance, 0, FLASH_MAXIMUM_DISTANCE, 1, 0)
+
+	var forward = -camera.global_transform.basis.z.normalized()
+	var to_other = (flash_position - self.global_transform.origin).normalized()
+	var angle = clamp(forward.angle_to(to_other), 0, FLASH_MAXIMUM_ANGLE)
+	var angle_ratio = range_lerp(angle, 0, FLASH_MAXIMUM_ANGLE, 1, 0.1)
+
+	var calc_flash_duration = FLASH_MAXIMUM_DURATION * distance_ratio * angle_ratio
+	flash_remaining_second = clamp(calc_flash_duration, 0, FLASH_MAXIMUM_DURATION)
