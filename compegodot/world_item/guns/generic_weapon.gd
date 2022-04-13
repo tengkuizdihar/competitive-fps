@@ -287,13 +287,11 @@ func trigger_on(delta) -> bool:
 				shoot_empty_audio_player.play()
 				return false
 		Global.WEAPON_TYPE.FRAG_GRENADE, Global.WEAPON_TYPE.FLASH_GRENADE:
-			var is_ammo_usable = _ammo_depletion_routine()
-			if is_ammo_usable:
-				shoot_audio_player.play()
-				rof_timer.start()
-				anim_player.stop()
-				anim_player.play(anim_shoot_name)
-				return true
+			shoot_audio_player.play()
+			rof_timer.start()
+			anim_player.stop()
+			anim_player.play(anim_shoot_name)
+			return true
 
 	return false
 
@@ -316,13 +314,11 @@ func second_trigger_on() -> bool:
 				_handle_sniper_zoom()
 				return true
 		Global.WEAPON_TYPE.FRAG_GRENADE, Global.WEAPON_TYPE.FLASH_GRENADE:
-			var is_ammo_usable = _ammo_depletion_routine()
-			if is_ammo_usable:
-				shoot_audio_player.play()
-				rof_timer.start()
-				anim_player.stop()
-				anim_player.play(anim_shoot_secondary_name)
-				return true
+			shoot_audio_player.play()
+			rof_timer.start()
+			anim_player.stop()
+			anim_player.play(anim_shoot_secondary_name)
+			return true
 
 	return false
 
@@ -570,7 +566,7 @@ func equip():
 # Will do a routine where everything that's running will be reseted
 # For example, reseting a reload animation in the middle.
 func unequip():
-	anim_player.stop()
+	anim_player.play("RESET")
 	_reset_sniper_zoom()
 
 
