@@ -434,11 +434,11 @@ func _drop_weapon(w: GenericWeapon) -> void:
 	w.set_to_world_object()
 
 	randomize()
-	w.global_transform.origin = camera.global_transform.origin - camera.global_transform.basis.z.normalized() * 2
+	w.global_transform.origin = camera.global_transform.origin
 	w.global_rotate(Vector3(rand_range(-1, 1), rand_range(-1, 1), rand_range(-1, 1)).normalized(), PI * rand_range(0, 2))
 
 	# add force to the gun
-	w.apply_central_impulse(-camera.global_transform.basis.z * (10 + desired_movement_velocity.length() / 2))
+	w.apply_central_impulse(-camera.global_transform.basis.z * (15 + desired_movement_velocity.length() / 2))
 	w.apply_torque_impulse(-camera.global_transform.basis.z.rotated(Vector3.UP, rand_range(-PI/2, PI/2)) * rand_range(0.1,0.5))
 
 	# make the weapons (dict) currenly equipped to null

@@ -24,7 +24,6 @@ lifetime = 2.13
 one_shot = true
 explosiveness = 0.91
 randomness = 0.84
-fixed_fps = 120
 visibility_aabb = AABB( -0.56147, -0.194597, -0.605732, 1.12294, 1.12064, 1.21342 )
 process_material = SubResource( 1 )
 draw_pass_1 = SubResource( 2 )

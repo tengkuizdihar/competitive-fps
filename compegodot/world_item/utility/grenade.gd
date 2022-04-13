@@ -164,6 +164,8 @@ func _is_influence_area() -> bool:
 
 func _on_AnimationPlayer_animation_finished(anim_name):
 	if anim_name == anim_shoot_name or anim_name == anim_shoot_secondary_name:
+		influence_area.monitoring = true
+
 		# Cache it for a second
 		var p = player
 		var camera = p.camera
@@ -176,7 +178,7 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 		self.add_collision_exception_with(p)
 
 		# Throw it from the front of the player
-		global_transform.origin = camera.global_transform.origin - camera.global_transform.basis.z.normalized() * 2
+		global_transform.origin = camera.global_transform.origin
 		global_rotate(Vector3(rand_range(-1, 1), rand_range(-1, 1), rand_range(-1, 1)).normalized(), PI * rand_range(0, 2))
 
 		# Throwing power based on animation name (because it determine between first and secondary shot)
