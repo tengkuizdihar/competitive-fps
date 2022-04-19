@@ -32,6 +32,10 @@ const FLASH_MAXIMUM_ANGLE = deg2rad(110)
 # A constant used to determine the flash overlay color
 const DEFAULT_FLASH_COLOR = Color(1,1,1,1)
 
+# Used for the height of a player to fall to make an audible sound.
+# This value is coming from experiment so feel free to change to a more appropriate one in the future.
+const DEFAULT_AUDIBLE_FALL_HEIGHT = 2.95
+
 # is_player is used for marking whether an object is a player or not.
 #
 # The reason it needs a marker instead of checking the class itself is
@@ -70,6 +74,11 @@ var is_crouching = false
 var debug_position_one_frame_ago = Vector3.ZERO
 var held_weapon = null
 
+#-- Jumping Variables --#
+var last_time_on_ground = 0
+var current_max_airborne_height = 0
+var current_lowest_airborne_height = 0
+
 #-- Weapon sway variables --#
 onready var gun_container_original_rotation = Vector2(gun_container.rotation_degrees.x, gun_container.rotation_degrees.y)
 var mouse_movement = Vector2()
@@ -86,11 +95,15 @@ onready var body_original_local_translation = $Body.transform.origin
 onready var body_original_height = $Body.shape.height
 onready var crouch_height = 3.75
 
+#-- Sound Variables -- #
+onready var walking_audio_player = $RandomWalkingAudioPlayer3D
+onready var dropping_audio_player = $RandomDroppingAudioPlayer3D
+
 export(bool) var auto_bhop = true
 export(float) var crouch_speed = 5.5 # meter per second
 export(float) var jump_impulse_velocity = 12
 export(float) var air_acceleration = 60
-export(float) var ground_acceleration = 55
+export(float) var ground_acceleration = 45
 export(float) var ground_friction = 40
 export(float) var gravity_constant = 25
 export(float) var max_run_velocity = 13.0
@@ -167,6 +180,7 @@ func _physics_process(delta: float) -> void:
 	handle_weapon_selection()
 	handle_gun_sway(delta)
 	handle_flash_dissipation(delta)
+	handle_movement_sounds()
 
 	fire_to_direction(delta)
 	apply_shooting_knockback(self, camera, weapon)
@@ -178,6 +192,9 @@ func _physics_process(delta: float) -> void:
 	State.set_state("player_weapon_name", weapon.weapon_name)
 	State.set_state("player_weapon_current_ammo", weapon.current_ammo)
 	State.set_state("player_weapon_total_ammo", weapon.current_total_ammo)
+
+	# LAST-ONLY HANDLING
+	handle_airborne_monitoring()
 
 
 ###########################################################
@@ -310,7 +327,6 @@ func handle_movement(input_vector: Vector3, delta: float):
 	# TODO: fix snapping to sides of walls when stepping fast away from it
 	desired_movement_velocity = self.move_and_slide_with_snap(desired_movement_velocity, snap_vector, Vector3.UP, false, 4, 0.785398, false)
 
-	State.set_state("debug_misc", str(stepify(desired_movement_velocity.length(), 0.01)))
 	State.set_state("player_velocity_length", desired_movement_velocity.length())
 
 
@@ -549,6 +565,31 @@ func handle_flash_dissipation(delta) -> void:
 	flash_color.a = clamp(flash_remaining_second, 0, 1)
 	flash_overlay.color = flash_color
 	flash_remaining_second = clamp(flash_remaining_second - delta, 0, FLASH_MAXIMUM_DURATION)
+
+
+func _get_was_airborne() -> bool:
+	return (last_time_on_ground < Engine.get_physics_frames() - 1) and is_on_floor()
+
+
+func handle_airborne_monitoring() -> void:
+	if is_on_floor():
+		last_time_on_ground = Engine.get_physics_frames()
+		current_max_airborne_height = -1.79769e510
+		current_lowest_airborne_height = 1.79769e510
+	else:
+		var y_position = global_transform.origin.y
+		current_max_airborne_height = max(y_position, current_max_airborne_height)
+		current_lowest_airborne_height = min(y_position, current_lowest_airborne_height)
+
+
+func handle_movement_sounds() -> void:
+	var was_airborne = _get_was_airborne()
+	var fall_height = current_max_airborne_height - current_lowest_airborne_height
+
+	if is_on_floor() and was_airborne and fall_height > DEFAULT_AUDIBLE_FALL_HEIGHT:
+		dropping_audio_player.play()
+	elif is_on_floor() and desired_movement_velocity.length() > max_run_velocity - 1 and !walking_audio_player.is_playing():
+		walking_audio_player.play()
 
 
 ###########################################################

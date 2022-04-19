@@ -50,6 +50,11 @@ _global_script_classes=[ {
 "path": "res://interfaces/i_interact.gd"
 }, {
 "base": "Spatial",
+"class": "RandomAudioPlayer3D",
+"language": "GDScript",
+"path": "res://util/RandomAudioPlayer3D.gd"
+}, {
+"base": "Spatial",
 "class": "TimeAttackContainer",
 "language": "GDScript",
 "path": "res://world_item/environments/time_attack_container.gd"
@@ -68,6 +73,7 @@ _global_script_class_icons={
 "IFlash": "",
 "IHealth": "",
 "IInteract": "",
+"RandomAudioPlayer3D": "",
 "TimeAttackContainer": "",
 "VolumetricSky": ""
 }
@@ -106,7 +112,7 @@ window/vsync/use_vsync=false
 
 [editor_plugins]
 
-enabled=PoolStringArray( "SIsilicon.3d.text" )
+enabled=PoolStringArray( "res://addons/SIsilicon.3d.text/plugin.cfg" )
 
 [gui]
 

@@ -1,11 +1,14 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://player/camera_smooth_physics.gd" type="Script" id=1]
 [ext_resource path="res://player/player.gd" type="Script" id=2]
 [ext_resource path="res://player/player_gui.tscn" type="PackedScene" id=3]
 [ext_resource path="res://interfaces/i_flash.gd" type="Script" id=4]
+[ext_resource path="res://assets/sounds/footstep_6.ogg" type="AudioStream" id=5]
 [ext_resource path="res://world_item/guns/kf1.tscn" type="PackedScene" id=6]
 [ext_resource path="res://interfaces/i_health.gd" type="Script" id=7]
+[ext_resource path="res://util/RandomAudioPlayer3D.gd" type="Script" id=8]
+[ext_resource path="res://assets/sounds/footstep_9.ogg" type="AudioStream" id=9]
 
 [sub_resource type="CylinderShape" id=1]
 radius = 2.2
@@ -20,7 +23,6 @@ mid_height = 3.0
 [node name="Player" type="KinematicBody" groups=["SPAWN_TYPE_GROUP__UNIVERSAL"]]
 collision_layer = 6
 script = ExtResource( 2 )
-auto_bhop = false
 
 [node name="IHealth" type="Node" parent="."]
 script = ExtResource( 7 )
@@ -77,6 +79,26 @@ material/0 = null
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0 )
 enabled = true
 cast_to = Vector3( 0, 0, 0 )
+
+[node name="RandomWalkingAudioPlayer3D" type="Spatial" parent="."]
+script = ExtResource( 8 )
+pitch_range = 0.1
+interval_seconds = 0.35
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="RandomWalkingAudioPlayer3D"]
+stream = ExtResource( 5 )
+unit_db = -10.0
+bus = "Gameplay"
+
+[node name="RandomDroppingAudioPlayer3D" type="Spatial" parent="."]
+script = ExtResource( 8 )
+interval_seconds = 0.3
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="RandomDroppingAudioPlayer3D"]
+stream = ExtResource( 9 )
+unit_db = -10.0
+pitch_scale = 0.9
+bus = "Gameplay"
 
 [connection signal="health_changed" from="IHealth" to="." method="_on_IHealth_health_changed"]
 [connection signal="flashed" from="IFlash" to="." method="_on_IFlash_flashed"]
