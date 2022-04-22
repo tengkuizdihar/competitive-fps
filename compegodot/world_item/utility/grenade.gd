@@ -188,7 +188,7 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 
 		# Add force to the gun
 		apply_central_impulse(-camera.global_transform.basis.z * throwing_power + (p.desired_movement_velocity))
-		apply_torque_impulse(Vector3(rand_range(-1, 1), rand_range(-1, 1), rand_range(-1, 1)).normalized() * 0.25)
+		apply_torque_impulse(Vector3(rand_range(-1, 1), rand_range(-1, 1), rand_range(-1, 1)).normalized() * 0.10)
 
 		# Depends on the types of grenade
 		_active_grenade_routine()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://assets/utility_model/grenade.obj" type="ArrayMesh" id=1]
 [ext_resource path="res://world_item/utility/utility_bounce_material.tres" type="PhysicsMaterial" id=2]
@@ -31,10 +31,9 @@ tracks/0/keys = {
 length = 0.1
 step = 0.01
 
-[sub_resource type="Animation" id=3]
+[sub_resource type="Animation" id=9]
 resource_name = "shoot"
-length = 0.3
-step = 0.01
+length = 0.25
 tracks/0/type = "value"
 tracks/0/path = NodePath("grenade:transform")
 tracks/0/interp = 1
@@ -42,16 +41,15 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.07, 0.3 ),
-"transitions": PoolRealArray( 1, 1, 1 ),
+"times": PoolRealArray( 0, 0.25 ),
+"transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Transform( -25, 0, -2.18557e-06, 1.09278e-06, 21.6506, -12.5, 1.89276e-06, -12.5, -21.6506, 0, 0, 0 ), Transform( -25, 0, -2.18557e-06, 1.09278e-06, 21.6506, -12.5, 1.89276e-06, -12.5, -21.6506, 0, -0.5217, 0.780291 ), Transform( -25, 0, -2.18557e-06, 1.09278e-06, 21.6506, -12.5, 1.89276e-06, -12.5, -21.6506, 0, 0.827218, -1.29925 ) ]
+"values": [ Transform( -25, 0, -2.18557e-06, 1.09278e-06, 21.6506, -12.5, 1.89276e-06, -12.5, -21.6506, 0, -0.39, 0.88 ), Transform( -25, 0, -2.18557e-06, 1.09278e-06, 21.6506, -12.5, 1.89276e-06, -12.5, -21.6506, 0, 0.61, -0.79 ) ]
 }
 
-[sub_resource type="Animation" id=7]
+[sub_resource type="Animation" id=10]
 resource_name = "shoot_secondary"
-length = 0.3
-step = 0.01
+length = 0.25
 tracks/0/type = "value"
 tracks/0/path = NodePath("grenade:transform")
 tracks/0/interp = 1
@@ -59,10 +57,10 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.07, 0.3 ),
-"transitions": PoolRealArray( 1, 1, 1 ),
+"times": PoolRealArray( 0, 0.25 ),
+"transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Transform( -25, 0, -2.18557e-06, 1.09278e-06, 21.6506, -12.5, 1.89276e-06, -12.5, -21.6506, 0, 0, 0 ), Transform( -25, 0, -2.18557e-06, 1.09278e-06, 21.6506, -12.5, 1.89276e-06, -12.5, -21.6506, 0, -0.5217, 0.780291 ), Transform( -25, 0, -2.18557e-06, 1.09278e-06, 21.6506, -12.5, 1.89276e-06, -12.5, -21.6506, 0, 0.827218, -1.29925 ) ]
+"values": [ Transform( -25, 0, -2.18557e-06, 1.09278e-06, 21.6506, -12.5, 1.89276e-06, -12.5, -21.6506, 0, -0.39, 0.88 ), Transform( -25, 0, -2.18557e-06, 1.09278e-06, 21.6506, -12.5, 1.89276e-06, -12.5, -21.6506, 0, 0.61, -0.79 ) ]
 }
 
 [sub_resource type="Animation" id=4]
@@ -79,6 +77,38 @@ tracks/0/keys = {
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
 "values": [ Transform( -25, 0, -2.18557e-06, 1.09278e-06, 21.6506, -12.5, 1.89276e-06, -12.5, -21.6506, -1.65557, -0.951802, 0 ), Transform( -25, 0, -2.18557e-06, 1.09278e-06, 21.6506, -12.5, 1.89276e-06, -12.5, -21.6506, 0, 0, 0 ) ]
+}
+
+[sub_resource type="Animation" id=8]
+resource_name = "startup_shoot"
+length = 1e+12
+tracks/0/type = "value"
+tracks/0/path = NodePath("grenade:transform")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Transform( -25, 0, -2.18557e-06, 1.09278e-06, 21.6506, -12.5, 1.89276e-06, -12.5, -21.6506, 0, 0, 0 ), Transform( -25, 0, -2.18557e-06, 1.09278e-06, 21.6506, -12.5, 1.89276e-06, -12.5, -21.6506, 0, -0.24, 0.41 ) ]
+}
+
+[sub_resource type="Animation" id=11]
+resource_name = "startup_shoot_secondary"
+length = 1e+12
+tracks/0/type = "value"
+tracks/0/path = NodePath("grenade:transform")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Transform( -25, 0, -2.18557e-06, 1.09278e-06, 21.6506, -12.5, 1.89276e-06, -12.5, -21.6506, 0, 0, 0 ), Transform( -25, 0, -2.18557e-06, 1.09278e-06, 21.6506, -12.5, 1.89276e-06, -12.5, -21.6506, 0, -0.24, 0.41 ) ]
 }
 
 [sub_resource type="SphereShape" id=6]
@@ -153,9 +183,11 @@ bus = "Gameplay"
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/RESET = SubResource( 5 )
 anims/reload = SubResource( 2 )
-anims/shoot = SubResource( 3 )
-anims/shoot_secondary = SubResource( 7 )
+anims/shoot = SubResource( 9 )
+anims/shoot_secondary = SubResource( 10 )
 anims/startup = SubResource( 4 )
+anims/startup_shoot = SubResource( 8 )
+anims/startup_shoot_secondary = SubResource( 11 )
 
 [node name="ExplosionArea" type="Area" parent="."]
 collision_layer = 0

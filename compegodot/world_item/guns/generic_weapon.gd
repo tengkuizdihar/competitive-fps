@@ -76,8 +76,16 @@ export (NodePath) var gun_mesh_instance
 # For example, cocking the gun
 export (String) var anim_startup_name = "startup"
 
+# The start up before shooting animation name in the gun AnimationPlayer
+# For example, holding left click to play the grenade being pulled
+export (String) var anim_startup_shoot_name = "startup_shoot"
+
 # The shooting animation name in the gun AnimationPlayer
 export (String) var anim_shoot_name = "shoot"
+
+# The start up before shooting animation name in the gun AnimationPlayer
+# For example, holding left click to play the grenade being pulled
+export (String) var anim_startup_shoot_secondary_name = "startup_shoot_secondary"
 
 # The secondary animation name in the gun AnimationPlayer
 export (String) var anim_shoot_secondary_name = "shoot_secondary"
@@ -287,10 +295,9 @@ func trigger_on(delta) -> bool:
 				shoot_empty_audio_player.play()
 				return false
 		Global.WEAPON_TYPE.FRAG_GRENADE, Global.WEAPON_TYPE.FLASH_GRENADE:
-			shoot_audio_player.play()
-			rof_timer.start()
-			anim_player.stop()
-			anim_player.play(anim_shoot_name)
+			if not (anim_player.current_animation == anim_startup_shoot_name):
+				anim_player.play(anim_startup_shoot_name)
+
 			return true
 
 	return false
@@ -298,6 +305,12 @@ func trigger_on(delta) -> bool:
 
 func trigger_off() -> void:
 	semi_could_shoot = true
+	match weapon_type:
+		Global.WEAPON_TYPE.FRAG_GRENADE, Global.WEAPON_TYPE.FLASH_GRENADE:
+			shoot_audio_player.play()
+			rof_timer.start()
+			anim_player.stop()
+			anim_player.play(anim_shoot_name)
 
 
 # TODO add second audio
@@ -314,10 +327,9 @@ func second_trigger_on() -> bool:
 				_handle_sniper_zoom()
 				return true
 		Global.WEAPON_TYPE.FRAG_GRENADE, Global.WEAPON_TYPE.FLASH_GRENADE:
-			shoot_audio_player.play()
-			rof_timer.start()
-			anim_player.stop()
-			anim_player.play(anim_shoot_secondary_name)
+			if not (anim_player.current_animation == anim_startup_shoot_secondary_name):
+				anim_player.play(anim_startup_shoot_secondary_name)
+
 			return true
 
 	return false
@@ -327,6 +339,11 @@ func second_trigger_off() -> void:
 	match weapon_type:
 		Global.WEAPON_TYPE.SNIPER_SEMI_AUTOMATIC:
 			allow_scope_to_activate = true
+		Global.WEAPON_TYPE.FRAG_GRENADE, Global.WEAPON_TYPE.FLASH_GRENADE:
+			shoot_audio_player.play()
+			rof_timer.start()
+			anim_player.stop()
+			anim_player.play(anim_shoot_secondary_name)
 
 
 func reload_trigger() -> void:
