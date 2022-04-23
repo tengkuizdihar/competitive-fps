@@ -108,6 +108,12 @@ enum SHOOTING_TARGET_MOVEMENT_MODE {
 	MOVING,
 }
 
+enum AMMO_INFINITE_MODE {
+	NONE, # Normal mode where ammo and magazine is spent, basically no infinite mode.
+	INFINITE_AMMO, # Infinite ammo where the player doesn't need to reload.
+	INFINITE_MAGAZINE # Infinite magazine where the player need to reload from a pool of infinite magazine.
+}
+
 
 ###########################################################
 # GLOBALLY USED FUNCTIONS
