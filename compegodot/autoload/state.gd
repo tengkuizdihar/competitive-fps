@@ -38,6 +38,9 @@ const INITIAL_STATE = {
 	# NOTE: The default size is the same as the default scale (1)
 	"shooting_target_movement_mode": 0,
 	"shooting_target_size": 1.0,
+
+	# Based on the enum supplied in Global.AMMO_INFINITE_MODE
+	"ammo_infinite_mode": 0.0
 }
 
 # To add state, make sure that the key is STRING and the value is anything

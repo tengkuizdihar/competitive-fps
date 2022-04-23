@@ -364,7 +364,9 @@ func _reload_routine() -> void:
 		else:
 			current_ammo = magazine_ammo
 
-		current_total_ammo = max(next_total_ammo, 0)
+		var mode = State.get_state("ammo_infinite_mode")
+		if not (mode == Global.AMMO_INFINITE_MODE.INFINITE_MAGAZINE or mode == Global.AMMO_INFINITE_MODE.INFINITE_AMMO):
+			current_total_ammo = max(next_total_ammo, 0)
 	else:
 		current_ammo = magazine_ammo
 
@@ -544,6 +546,9 @@ func _spray_routine(delta):
 
 
 func _ammo_depletion_routine() -> bool:
+	if State.get_state("ammo_infinite_mode") == Global.AMMO_INFINITE_MODE.INFINITE_AMMO:
+		return true
+
 	var next_ammo = current_ammo - 1
 	current_ammo = max(next_ammo, 0)
 
