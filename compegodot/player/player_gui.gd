@@ -1,6 +1,6 @@
 extends Control
 
-onready var crosshair = $CrosshairContainer/Crosshair
+onready var crosshair = $CrosshairProcedural
 onready var gun_container = $GunContainer
 onready var sniper_scope = $SniperScope
 onready var sniper_dot = $CrosshairContainer/SniperDot

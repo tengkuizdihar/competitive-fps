@@ -12,7 +12,18 @@ const default_state = {
 		bullet_decal_max = 200
 	},
 	player = {
-		mouse_speed = 1.0
+		mouse_speed = 1.0,
+		crosshair_center_enabled = false,
+		crosshair_legs_enabled = true,
+		crosshair_inverted = false,
+		crosshair_color_0 = Color(0.0, 1.0, 0.0, 1.0),
+		crosshair_center_radius = 0.002,
+		crosshair_width = 0.001,
+		crosshair_len = 0.009,
+		crosshair_spacing = 0.006,
+		crosshair_spread = 1.0,
+		crosshair_leg_alpha = 1.0,
+		crosshair_top_leg_alpha = 1.0,
 	},
 	audio = {
 		master_volume = db2linear(0),	# Measured in 0 to 1 and then converted using linear2db
@@ -56,7 +67,7 @@ func emit_config_changed():
 func reset_config():
 	state = default_state.duplicate(true)
 	apply_config()
-	emit_signal("config_changed", state)
+	emit_config_changed()
 
 
 func apply_config():
@@ -73,7 +84,7 @@ func apply_config():
 							pass
 				'player':
 					match section_key:
-						'mouse_speed':
+						'mouse_speed', 'crosshair_center_enabled':
 							# NOTHING TO DO
 							# Player directly use this value from config
 							pass
@@ -107,7 +118,7 @@ func load_config():
 	if config_file.load(config_file_path) == OK:
 		from_config_file(config_file)
 
-	emit_signal("config_changed", state)
+	emit_config_changed()
 
 
 # Save the configuration to a path in the user directory
