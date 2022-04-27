@@ -1,0 +1,72 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://ui/crosshair_procedural.gd" type="Script" id=1]
+
+[sub_resource type="Shader" id=2]
+code = "// Originally https://github.com/0xspig/CrosshairShader, Licensed under MIT
+// Modified by Tengku Izdihar, Licensed under AGPLv3
+
+shader_type canvas_item;
+
+uniform bool center_enabled = true;
+uniform bool legs_enabled = true;
+uniform bool inverted = false;
+uniform vec4 color_0: hint_color = vec4(0., 1, 0., 1.);
+uniform float center_radius = .002;
+uniform float width = .001;
+uniform float len = .009;
+uniform float spacing = .006;
+uniform float spread = 1.;
+uniform float leg_alpha = 1.;
+uniform float top_leg_alpha = 1.;
+
+
+void fragment(){
+	float a = SCREEN_PIXEL_SIZE.x / SCREEN_PIXEL_SIZE.y;
+	vec2 UVa = vec2(UV.x, UV.y);
+	vec2 center = vec2(.5, .5);
+
+	float point = step(distance(UVa, center), center_radius);
+
+	float h = step(center.x - len - spacing*spread, UVa.x) - step(center.x - spacing*spread, UVa.x);
+	h += step(center.x + spacing*spread, UVa.x) - step(center.x + len + spacing*spread, UVa.x);
+	h *= step(center.y - width, UVa.y) - step(center.y + width, UVa.y);
+	
+	float v = (step(center.y - len - spacing*spread, UVa.y) - step(center.y - spacing*spread, UVa.y)) * top_leg_alpha;
+	v += step(center.y + spacing*spread, UVa.y) - step(center.y + len + spacing*spread, UVa.y);
+	v *= step(center.x - width, UVa.x) - step(center.x + width, UVa.x);
+
+	float crosshair;
+
+	crosshair = (h+v) * float(legs_enabled) * leg_alpha + point * float(center_enabled);
+
+	if(!inverted){
+		COLOR = color_0 * crosshair;
+	}else{
+		COLOR = vec4((cos(textureLod(SCREEN_TEXTURE, SCREEN_UV, 0.0).rgb * 3.1415926534) + 1.)/2., 1.) * crosshair;
+	}
+}"
+
+[sub_resource type="ShaderMaterial" id=1]
+shader = SubResource( 2 )
+shader_param/center_enabled = true
+shader_param/legs_enabled = true
+shader_param/inverted = false
+shader_param/color_0 = Color( 0, 1, 0, 1 )
+shader_param/center_radius = 0.002
+shader_param/width = 0.001
+shader_param/len = 0.009
+shader_param/spacing = 0.006
+shader_param/spread = 1.0
+shader_param/leg_alpha = 1.0
+shader_param/top_leg_alpha = 1.0
+
+[node name="CrosshairProcedural" type="ColorRect"]
+material = SubResource( 1 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -598.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}

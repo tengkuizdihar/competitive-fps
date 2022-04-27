@@ -1,7 +1,7 @@
 [gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://world_item/gun_container.tscn" type="PackedScene" id=1]
-[ext_resource path="res://assets/crosshair_temp/default_crosshair.tres" type="Texture" id=2]
+[ext_resource path="res://ui/CrosshairProcedural.tscn" type="PackedScene" id=2]
 [ext_resource path="res://player/player_gui.gd" type="Script" id=3]
 [ext_resource path="res://icon.png" type="Texture" id=4]
 [ext_resource path="res://assets/crosshair_temp/literally_red_dot.png" type="Texture" id=5]
@@ -56,7 +56,9 @@ anchor_bottom = 1.0
 mouse_filter = 2
 script = ExtResource( 3 )
 __meta__ = {
-"_edit_use_anchors_": false
+"_edit_horizontal_guides_": [ 384.0 ],
+"_edit_use_anchors_": false,
+"_edit_vertical_guides_": [ 683.0 ]
 }
 
 [node name="GunContainer" parent="." instance=ExtResource( 1 )]
@@ -159,24 +161,10 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Crosshair" type="TextureRect" parent="CrosshairContainer"]
-margin_left = 667.0
-margin_top = 368.0
-margin_right = 699.0
-margin_bottom = 400.0
-mouse_filter = 2
-texture = ExtResource( 2 )
-stretch_mode = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="SniperDot" type="TextureRect" parent="CrosshairContainer"]
 material = SubResource( 12 )
-margin_left = 678.0
-margin_top = 379.0
-margin_right = 687.0
-margin_bottom = 388.0
+margin_right = 9.0
+margin_bottom = 9.0
 rect_min_size = Vector2( 9, 9 )
 mouse_filter = 2
 texture = SubResource( 13 )
@@ -184,6 +172,16 @@ expand = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="CrosshairProcedural" parent="." instance=ExtResource( 2 )]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -384.0
+margin_top = -384.0
+margin_right = 384.0
+margin_bottom = 384.0
 
 [node name="Indicators" type="VBoxContainer" parent="."]
 anchor_right = 1.0
