@@ -10,6 +10,8 @@ variables:
 linux-docker:
   image: barichello/godot-ci:3.4.2
   stage: export
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   script:
     - mkdir -v -p build/linux
     - cd $EXPORT_NAME
@@ -26,6 +28,8 @@ linux-docker:
 linux-nix:
   image: nixos/nix:2.3.16
   stage: export
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   script:
     - nix-env -iA cachix -f https://cachix.org/api/v1/install
     - cachix use publicagainmisterbin
@@ -43,6 +47,8 @@ linux-nix:
 windows:
   image: barichello/godot-ci:3.4.2
   stage: export
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   script:
     - mkdir -v -p build/windows
     - cd $EXPORT_NAME
@@ -67,6 +73,8 @@ windows:
 web:
   image: barichello/godot-ci:3.4.2
   stage: export
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   script:
     - mkdir -v -p build/web
     - cd $EXPORT_NAME
