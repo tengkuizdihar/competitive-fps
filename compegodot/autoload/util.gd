@@ -22,6 +22,11 @@ func get_interface(target: Node, interface_class) -> Node:
 
 
 func add_to_world(node: Node) -> void:
+	var level_groups = get_tree().get_nodes_in_group(Global.GROUP.LEVEL)
+	if level_groups.size() > 0:
+		level_groups.front().add_child(node)
+		return
+
 	for i in get_tree().root.get_children():
 		if i is Spatial:
 			i.add_child(node)
@@ -42,8 +47,9 @@ func handle_err(error_code: int) -> void:
 		printerr("ERROR CODE: ", error_code, "\n", get_stack())
 
 
-func change_level(scene_path: String) -> void:
+func change_level(scene_path: String, game_mode: int = Global.GAME_MODE.DEFAULT) -> void:
 	State.reset_game()
+	State.set_state("game_mode", game_mode)
 	handle_err(get_tree().change_scene(scene_path))
 
 
@@ -94,3 +100,8 @@ func is_in_either_group(node: Node, group_name: Array):
 
 func is_player(node: Node) -> bool:
 	return "is_player" in node
+
+
+func validated_connect(source: Object, signal_name: String, target: Object, method_name: String, binds: Array) -> void:
+	if not source.is_connected(signal_name, target, method_name):
+		handle_err(source.connect(signal_name, target, method_name, binds))

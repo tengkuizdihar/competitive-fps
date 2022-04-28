@@ -13,7 +13,7 @@ __meta__ = {
 }
 level_scene_path = "res://world_item/levels/test_level.tscn"
 tutorial_scene_path = "res://world_item/levels/tutorial_level.tscn"
-training_scene_path = "res://world_item/levels/training_level.tscn"
+training_scene_path = "res://world_item/levels/aim_training_level.tscn"
 
 [node name="ColumnContainer" type="HBoxContainer" parent="."]
 anchor_right = 1.0

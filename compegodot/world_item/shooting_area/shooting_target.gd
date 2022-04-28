@@ -6,6 +6,9 @@ var speed = 1.0
 onready var i_health = $IHealth
 onready var health_label = $HealthLabel
 
+export (bool) var is_free_after_death = true
+export (bool) var is_score_count_after_death = true
+
 func _ready() -> void:
 	Util.handle_err(i_health.connect("dead", self, "_on_ShootingTarget_dead"))
 	Util.handle_err(i_health.connect("health_changed", self, "_on_IHealth_health_changed"))
@@ -38,8 +41,11 @@ func set_health_text(health: float):
 
 
 func _on_ShootingTarget_dead() -> void:
-	add_hit_count()
-	queue_free()
+	if is_score_count_after_death:
+		add_hit_count()
+
+	if is_free_after_death:
+		queue_free()
 
 
 func _on_state_shooting_target_size(state: float):

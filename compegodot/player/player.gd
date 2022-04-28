@@ -100,6 +100,8 @@ onready var walking_audio_player = $RandomWalkingAudioPlayer3D
 onready var dropping_audio_player = $RandomDroppingAudioPlayer3D
 
 export(bool) var auto_bhop = true
+export(bool) var disable_movement = false
+export(bool) var disable_weapon_drop = false
 export(float) var crouch_speed = 5.5 # meter per second
 export(float) var jump_impulse_velocity = 12
 export(float) var air_acceleration = 60
@@ -248,6 +250,9 @@ func handle_crouching(delta: float):
 
 # TODO: decouple these codes into other smaller more concise function
 func handle_movement(input_vector: Vector3, delta: float):
+	if disable_movement:
+		return
+
 	# Handle pausing by zero-ing the input vector
 	var is_paused = State.get_state("player_paused")
 	if is_paused:
@@ -373,7 +378,7 @@ func fire_to_direction(delta) -> void:
 
 
 func handle_weapon_drop() -> void:
-	if Input.is_action_just_pressed("player_weapon_drop") and weapon.weapon_slot != Global.WEAPON_SLOT.MELEE:
+	if not disable_weapon_drop and Input.is_action_just_pressed("player_weapon_drop") and weapon.weapon_slot != Global.WEAPON_SLOT.MELEE:
 		_drop_weapon(weapon)
 
 # Unlike drop_weapon, this one will only remove it from the inventory and not add it to the world
@@ -422,6 +427,13 @@ func _weapon_pickup_routine(w: GenericWeapon) -> void:
 	# if player already have a weapon in the chosen weapon slot
 	if existing_weapon:
 		_drop_weapon(existing_weapon)
+
+
+func replace_weapon_and_free_existing(w: GenericWeapon) -> void:
+	var existing_weapon = _set_weapon(w)
+
+	if existing_weapon:
+		existing_weapon.queue_free()
 
 
 func handle_weapon_reload() -> void:
