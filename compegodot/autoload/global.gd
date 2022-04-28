@@ -65,7 +65,10 @@ enum GAME_MODE {
 	LONG_COMPETITIVE,
 
 	# A competitive mode that's taking a shorter amount of rounds to win
-	SHORT_COMPETITIVE
+	SHORT_COMPETITIVE,
+
+	# Training mode in which the player cannot walk and given gun with infinite ammo
+	AIM_TRAINING
 }
 
 enum WEAPON_TYPE {

@@ -26,7 +26,7 @@ func hide_all_menu():
 
 
 func _on_StartTraining_pressed():
-	Util.change_level(training_scene_path)
+	Util.change_level(training_scene_path, Global.GAME_MODE.AIM_TRAINING)
 
 
 func _on_SelectLevel_pressed():
