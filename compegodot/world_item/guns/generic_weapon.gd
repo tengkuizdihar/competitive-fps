@@ -48,7 +48,7 @@ export (Global.WEAPON_TYPE) var weapon_type = Global.WEAPON_TYPE.SEMI_AUTOMATIC
 # The slot that the weapon use if held by a player
 export (Global.WEAPON_SLOT) var weapon_slot = Global.WEAPON_SLOT.PRIMARY
 
-
+export (Global.AMMO_INFINITE_MODE) var inherent_infinite_mode = Global.AMMO_INFINITE_MODE.NONE
 
 ######################################
 #       PATH RELATED EXPORTS         #
@@ -365,7 +365,7 @@ func _reload_routine() -> void:
 			current_ammo = magazine_ammo
 
 		var mode = State.get_state("ammo_infinite_mode")
-		if not (mode == Global.AMMO_INFINITE_MODE.INFINITE_MAGAZINE or mode == Global.AMMO_INFINITE_MODE.INFINITE_AMMO):
+		if not (mode == Global.AMMO_INFINITE_MODE.INFINITE_MAGAZINE or mode == Global.AMMO_INFINITE_MODE.INFINITE_AMMO or inherent_infinite_mode == Global.AMMO_INFINITE_MODE.INFINITE_MAGAZINE or inherent_infinite_mode == Global.AMMO_INFINITE_MODE.INFINITE_AMMO):
 			current_total_ammo = max(next_total_ammo, 0)
 	else:
 		current_ammo = magazine_ammo
@@ -546,7 +546,7 @@ func _spray_routine(delta):
 
 
 func _ammo_depletion_routine() -> bool:
-	if State.get_state("ammo_infinite_mode") == Global.AMMO_INFINITE_MODE.INFINITE_AMMO:
+	if State.get_state("ammo_infinite_mode") == Global.AMMO_INFINITE_MODE.INFINITE_AMMO or inherent_infinite_mode == Global.AMMO_INFINITE_MODE.INFINITE_AMMO:
 		return true
 
 	var next_ammo = current_ammo - 1
