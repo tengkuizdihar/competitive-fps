@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=2]
+[gd_scene load_steps=32 format=2]
 
 [ext_resource path="res://world_item/environments/spawn_point_universal.tscn" type="PackedScene" id=1]
 [ext_resource path="res://materials/level_testing_material_2.tres" type="Material" id=2]
@@ -16,6 +16,7 @@
 [ext_resource path="res://assets/gridtextures/png/Green/texture_01.png" type="Texture" id=14]
 [ext_resource path="res://materials/fresnel_material.tres" type="Material" id=15]
 [ext_resource path="res://assets/gridtextures/png/Green/texture_05.png" type="Texture" id=16]
+[ext_resource path="res://world_item/guns/infinite_semi_auto_pistol.tscn" type="PackedScene" id=17]
 
 [sub_resource type="PhysicsMaterial" id=1]
 rough = true
@@ -391,6 +392,9 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 29, 5, 23 )
 
 [node name="RF8" parent="." instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 5, 23 )
+
+[node name="InfiniteSemiAutoPistol" parent="." instance=ExtResource( 17 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 11.0332, 1.5, 6.31493 )
 
 [node name="Explosion1" type="Particles" parent="."]
 transform = Transform( -4.37114e-07, -10, 0, 10, -4.37114e-07, 0, 0, 0, 10, 0, 2, 1 )
