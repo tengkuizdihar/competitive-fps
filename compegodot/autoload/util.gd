@@ -102,6 +102,6 @@ func is_player(node: Node) -> bool:
 	return "is_player" in node
 
 
-func validated_connect(source: Object, signal_name: String, target: Object, method_name: String, binds: Array) -> void:
+func validated_connect(source: Object, signal_name: String, target: Object, method_name: String, binds: Array = []) -> void:
 	if not source.is_connected(signal_name, target, method_name):
 		handle_err(source.connect(signal_name, target, method_name, binds))

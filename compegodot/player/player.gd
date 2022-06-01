@@ -594,6 +594,7 @@ func handle_airborne_monitoring() -> void:
 		current_lowest_airborne_height = min(y_position, current_lowest_airborne_height)
 
 
+# BUG: What happened when the player is using a heavy weapon where current_max_movement_velocity will always be below `max_run_velocity - 1`?
 func handle_movement_sounds() -> void:
 	var was_airborne = _get_was_airborne()
 	var fall_height = current_max_airborne_height - current_lowest_airborne_height
