@@ -32,7 +32,7 @@ func _physics_process(delta):
 	if not Engine.editor_hint:
 		if Score.mode == Score.Mode.RANDOM_SINGLE and State.get_state("shooting_target_movement_mode") == Global.SHOOTING_TARGET_MOVEMENT_MODE.MOVING:
 			for t in alive_targets:
-				if is_instance_valid(t):
+				if is_instance_valid(t) and t.is_inside_tree():
 					t.move_target(delta)
 
 
@@ -47,6 +47,9 @@ func _on_Target_dead(target) -> void:
 	match Score.mode:
 		Score.Mode.RANDOM_SINGLE:
 			__spawn_target()
+		Score.Mode.RANDOM_SINGLE_TIMED:
+			if Score.score > 0:
+				__spawn_target()
 		Score.Mode.SPRAY_SINGLE:
 			__spawn_target(collision_area.global_transform.origin)
 		_:

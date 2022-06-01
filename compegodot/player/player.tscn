@@ -15,6 +15,7 @@ radius = 2.2
 height = 5.0
 
 [sub_resource type="CylinderShape" id=9]
+margin = 0.001
 height = 5.0
 
 [sub_resource type="CapsuleMesh" id=8]

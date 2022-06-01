@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=2]
+[gd_scene load_steps=34 format=2]
 
 [ext_resource path="res://world_item/environments/spawn_point_universal.tscn" type="PackedScene" id=1]
 [ext_resource path="res://materials/level_testing_material_2.tres" type="Material" id=2]
@@ -17,6 +17,8 @@
 [ext_resource path="res://materials/fresnel_material.tres" type="Material" id=15]
 [ext_resource path="res://assets/gridtextures/png/Green/texture_05.png" type="Texture" id=16]
 [ext_resource path="res://world_item/guns/infinite_semi_auto_pistol.tscn" type="PackedScene" id=17]
+[ext_resource path="res://assets/reference/mannequin_masculine.tscn" type="PackedScene" id=18]
+[ext_resource path="res://assets/reference/mannequin_feminine.tscn" type="PackedScene" id=19]
 
 [sub_resource type="PhysicsMaterial" id=1]
 rough = true
@@ -414,3 +416,9 @@ process_mode = 0
 wait_time = 3.0
 one_shot = true
 autostart = true
+
+[node name="MannequinMasculine" parent="." instance=ExtResource( 18 )]
+transform = Transform( 2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 13.7939, 1, -10.4179 )
+
+[node name="MannequinFeminine" parent="." instance=ExtResource( 19 )]
+transform = Transform( 2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 7.88974, 1, -10.4617 )

@@ -6,7 +6,7 @@
   # Enable support for OpenGL/Vulkan for your drivers
   nixgl ? import (fetchTarball "https://github.com/guibou/nixGL/archive/7d6bc1b21316bab6cf4a6520c2639a11c25a220e.tar.gz") { }
 , # Pin the version of the nix package repository
-  pkgs ? import (fetchTarball "https://github.com/nixos/nixpkgs/archive/1caf78f4bf5cba45eb04c45a3c9b46bde8fa50e0.tar.gz") { }
+  pkgs ? import (fetchTarball "https://github.com/nixos/nixpkgs/archive/ebe2adcc71e9bbd4406d2893a866834bfa2ae6a3.tar.gz") { }
 ,
 }:
 
