@@ -1,3 +1,11 @@
+# Development Status
+
+![Dev Badge](https://img.shields.io/badge/Development-Paused%20Until%20Godot%204.0-lightgrey)
+
+Because of the importance of Godot 4.0 and the breaking changes we would need to handle once we're going 4.0 eventually, it's decided that we will pause any kinds of development for this project until Godot 4.0 is stable. Until then, the project owner is working on other things to fill his free time such as,
+* [Writer Heaven](https://gitlab.com/tengkuizdihar/writer-heaven), a web application made for writers to publish and manage their stories.
+* [Link Level Zero](https://tengkuizdihar.gitlab.io/tags/llz/), a web novel about a guy with his wife doing spy stuff. Magic is also involved I guess.
+
 # The Solver Series
 
 This is an open source project about the most versatile and fun **first person shooter**. There's already an implementation made in Godot Engine, but every single changes is based on the proposal inside of [`documents/PROPOSAL.md`](documents/PROPOSAL.md). Right now Tengku Izdihar the only one who is developing it on his free time, but you're welcome to contribute to the project.
@@ -18,6 +26,7 @@ This screenshot is last updated Sunday, March 20, 2022 8:46:54 PM GMT+07:00.
 ![Gameplay](documents/assets/gameplay_sniper_show_off.png)
 
 # Table Of Contents
+- [Development Status](#development-status)
 - [The Solver Series](#the-solver-series)
 - [Screenshot](#screenshot)
 - [Table Of Contents](#table-of-contents)
@@ -58,7 +67,7 @@ The first game in Project Solver that's all about aiming and training. It featur
       - [x] Timed Detonation
     - [x] Frag Grenade
     - [ ] Smoke Grenade
-    - [ ] Flash Grenade
+    - [x] Flash Grenade
     - [ ] Incendiary Grenade
 - [x] Training Methods
   - [x] Spray Practice
@@ -70,6 +79,10 @@ The first game in Project Solver that's all about aiming and training. It featur
   - [x] Air Strafing
   - [x] Counter Strafing
 - [ ] Sound Design
+  - [ ] footsteps
+    - [ ] adaptive (many kinds of surfaces)
+    - [ ] static (only one kind of surface)
+  - [ ] Etc.
 - [ ] Animation
 - [x] Light weight experience that's not only targeting the toaster, but also your beefed up $500,000, NASA made, super computer
 - [ ] Easy to use UI customization that also includes an export and import function, for portability.
