@@ -2,6 +2,8 @@
 
 ![Dev Badge](https://img.shields.io/badge/Development-Paused%20Until%20Godot%204.0-lightgrey)
 
+Update: 1-July-2022 I'm still waiting for Godot.
+
 Because of the importance of Godot 4.0 and the breaking changes we would need to handle once we're going 4.0 eventually, it's decided that we will pause any kinds of development for this project until Godot 4.0 is stable. Until then, the project owner is working on other things to fill his free time such as,
 * [Writer Heaven](https://gitlab.com/tengkuizdihar/writer-heaven), a web application made for writers to publish and manage their stories.
 * [Link Level Zero](https://tengkuizdihar.gitlab.io/tags/llz/), a web novel about a guy with his wife doing spy stuff. Magic is also involved I guess.
